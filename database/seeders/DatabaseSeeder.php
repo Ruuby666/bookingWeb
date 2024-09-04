@@ -33,17 +33,19 @@ class DatabaseSeeder extends Seeder
     private function createReservations($property)
     {
         $dates = [
-            ['start_date' => '2024-09-01', 'end_date' => '2024-09-07'],
-            ['start_date' => '2024-09-10', 'end_date' => '2024-09-15'],
-            ['start_date' => '2024-09-25', 'end_date' => '2024-09-30'],
+            ['check_in' => '2024-09-01', 'check_out' => '2024-09-07'],
+            ['check_in' => '2024-09-10', 'check_out' => '2024-09-15'],
+            ['check_in' => '2024-09-25', 'check_out' => '2024-09-30'],
         ];
 
         foreach ($dates as $date) {
             Reservation::create([
                 'user_id' => User::inRandomOrder()->first()->id,
                 'property_id' => $property->id,
-                'start_date' => $date['start_date'],
-                'end_date' => $date['end_date'],
+                'check_in' => $date['check_in'],
+                'check_out' => $date['check_out'],
+                'guests' => rand(1, $property->capacity), // Número de huéspedes aleatorio
+                'total_price' => $property->price_per_night * (strtotime($date['check_out']) - strtotime($date['check_in'])) / 86400,
             ]);
         }
     }
