@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User; // Modelo de ejemplo, ajusta según tu aplicación
 use App\Models\Property;
 use App\Models\Reservation;
@@ -23,14 +24,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Cargar los datos desde la base de datos
-        $users = User::all();
-        $properties = Property::all();
-        $reservations = Reservation::all();
 
-        // Compartir los datos con todas las vistas
-        View::share('users', $users);
-        View::share('properties', $properties);
-        View::share('reservations', $reservations);
+        if (!Storage::exists('data.json')) {
+            $data = [
+                'users' => User::all()->toArray(),
+                'properties' => Property::all()->toArray(),
+                'reservations' => Reservation::all()->toArray(),
+            ];
+
+            Storage::put('data.json', json_encode($data));
+            error_log("Data saved in JSON.");
+        } else {
+
+            $json = Storage::get('data.json');
+            $data = json_decode($json, true);
+
+            error_log('Data retrive from JSON.');
+        }
+
+        View::share('users', $data['users']);
+        View::share('properties', $data['properties']);
+        View::share('reservations', $data['reservations']);
     }
 }
