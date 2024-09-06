@@ -59,7 +59,7 @@
                 }));
             d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
         })({
-            key: "AIzaSyDqFahpjk7iDMlMkWBmQqGJX8oJXmQIBjQ",
+            key: "no",
             v: "weekly",
         });
     </script>
