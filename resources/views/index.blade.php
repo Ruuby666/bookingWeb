@@ -31,38 +31,40 @@
     </ul>
 
     <h1>Map</h1>
-    <div id="map"></div>
+    <div id="map" style=" width: 50%; height: 400px;"></div>
 
     <!-- Google Maps JavaScript API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{env('API_GOOGLE_MAPS_KEY')}}"></script>
     <script>
-        (g => {
-            var h, a, k, p = "The Google Maps JavaScript API",
-                c = "google",
-                l = "importLibrary",
-                q = "__ib__",
-                m = document,
-                b = window;
-            b = b[c] || (b[c] = {});
-            var d = b.maps || (b.maps = {}),
-                r = new Set,
-                e = new URLSearchParams,
-                u = () => h || (h = new Promise(async (f, n) => {
-                    await (a = m.createElement("script"));
-                    e.set("libraries", [...r] + "");
-                    for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
-                    e.set("callback", c + ".maps." + q);
-                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
-                    d[q] = f;
-                    a.onerror = () => h = n(Error(p + " could not load."));
-                    a.nonce = m.querySelector("script[nonce]")?.nonce || "";
-                    m.head.append(a)
-                }));
-            d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
-        })({
-            key: "no",
-            v: "weekly",
-        });
+        function initMap() {
+            let map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10, // Initial zoom level
+                center: {
+                    lat: 29.0669,
+                    lng: -13.5900
+                }, // Initial center coordinates
+            });
+
+            // Definir el array de marcadores con sus posiciones y títulos
+            var markers = [
+                { title: "Casa", lat: 29.009408, lng: -13.613061 },
+                { title: "Fariones", lat: 28.922024, lng: -13.676059 },
+                { title: "Playa Blanca", lat: 28.874166, lng: -13.825272 }
+            ];
+
+            // Iterar sobre el array de marcadores y añadirlos al mapa
+            markers.forEach(function(markerInfo) {
+                var pos = { lat: markerInfo.lat, lng: markerInfo.lng };
+                var marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: markerInfo.title
+                });
+            });
+        }
     </script>
+    <!-- Cargar el script de Google Maps con la clave de API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{env('API_GOOGLE_MAPS_KEY')}}&callback=initMap"></script>
 </body>
 
 </html>
