@@ -16,18 +16,13 @@ class DatabaseSeeder extends Seeder
         // Crear 5 usuarios
         User::factory()->count(5)->create();
 
-        // Crear una propiedad
-        $property = Property::create([
-            'title' => 'Beautiful Beach House',
-            'description' => 'A stunning beach house with an amazing view.',
-            'location' => 'Santa Monica Beach',
-            'price_per_night' => 150.00,
-            'capacity' => 6,
-            'image_url' => 'https://www.fincalasnubes.com/wp-content/uploads/casa-img-4.png',
-        ]);
+        // Crear 3 propiedades
+        $properties = Property::factory()->count(3)->create();
 
-        // Generar reservas no solapadas para la propiedad
-        $this->createReservations($property);
+        // Generar reservas no solapadas para cada propiedad
+        foreach ($properties as $property) {
+            $this->createReservations($property);
+        }
     }
 
     private function createReservations($property)

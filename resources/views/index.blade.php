@@ -19,7 +19,9 @@
     <ul>
         @foreach ($properties as $property)
             <li>{{ $property['title'] }}</li>
-            <img src="{{ $property['image_url'] }}" alt="Image not found">
+            <li>{{ $property['lat'] }}</li>
+            <li>{{ $property['lng'] }}</li>
+            <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
         @endforeach
     </ul>
 
@@ -36,43 +38,7 @@
 
     <!-- Google Maps JavaScript API -->
     <script>
-        let markers = [{
-                title: "Beautiful Beach House",
-                description: "A stunning beach house with an amazing view.",
-                location: "Santa Monica Beach",
-                price_per_night: "$150",
-                capacity: 6,
-                image_url: "/images/house.png", // Adjust the path to your image
-                position: {
-                    lat: 29.009408,
-                    lng: -13.613061
-                }
-            },
-            {
-                title: "Mountain Cabin",
-                description: "A cozy cabin in the mountains.",
-                location: "Mountain Range",
-                price_per_night: "$100",
-                capacity: 4,
-                image_url: "/images/house2.png", // Adjust the path to your image
-                position: {
-                    lat: 28.922024,
-                    lng: -13.676059
-                }
-            },
-            {
-                title: "City Apartment",
-                description: "An apartment in the city center.",
-                location: "City Center",
-                price_per_night: "$200",
-                capacity: 2,
-                image_url: "/images/house3.png", // Adjust the path to your image
-                position: {
-                    lat: 28.874166,
-                    lng: -13.825272
-                }
-            }
-        ];
+        let markers = @json($properties);;
 
         async function initMap() {
             // Initialize the map
@@ -96,7 +62,8 @@
             // Iterar sobre el array de marcadores y añadirlos al mapa
             markers.forEach((markerInfo) => {
                 let content = null;
-                if (markerInfo.title == 'Mountain Cabin') {
+                let position = { lat: parseFloat(markerInfo.lat), lng: parseFloat(markerInfo.lng) };
+                if (markerInfo.id == 2) {
 
                     const icon = document.createElement("div");
                     icon.innerHTML = '<i class="fa fa-home fa-lg fa-spin"></i>';
@@ -108,7 +75,7 @@
                     });
                     content = faPin.element;
 
-                } else if (markerInfo.title == 'City Apartment') {
+                } else if (markerInfo.id == 1) {
 
                     let beachFlagImg = document.createElement("img");
                     beachFlagImg.src = "/images/check.png";
@@ -124,7 +91,7 @@
                 }
 
                 var marker = new google.maps.marker.AdvancedMarkerElement({
-                    position: markerInfo.position,
+                    position: position,
                     map: map,
                     title: markerInfo.title,
                     content: content, // Use content only if pinElement is not used
@@ -161,7 +128,7 @@
             content.classList.add("property");
             content.innerHTML = `
                 <div class="property-image">
-                    <img src="${property.image_url}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
+                    <img src="/images/${property.image_url}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
                 </div>
                 <div class="property-details">
                     <h3>${property.title}</h3>
@@ -169,6 +136,10 @@
                     <p><strong>Location:</strong> ${property.location}</p>
                     <p><strong>Price per Night:</strong> ${property.price_per_night}</p>
                     <p><strong>Capacity:</strong> ${property.capacity} people</p>
+                    <a href="/property/1">
+                        View Property Details
+                    </a>
+
                 </div>
                 `;
             return content;

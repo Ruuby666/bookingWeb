@@ -28,9 +28,11 @@ class PropertyFactory extends Factory
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph,
             'location' => $this->faker->address,
-            'price_per_night' => $this->faker->randomFloat(2, 50, 1000), // Precios entre 50 y 1000
+            'price_per_night' => $this->faker->randomFloat(2, 50, 1000),
             'capacity' => $this->faker->numberBetween(1, 20),
-            'image_url' => $this->faker->imageUrl(640, 480, 'real estate', true, 'Faker'), // URL de imagen ficticia
+            'image_url' => $this->faker->imageUrl(640, 480, 'real estate', true, 'Faker'),
+            'lat' => $this->faker->randomFloat(6, 28.85, 29.25),
+            'lng' => $this->faker->randomFloat(6, -13.85, -13.35),
         ];
     }
 }

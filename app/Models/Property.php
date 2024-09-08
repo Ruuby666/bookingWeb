@@ -14,6 +14,7 @@ class Property extends Model
      *
      * @var array<string>
      */
+    //Añadir id
     protected $fillable = [
         'title',
         'description',
@@ -21,6 +22,8 @@ class Property extends Model
         'price_per_night',
         'capacity',
         'image_url',
+        'lat',
+        'lng',
     ];
 
     /**
@@ -31,7 +34,7 @@ class Property extends Model
     protected $casts = [
         'price_per_night' => 'decimal:2',
     ];
-    
+
     /**
      * Get the reservations for the property.
      */
