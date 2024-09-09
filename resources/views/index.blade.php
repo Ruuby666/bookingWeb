@@ -12,24 +12,25 @@
     <h1>Users</h1>
     <ul>
         @foreach ($users as $user)
-            <li>{{ $user['name'] }}</li>
+        <li>{{ $user['name'] }}</li>
         @endforeach
     </ul>
     <h1>Properties</h1>
     <ul>
         @foreach ($properties as $property)
-            <li>{{ $property['title'] }}</li>
-            <li>{{ $property['lat'] }}</li>
-            <li>{{ $property['lng'] }}</li>
-            <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
+        <li>{{ $property['title'] }}</li>
+        <li>{{ $property['lat'] }}</li>
+        <li>{{ $property['lng'] }}</li>
+        <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
         @endforeach
     </ul>
 
     <h1>Reservations</h1>
     <ul>
         @foreach ($reservations as $reservation)
-            <li>{{ $reservation['user_id'] }} {{ $reservation['property_id'] }} From: {{ $reservation['check_in'] }} To:
-                {{ $reservation['check_out'] }}</li>
+        <li>{{ $reservation['user_id'] }} {{ $reservation['property_id'] }} From: {{ $reservation['check_in'] }} To:
+            {{ $reservation['check_out'] }}
+        </li>
         @endforeach
     </ul>
 
@@ -38,7 +39,7 @@
 
     <!-- Google Maps JavaScript API -->
     <script>
-        let markers = @json($properties);;
+        let markers = @json($properties);
 
         async function initMap() {
             // Initialize the map
@@ -62,7 +63,10 @@
             // Iterar sobre el array de marcadores y añadirlos al mapa
             markers.forEach((markerInfo) => {
                 let content = null;
-                let position = { lat: parseFloat(markerInfo.lat), lng: parseFloat(markerInfo.lng) };
+                let position = {
+                    lat: parseFloat(markerInfo.lat),
+                    lng: parseFloat(markerInfo.lng)
+                };
                 if (markerInfo.id == 2) {
 
                     const icon = document.createElement("div");
@@ -145,10 +149,7 @@
             return content;
         }
     </script>
-    <!-- Cargar el script de Google Maps con la clave de API -->
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ env('API_GOOGLE_MAPS_KEY') }}&loading=async&callback=initMap&v=weekly&libraries=marker,core,places,routes,geocoding,geometry,elevation,drawing,visualization"
-        async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('API_GOOGLE_MAPS_KEY') }}&loading=async&callback=initMap&v=weekly&libraries=marker,core,places,routes,geocoding,geometry,elevation,drawing,visualization" async defer></script>
 </body>
 
 </html>

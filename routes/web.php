@@ -8,3 +8,8 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/property/{id}', [PropertyController::class, 'show'])->name('property.show');
+
+// En routes/web.php
+Route::get('/calendar', function () {
+    return view('calendar');
+})->name('calendar');
