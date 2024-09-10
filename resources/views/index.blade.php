@@ -19,7 +19,7 @@
     </ul>
     <h1>Properties</h1>
 
-    @include('components.date_range')
+    @include('components.date-range')
 
     <ul>
         @foreach ($properties as $property)

@@ -11,9 +11,3 @@ Route::get('/', function () {
 
 Route::get('/property/{id}', [PropertyController::class, 'show'])->name('property.show');
 
-// En routes/web.php
-Route::post('/submit-daterange', function (Request $request) {
-    $dateRange = $request->input('daterange'); // Obtiene el rango de fechas
-
-    return "Selected Date Range: " . $dateRange; // Devuelve el rango seleccionado
-});

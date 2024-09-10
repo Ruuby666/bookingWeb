@@ -10,12 +10,13 @@
 
     <!-- Import Daterangepicker and jQuery from CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="{{ asset('css/date-range.css') }}">
 </head>
 
 <body>
     <h5>Select a Date Range</h5>
     @csrf
-    <input type="text" id="daterange" />
+    <input type="text" id="daterange" placeholder="Select a date range"/>
 
     <!-- jQuery and DateRangePicker script from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -25,24 +26,25 @@
 
     <!-- Initialize Date Range Picker -->
     <script>
-        var invalidDates = [
-            '09/15/2024', // Example invalid dates
-            '09/20/2024'
+        var dbDates = [
+            '2024-09-15',
+            '2024-09-20'
         ];
 
         $('#daterange').daterangepicker({
             "autoApply": true,
             "linkedCalendars": false,
-            "autoUpdateInput": false,
+            "autoUpdateInput": true,
             "showCustomRangeLabel": false,
             "minDate": moment(),
             "opens": "center",
             "drops": "auto",
             "isInvalidDate": function (date) {
                 // Check if the date is in the invalidDates array
-                return invalidDates.includes(date.format('MM/DD/YYYY'));
+                return dbDates.includes(date.format('YYYY-MM-DD'));
             }
         }, function (start, end) {
+
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
 
