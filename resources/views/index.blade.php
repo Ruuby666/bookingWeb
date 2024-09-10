@@ -22,12 +22,15 @@
     @include('components.date-range')
 
     <div id="available-properties">
-        @foreach ($properties as $property)
-            <li>{{ $property['title'] }}</li>
-            <li>{{ $property['lat'] }}</li>
-            <li>{{ $property['lng'] }}</li>
-            <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
-        @endforeach
+        <ul>
+            @foreach ($properties as $property)
+                <li>{{ $property['title'] }}</li>
+                <li>{{ $property['lat'] }}</li>
+                <li>{{ $property['lng'] }}</li>
+                <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
+            @endforeach
+        </ul>
+
     </div>
     <!-- <ul>
         @foreach ($properties as $property)
@@ -167,7 +170,7 @@
                     <p><strong>Location:</strong> ${property.location}</p>
                     <p><strong>Price per Night:</strong> ${property.price_per_night}</p>
                     <p><strong>Capacity:</strong> ${property.capacity} people</p>
-                    <a href="/property/1">
+                    <a href="/property/${property.id}">
                         View Property Details
                     </a>
 
