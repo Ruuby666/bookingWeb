@@ -21,14 +21,22 @@
 
     @include('components.date-range')
 
-    <ul>
+    <div id="available-properties">
         @foreach ($properties as $property)
             <li>{{ $property['title'] }}</li>
             <li>{{ $property['lat'] }}</li>
             <li>{{ $property['lng'] }}</li>
             <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
         @endforeach
-    </ul>
+    </div>
+    <!-- <ul>
+        @foreach ($properties as $property)
+            <li>{{ $property['title'] }}</li>
+            <li>{{ $property['lat'] }}</li>
+            <li>{{ $property['lng'] }}</li>
+            <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
+        @endforeach
+    </ul> -->
 
     <h1>Reservations</h1>
     <ul>
