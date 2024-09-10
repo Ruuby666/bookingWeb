@@ -28,9 +28,7 @@
             <!-- Detalles del Apartamento -->
             <div class="property-details">
                 <h1 class="title">{{ $property->title }}</h1>
-                <a href="/">
-                    Go back
-                </a>
+                <a href="{{ route('index') }}">Back to all properties</a>
                 <div class="location">
                     <i class="fas fa-map-marker-alt icon"></i>
                     <span>{{ $property->location }}</span>
