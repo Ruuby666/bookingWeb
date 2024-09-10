@@ -6,37 +6,56 @@
 </head>
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 
 <body>
 
     <h1>Users</h1>
     <ul>
         @foreach ($users as $user)
-        <li>{{ $user['name'] }}</li>
+            <li>{{ $user['name'] }}</li>
         @endforeach
     </ul>
     <h1>Properties</h1>
+
+    @include('components.date_range')
+
     <ul>
         @foreach ($properties as $property)
-        <li>{{ $property['title'] }}</li>
-        <li>{{ $property['lat'] }}</li>
-        <li>{{ $property['lng'] }}</li>
-        <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
+            <li>{{ $property['title'] }}</li>
+            <li>{{ $property['lat'] }}</li>
+            <li>{{ $property['lng'] }}</li>
+            <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
         @endforeach
     </ul>
 
     <h1>Reservations</h1>
     <ul>
         @foreach ($reservations as $reservation)
-        <li>{{ $reservation['user_id'] }} {{ $reservation['property_id'] }} From: {{ $reservation['check_in'] }} To:
-            {{ $reservation['check_out'] }}
-        </li>
+            <li>{{ $reservation['user_id'] }} {{ $reservation['property_id'] }} From: {{ $reservation['check_in'] }} To:
+                {{ $reservation['check_out'] }}
+            </li>
         @endforeach
     </ul>
 
     <h1>Map</h1>
     <div id="map" style=" width: 50%; height: 400px;"></div>
 
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <script>
+        $(function () {
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left'
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+        });
+    </script>
     <!-- Google Maps JavaScript API -->
     <script>
         let markers = @json($properties);
@@ -149,7 +168,9 @@
             return content;
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('API_GOOGLE_MAPS_KEY') }}&loading=async&callback=initMap&v=weekly&libraries=marker,core,places,routes,geocoding,geometry,elevation,drawing,visualization" async defer></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key={{ env('API_GOOGLE_MAPS_KEY') }}&loading=async&callback=initMap&v=weekly&libraries=marker,core,places,routes,geocoding,geometry,elevation,drawing,visualization"
+        async defer></script>
 </body>
 
 </html>
