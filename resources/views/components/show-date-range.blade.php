@@ -14,7 +14,6 @@
 </head>
 
 <body>
-    <h5>Select a Date Range</h5>
     @csrf
     <input type="text" id="daterange" placeholder="Select a date range" />
 
@@ -28,36 +27,31 @@
     <!-- Initialize Date Range Picker -->
     <script>
         let reservations = @json($reservations);
-        let availableProperties = @json($properties);
+        let idProperty = {{ $id }};
+        var fullDates = [];
 
-        var dbDates = [
-            // if you want to unavailable any date '2024-09-15'(example)
-        ];
-
-        // Function to display available properties
-        function displayAvailableProperties(properties) {
-            let container = $('#available-properties');
-            container.empty();
-
-            if (properties.length === 0) {
-                container.append('<p>No properties available for the selected dates.</p>');
-                return;
+        reservations.forEach(reservation => {
+            if (idProperty == reservation.property_id ) {
+                generateAllDates(reservation.check_in, reservation.check_out);
             }
+        });
 
-            properties.forEach(property => {
-                let propertyHtml = `
-                <div class="property-card">
-                    <img src="/images/${property.image_url}" alt="${property.title}" class="property-image" style="height: 200px; width: 300px;">
-                    <h3>${property.title}</h3>
-                    <p>${property.description}</p>
-                    <p>Price/Night: $${property.price_per_night}</p>
-                </div>
-            `;
-                container.append(propertyHtml);
-            });
+        // Function to create full dates
+        function generateAllDates(checkIn, checkOut) {
+            let startDate = moment(checkIn);
+            let endDate = moment(checkOut);
+            let dateArray = [];
+
+            while (startDate.isBefore(endDate) || startDate.isSame(endDate, 'day')) {
+                dateArray.push(startDate.format("YYYY-MM-DD"));
+                startDate.add(1, 'days');
+            }
+            dateArray.forEach(date => fullDates.push(date));
         }
 
-        displayAvailableProperties(availableProperties);
+        console.log(fullDates);
+
+
 
         $('#daterange').daterangepicker({
             "autoApply": true,
@@ -70,7 +64,7 @@
             "drops": "auto",
             "isInvalidDate": function(date) {
                 // Check if the date is in the invalidDates array
-                return dbDates.includes(date.format('YYYY-MM-DD'));
+                return fullDates.includes(date.format('YYYY-MM-DD'));
                 //Cuando haga una reserva por apartamento quiero que se bloqueen todas las fechas ocupadas
 
             }

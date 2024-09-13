@@ -12,6 +12,6 @@ class PropertyController extends Controller
         $property = Property::findOrFail($id);  // If not found, return 404
 
         // Pass the property to the view
-        return view('property.show', compact('property'));
+        return view('property.show', compact('property', 'id'));
     }
 }

@@ -55,6 +55,9 @@
                     <h2>Property Description</h2>
                     <p>{{ $property->description }}</p>
                 </div>
+
+                @include('components.show-date-range')
+
                 <form class="contact-form">
                     <div class="form-group">
                         <label for="name">Name</label>
