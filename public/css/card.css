@@ -1,0 +1,175 @@
+/* Estilo básico del título */
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Contenedor principal con scroll horizontal */
+.container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px; /* Espacio entre tarjetas */
+    padding: 20px;
+    overflow-x: auto; /* Scroll horizontal */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Mejora el scroll en dispositivos táctiles */
+    white-space: nowrap; /* Mantiene los elementos en una sola línea */
+}
+
+/* Ocultar scrollbar horizontal en diferentes navegadores */
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.container {
+    -ms-overflow-style: none; /* IE y Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Tarjeta con ajuste de tamaño y efecto hover */
+.cardcontainer {
+    width: 300px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.cardcontainer:hover {
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+    transform: translateY(-30px); /* Efecto de levantar la tarjeta al hacer hover */
+}
+
+/* Imagen dentro de la tarjeta centrada y adaptada */
+.photo {
+    height: 285px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* La imagen se adapta al contenedor manteniendo su relación de aspecto */
+    transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
+    ;
+}
+
+/* Efecto de zoom en la imagen al hacer hover */
+.cardcontainer:hover .photo img {
+    transform: scale(1.1); /* Zoom suave al pasar el mouse */
+}
+
+/* Etiqueta sobre la foto */
+.photos {
+    width: 90px;
+    height: 30px;
+    background-color: #E74C3C;
+    color: white;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.9rem;
+    line-height: 30px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Contenido de la tarjeta */
+.content {
+    padding: 10px 15px;
+    text-align: center;
+    flex-grow: 1;
+    transition:  transformtext 0.3s ease;
+
+}
+
+/* Título */
+.txt4 {
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 5px;
+
+}
+
+/* Ubicación */
+.txt5 {
+    font-size: 1.1rem;
+    color: #E74C3C;
+    margin-bottom: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Descripción */
+.txt2 {
+    font-size: 0.9rem;
+    color: #666;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Pie de la tarjeta */
+.footer-card {
+    padding: 10px 15px;
+    text-align: center;
+    background-color: white;
+}
+
+/* Botón de acción */
+.btn {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+/* Icono de like */
+#heart {
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.like {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.fa-gratipay {
+    margin-right: 5px;
+    transition: color 0.3s ease;
+}
+
+.fa-gratipay:hover {
+    color: #E74C3C;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .container {
+        flex-wrap: wrap; /* Tarjetas en varias filas */
+    }
+
+    .cardcontainer {
+        width: 90%;
+        margin-bottom: 20px;
+    }
+}

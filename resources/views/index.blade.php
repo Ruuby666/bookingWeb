@@ -5,46 +5,49 @@
     <title>BookingOcra</title>
 </head>
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/card.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
 <body>
-
-    <h1>Users</h1>
-    <ul>
-        @foreach ($users as $user)
-            <li>{{ $user['name'] }}</li>
-        @endforeach
-    </ul>
     <h1>Properties</h1>
 
     @include('components.date-range')
 
-    <div id="available-properties">
-        <ul>
-            @foreach ($properties as $property)
-                <li>{{ $property['title'] }}</li>
-                <li>{{ $property['lat'] }}</li>
-                <li>{{ $property['lng'] }}</li>
-                <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
-            @endforeach
-        </ul>
-
-    </div>
-    <!-- <ul>
+    <div class="container" id="available-properties">
         @foreach ($properties as $property)
-            <li>{{ $property['title'] }}</li>
-            <li>{{ $property['lat'] }}</li>
-            <li>{{ $property['lng'] }}</li>
-            <img src="/images/{{ $property['image_url'] }}" alt="Image not found" style="height: 200px; width: 300px;">
+        <div class="cardcontainer">
+
+                <div class="photo">
+                    <img src="/images/{{$property['image_url']}}" alt="Image not found"style="height: 200px; width: 300px;">
+                </div>
+                <div class="content">
+                    <p class="txt4">{{ $property['title'] }}</p>
+                    <p class="txt5">{{ $property['location'] }}</p>
+                    <p class="txt2">{{ $property['description'] }}</p>
+                </div>
+                <div class="footer">
+                    <p><a class="waves-effect waves-light btn" href="/property/{{ $property['id'] }}">Read More</a><a
+                            id="heart"><span class="like"><i class="fab fa-gratipay"></i>Like</span></a></p>
+                </div>
+
+        </div>
         @endforeach
-    </ul> -->
+    </div>
+
 
     <h1>Reservations</h1>
     <ul>
         @foreach ($reservations as $reservation)
-            <li>{{ $reservation['user_id'] }} {{ $reservation['property_id'] }} From: {{ $reservation['check_in'] }} To:
+            <li>{{ $reservation['user_id'] }} {{ $reservation['property_id'] }} From: {{ $reservation['check_in'] }}
+                To:
                 {{ $reservation['check_out'] }}
             </li>
         @endforeach
@@ -57,7 +60,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    
+
     <!-- Google Maps JavaScript API -->
     <script>
         let markers = @json($properties);

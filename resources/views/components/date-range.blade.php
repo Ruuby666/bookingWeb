@@ -14,9 +14,11 @@
 </head>
 
 <body>
-    <h5>Select a Date Range</h5>
-    @csrf
-    <input type="text" id="daterange" placeholder="Select a date range" />
+    <div class="daterange-container">
+        <h5>Select a Date Range</h5>
+        @csrf
+        <input type="text" id="daterange" placeholder="Select a date range" />
+    </div>
 
 
     <!-- jQuery and DateRangePicker script from CDN -->
@@ -46,13 +48,21 @@
 
             properties.forEach(property => {
                 let propertyHtml = `
-                <div class="property-card">
-                    <img src="/images/${property.image_url}" alt="${property.title}" class="property-image" style="height: 200px; width: 300px;">
-                    <h3>${property.title}</h3>
-                    <p>${property.description}</p>
-                    <p>Price/Night: $${property.price_per_night}</p>
+                <div class="cardcontainer">
+                    <div class="photo">
+                        <img src="/images/${property.image_url}" alt="Image not found"style="height: 200px; width: 300px;">
+                    </div>
+                    <div class="content">
+                        <p class="txt4">${property.title}</p>
+                        <p class="txt5">${property.location}</p>
+                        <p class="txt2">${property.description}</p>
+                    </div>
+                    <div class="footer-card">
+                        <p><a class="waves-effect waves-light btn" href="/property/${property.id}">Read More</a><a
+                                id="heart"><span class="like"><i class="fab fa-gratipay"></i>Like</span></a></p>
+                    </div>
                 </div>
-            `;
+                `;
                 container.append(propertyHtml);
             });
         }

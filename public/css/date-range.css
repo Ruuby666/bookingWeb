@@ -1,21 +1,69 @@
+/* Contenedor para alinear el h5 y el input */
+.daterange-container {
+    display: flex;
+    align-items: center; /* Alinea el h5 y el input verticalmente */
+    gap: 30px; /* Espacio entre el h5 y el input */
+    justify-content: center;
+}
 
+/* Estilo para el título */
+.daterange-container h5 {
+    font-family: 'Arial', sans-serif;
+    color: #4a4a4a;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
 
+/* Estilo mejorado para #daterange */
 #daterange {
-    padding: 5px 10px;
+    padding: 0px 15px; /* Padding cómodo */
+    width: auto; /* Ancho ajustable automáticamente */
     border: 2px solid #007bff;
-    border-radius: 5px;
+    border-radius: 8px; /* Bordes suaves para un estilo más moderno */
     background-color: #ffffff;
     color: #333333;
     font-size: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para darle profundidad */
     transition: all 0.3s ease;
-}
-
-#daterange:hover {
+    cursor: pointer;
     outline: none;
-    box-shadow: 2px 6px 3px 0.5px  rgba(11, 11, 12, 0.5);
 }
 
+/* Efecto hover */
+#daterange:hover {
+    border-color: #0056b3; /* Color del borde más oscuro en hover */
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2); /* Sombra más intensa en hover */
+}
+
+/* Efecto al hacer foco en el campo */
+#daterange:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Sombra azulada en foco */
+    background-color: #f8f9fa; /* Fondo ligeramente más claro */
+}
+
+/* Placeholder estilizado */
 #daterange::placeholder {
     color: #a9a9a9;
+    font-style: italic;
 }
+
+/* Efecto cuando se interactúa con el campo */
+#daterange:active {
+    transform: scale(1.02); /* Pequeño efecto de "zoom" al hacer clic */
+}
+
+/* Ajustes responsivos para dispositivos móviles */
+@media (max-width: 768px) {
+    .daterange-container {
+        flex-direction: column; /* En pantallas pequeñas, coloca el h5 encima del input */
+        align-items: flex-start;
+    }
+
+    #daterange {
+        width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+    }
+}
+
+
