@@ -1,0 +1,58 @@
+html {
+    scroll-behavior: smooth;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+#header {
+    height: 200px;
+    background-image: url('/images/laGeria.jpg');
+    background-position-y: -100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#nameLogo {
+    height: 50%;
+}
+
+#header-menu {
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+    padding-top: 10px;
+}
+
+
+
+#header-menu {
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+    padding-top: 10px;
+}
+
+#header-menu-word {
+    margin: 0 20px;
+    color: #e3e3e3;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+#header-menu-word:hover {
+    transform: scale(1.1);
+    padding: 0px 5px;
+    color: #ffffff;
+    border-left: #ffffff 2px solid;
+    border-right: #ffffff 2px solid;
+    border-radius: 5px;
+    text-shadow: 0 0 10px rgb(6, 6, 6);
+}

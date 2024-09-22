@@ -6,6 +6,7 @@
 </head>
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 <link rel="stylesheet" href="{{ asset('css/card.css') }}">
+<link rel="stylesheet" href="{{ asset('css/header.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
@@ -17,7 +18,10 @@
 
 
 <body>
-    <h1>Properties</h1>
+
+    @include('components.header')
+
+    <h1 id="properties-section">Properties</h1>
 
     @include('components.date-range')
 
@@ -42,19 +46,8 @@
         @endforeach
     </div>
 
-
-    <h1>Reservations</h1>
-    <ul>
-        @foreach ($reservations as $reservation)
-            <li>{{ $reservation['user_id'] }} {{ $reservation['property_id'] }} From: {{ $reservation['check_in'] }}
-                To:
-                {{ $reservation['check_out'] }}
-            </li>
-        @endforeach
-    </ul>
-
-    <h1>Map</h1>
-    <div id="map" style=" width: 50%; height: 400px;"></div>
+    <h1 id="map-section">Map</h1>
+    <div id="map"></div>
 
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
