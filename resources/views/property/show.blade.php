@@ -7,22 +7,9 @@
     <title>Details</title>
     <link href="{{ asset('css/details-property.css') }}" rel="stylesheet">
 </head>
-<!-- <body>
-    <div class="container">
-        <h1>{{ $property['title'] }}</h1>
-        <img src="/images/{{ $property['image_url'] }}" alt="{{ $property['title'] }}" width="400">
-        <p><strong>Description:</strong> {{ $property['description'] }}</p>
-        <p><strong>Location:</strong> {{ $property['location'] }}</p>
-        <p><strong>Price per night:</strong> ${{ $property['price_per_night'] }}</p>
-        <p><strong>Capacity:</strong> {{ $property['capacity'] }} people</p>
-    </div>
-
-    <a href="{{ route('index') }}">Back to all properties</a>
-
-    <script src="{{ asset('js/app.js') }}"></script>
-</body> -->
-
 <body>
+    @include('components.header')
+
     <div class="container">
         <div class="content-grid">
             <!-- Detalles del Apartamento -->
@@ -86,6 +73,8 @@
             </div>
         </div>
     </div>
+
+    @include('components.footer')
 
 </body>
 

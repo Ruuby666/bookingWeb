@@ -8,10 +8,11 @@ h1 {
 
 /* Contenedor principal con scroll horizontal */
 .container {
+    margin-top: 20px;
     display: flex;
     justify-content: flex-start;
     gap: 15px; /* Espacio entre tarjetas */
-    padding: 20px;
+    padding: 50px 20px 20px 20px;    ;
     overflow-x: auto; /* Scroll horizontal */
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch; /* Mejora el scroll en dispositivos táctiles */
