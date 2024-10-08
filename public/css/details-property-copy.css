@@ -1,0 +1,212 @@
+body {
+    margin: 0;
+}
+
+.content-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 10px 10px;
+}
+
+.fa-caret-left{
+    font-size: 40px;
+    margin-left: 10px;
+    margin-top: -20px;
+}
+
+#daterange {
+    padding: 10px 15px !important;
+}
+
+.property-details {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 50%;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: #8e44ad;
+    margin-bottom: 15px;
+}
+
+.location .icon {
+    margin-right: 8px;
+}
+
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    color: #34495e;
+    flex: 1 1 200px;
+}
+
+.feature .icon {
+    color: #3498db;
+    margin-right: 8px;
+}
+
+.description h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.description p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #7f8c8d;
+}
+
+.image-gallery {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 50%;
+    background-color: white;
+}
+
+.main-image img {
+    width: 100%;
+    height: auto;
+    background-color: white;
+}
+
+.thumbnail-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.thumbnail-gallery img {
+    width: 48%;
+    height: auto;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.thumbnail-gallery img:hover {
+    transform: scale(1.05);
+}
+
+.contact-form {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+.contact-form .form-group {
+    margin-bottom: 10px;
+}
+
+.contact-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    resize: none;
+    width: 96%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+    outline: none;
+}
+
+/* Estilo para el textarea */
+.contact-form textarea {
+    resize: vertical; /* Permite al usuario cambiar el tamaño solo verticalmente */
+    min-height: 150px;
+}
+
+/* Botón de envío */
+.contact-form button {
+    width: 100%;
+    padding: 15px;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.contact-form button:hover {
+    background-color: #2980b9;
+    transform: scale(1.02); /* Ligero aumento en el tamaño del botón cuando se pasa el mouse */
+}
+
+.contact-form button:focus {
+    outline: none;
+    background-color: #1c6ca1;
+    box-shadow: 0 0 5px rgba(28, 108, 161, 0.5);
+}
+
+/* Estilo para dispositivos móviles */
+@media (max-width: 768px) {
+    .contact-form {
+        padding: 15px;
+    }
+
+    .contact-form button {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .content-grid {
+        flex-direction: column;
+    }
+
+    .property-details, .image-gallery {
+        max-width: 100%;
+    }
+}

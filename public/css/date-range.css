@@ -1,12 +1,11 @@
-/* Contenedor para alinear el h5 y el input */
+
 .daterange-container {
     display: flex;
-    align-items: center; /* Alinea el h5 y el input verticalmente */
-    gap: 30px; /* Espacio entre el h5 y el input */
+    align-items: center;
+    gap: 30px;
     justify-content: center;
 }
 
-/* Estilo para el título */
 .daterange-container h5 {
     font-family: 'Arial', sans-serif;
     color: #4a4a4a;
@@ -14,17 +13,16 @@
     font-weight: 600;
 }
 
-/* Estilo mejorado para #daterange */
 #daterange {
-    padding: 0px 15px; /* Padding cómodo */
-    width: auto; /* Ancho ajustable automáticamente */
+    padding: 0px 15px;
+    width: auto;
     border: 2px solid #007bff;
-    border-radius: 8px; /* Bordes suaves para un estilo más moderno */
+    border-radius: 8px;
     background-color: #ffffff;
     color: #333333;
-    font-size: 16px;
+    font-size: 18px;
     font-family: 'Arial', sans-serif;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para darle profundidad */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     cursor: pointer;
     outline: none;

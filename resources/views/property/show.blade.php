@@ -5,17 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Details</title>
-    <link href="{{ asset('css/details-property.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/details-property-copy.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
 <body>
     @include('components.header')
-
+    <a href="{{ route('index') }}"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
     <div class="container">
         <div class="content-grid">
             <!-- Detalles del Apartamento -->
             <div class="property-details">
                 <h1 class="title">{{ $property->title }}</h1>
-                <a href="{{ route('index') }}">Back to all properties</a>
+
                 <div class="location">
                     <i class="fas fa-map-marker-alt icon"></i>
                     <span>{{ $property->location }}</span>
@@ -47,8 +49,12 @@
 
                 <form class="contact-form">
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">Full Name</label>
                         <input id="name" type="text" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="number">Contact Number</label>
+                        <input id="number" type="number" placeholder="Enter your phone number">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -56,7 +62,7 @@
                     </div>
                     <div class="form-group">
                         <label for="message">Message</label>
-                        <textarea id="message" rows="4" placeholder="Enter your message"></textarea>
+                        <textarea id="message" rows="2" placeholder="Enter your message"></textarea>
                     </div>
                     <button type="submit">Submit Inquiry</button>
                 </form>
@@ -68,7 +74,9 @@
                     <img src="/images/{{ $property->image_url }}" alt="Property Image">
                 </div>
                 <div class="thumbnail-gallery">
-                    <!-- Suponiendo que $property->additional_images es un array de URLs -->
+                    {{-- @foreach($property->additional_images as $image)
+                        <img src="/images/{{ $property->image_url }}" alt="Property Image">
+                    @endforeach --}}
                 </div>
             </div>
         </div>
