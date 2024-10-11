@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Details</title>
-    <link href="{{ asset('css/details-property-copy.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/details-property.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
+
 <body>
     @include('components.header')
     <a href="{{ route('index') }}"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
@@ -71,12 +72,12 @@
             <!-- Imágenes del Apartamento -->
             <div class="image-gallery">
                 <div class="main-image">
-                    <img src="/images/{{ $property->image_url }}" alt="Property Image">
+                    <img src="{{ asset('images/' . $property->image_url . '/' . $mainImage) }}" alt="Main Property Image" loading="lazy">
                 </div>
                 <div class="thumbnail-gallery">
-                    {{-- @foreach($property->additional_images as $image)
-                        <img src="/images/{{ $property->image_url }}" alt="Property Image">
-                    @endforeach --}}
+                    @foreach($imagesWithoutFirst as $image)
+                    <img class="thumbnail" src="{{ asset('images/' . $property->image_url . '/' . $image) }}" alt="Property Thumbnail" loading="lazy">
+                    @endforeach
                 </div>
             </div>
         </div>
