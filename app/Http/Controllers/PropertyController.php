@@ -14,7 +14,6 @@ class PropertyController extends Controller
 
         // Assuming images are stored in 'public/images/{property_id}/'
         $imageFolder = public_path('images/' . $property->image_url);
-        echo("<script>console.log('PHP: " . $imageFolder . "');</script>");
 
         $images = [];
 

@@ -26,25 +26,25 @@
 
     <div class="container" id="available-properties">
         @foreach ($properties as $property)
-            <a href="/property/{{ $property['id'] }}">
-                <div class="cardcontainer">
+        <a href="/property/{{ $property['id'] }}">
+            <div class="cardcontainer">
 
-                    <div class="photo">
-                        <img src="/images/{{ $property['image_url'] }}"
-                            alt="Image not found"style="height: 200px; width: 300px;">
-                    </div>
-                    <div class="content">
-                        <p class="txt4">{{ $property['title'] }}</p>
-                        <p class="txt5">{{ $property['location'] }}</p>
-                        <p class="txt2">{{ $property['description'] }}</p>
-                    </div>
-                    <div class="footer">
-                        <p><a class="waves-effect waves-light btn" href="/property/{{ $property['id'] }}">Read
-                                More</a><a id="heart"><span class="like"><i
-                                        class="fab fa-gratipay"></i>Like</span></a></p>
-                    </div>
+                <div class="photo">
+                    <img src="/images/{{ $property['image_url'] }}/{{ $propertyWithImages[$property['id']]}}"
+                        alt="Image not found" style="height: 200px; width: 300px;">
                 </div>
-            </a>
+                <div class="content">
+                    <p class="txt4">{{ $property['title'] }}</p>
+                    <p class="txt5">{{ $property['location'] }}</p>
+                    <p class="txt2">{{ $property['description'] }}</p>
+                </div>
+                <div class="footer">
+                    <p><a class="waves-effect waves-light btn" href="/property/{{ $property['id'] }}">Read
+                            More</a><a id="heart"><span class="like"><i
+                                    class="fab fa-gratipay"></i>Like</span></a></p>
+                </div>
+            </div>
+        </a>
         @endforeach
     </div>
 
@@ -59,6 +59,7 @@
     <!-- Google Maps JavaScript API -->
     <script>
         let markers = @json($properties);
+        let propertyWithImages = @json($propertyWithImages);
 
         async function initMap() {
             // Initialize the map
@@ -117,14 +118,8 @@
                     position: position,
                     map: map,
                     title: markerInfo.title,
-                    content: content, // Use content only if pinElement is not used
+                    content: content,
                 });
-                /*  //Puedo hacer que se guarde aqui la información
-                marker.addListener('click', ({domEvent, latLng}) => {
-                    const {target} = domEvent;
-                    console.log(target);
-
-                }); */
 
                 // Crear la InfoWindow
                 const infoWindow = new google.maps.InfoWindow({
@@ -147,12 +142,13 @@
         // Function to build content for InfoWindow
         function buildContent(property) {
             const content = document.createElement("div");
+            const imageName = propertyWithImages[property.id];
 
             content.classList.add("property");
             content.innerHTML = `
                 <div class="property-image">
                     <a href="/property/${property.id}">
-                    <img src="/images/${property.image_url}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
+                    <img src="/images/${property.image_url}/${imageName}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
                     </a>
                 </div>
                 <div class="property-details">
