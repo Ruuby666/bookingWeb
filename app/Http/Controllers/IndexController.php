@@ -17,22 +17,20 @@ class IndexController extends Controller
         $propertyWithImages = [];
 
         foreach ($properties as $property) {
-            $imageFolder = public_path('images/' . $property->image_url);
-            $images = [];
+            $imageFolder = public_path('images/' . $property->images_div);
+            $nameImage = null;
 
             if (File::exists($imageFolder)) {
+                $images = File::files($imageFolder);
 
-                $images = array_map('basename', File::files($imageFolder)); 
-                $nameImage = $images[0] ?? null; 
-
-            } else {
-                $nameImage = null; 
+                if (!empty($images)) {
+                    $nameImage = basename($images[0]);
+                }
             }
-            
+
             $propertyWithImages[$property->id] = $nameImage;
         }
-
+        error_log(print_r($propertyWithImages, true));
         return view('index', compact('propertyWithImages'));
     }
-
 }

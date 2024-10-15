@@ -15,12 +15,12 @@ return new class extends Migration
             $table->string('location');
             $table->decimal('price_per_night', 8, 2);
             $table->integer('capacity');
-            $table->integer('size');
-            $table->integer('bedrooms');
+            $table->string('size');
+            $table->json('bedrooms');
             $table->integer('bathrooms');
-            $table->string('images_url');
+            $table->string('images_div');
             $table->string('tv') -> nullable();
-            $table->string('entertainment') -> nullable();
+            $table->boolean('entertainment') -> nullable();
             $table->boolean('parking');
             $table->boolean('pool');
             $table->boolean('garden');

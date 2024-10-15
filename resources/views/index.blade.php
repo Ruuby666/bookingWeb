@@ -28,9 +28,8 @@
         @foreach ($properties as $property)
         <a href="/property/{{ $property['id'] }}">
             <div class="cardcontainer">
-
                 <div class="photo">
-                    <img src="/images/{{ $property['image_url'] }}/{{ $propertyWithImages[$property['id']]}}"
+                    <img src="/images/{{ $property['images_div'] }}/{{$propertyWithImages[$property['id']]}}"
                         alt="Image not found" style="height: 200px; width: 300px;">
                 </div>
                 <div class="content">
@@ -87,32 +86,10 @@
                     lat: parseFloat(markerInfo.lat),
                     lng: parseFloat(markerInfo.lng)
                 };
-                if (markerInfo.id == 2) {
-
-                    const icon = document.createElement("div");
-                    icon.innerHTML = '<i class="fa fa-home fa-lg fa-spin"></i>';
-                    const faPin = new google.maps.marker.PinElement({
-                        glyph: icon,
-                        glyphColor: "#000000",
-                        background: "#FFD514",
-                        borderColor: "#ff8300",
-                    });
-                    content = faPin.element;
-
-                } else if (markerInfo.id == 1) {
-
-                    let beachFlagImg = document.createElement("img");
-                    beachFlagImg.src = "/images/check.png";
-                    beachFlagImg.height = 20;
-                    beachFlagImg.width = 20;
-                    content = beachFlagImg;
-
-                } else {
-                    let pin = new google.maps.marker.PinElement({
-                        glyphColor: "white",
-                    });
-                    content = pin.element;
-                }
+                let pin = new google.maps.marker.PinElement({
+                    glyphColor: "white",
+                });
+                content = pin.element;
 
                 var marker = new google.maps.marker.AdvancedMarkerElement({
                     position: position,
@@ -121,14 +98,11 @@
                     content: content,
                 });
 
-                // Crear la InfoWindow
                 const infoWindow = new google.maps.InfoWindow({
                     content: buildContent(markerInfo),
                 });
 
-                // Mostrar el pop-up al hacer clic en el marcador
                 marker.addListener("click", () => {
-                    // Customize this part as needed for your application
                     if (currentInfoWindow) {
                         currentInfoWindow.close();
                     }
@@ -142,13 +116,12 @@
         // Function to build content for InfoWindow
         function buildContent(property) {
             const content = document.createElement("div");
-            const imageName = propertyWithImages[property.id];
 
             content.classList.add("property");
             content.innerHTML = `
                 <div class="property-image">
                     <a href="/property/${property.id}">
-                    <img src="/images/${property.image_url}/${imageName}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
+                    <img src="/images/${property.images_div}/${propertyWithImages[property.id]}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
                     </a>
                 </div>
                 <div class="property-details">

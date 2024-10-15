@@ -26,7 +26,11 @@
                 <div class="features">
                     <div class="feature">
                         <i class="fas fa-bed icon"></i>
-                        <span>{{ $property->bedrooms }} Bedrooms</span>
+                        <div class="bedrooms">
+                            <span>{{ json_decode($property->bedrooms, true)['1'] ?? 'N/A' }}</span>
+                            <span>{{ json_decode($property->bedrooms, true)['2'] ?? 'N/A' }}</span>
+                            <span>{{ json_decode($property->bedrooms, true)['3'] ?? 'N/A' }}</span>
+                        </div>
                     </div>
                     <div class="feature">
                         <i class="fas fa-bath icon"></i>
@@ -34,16 +38,33 @@
                     </div>
                     <div class="feature">
                         <i class="fas fa-ruler icon"></i>
-                        <span>{{ $property->size }} sq ft</span>
+                        <span>{{ $property->size }}</span>
                     </div>
                     <div class="feature">
-                        <i class="fas fa-vector-square icon"></i>
-                        <span>{{ $property->land_size }} Acres</span>
+                        <i class="fas fa-user  icon"></i>
+                        <span>{{ $property->capacity }} Guests</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-dollar-sign icon"></i>
+                        <span>€{{ $property->price_per_night }} per night</span>
                     </div>
                 </div>
                 <div class="description">
                     <h2>Property Description</h2>
                     <p>{{ $property->description }}</p>
+                </div>
+
+                <div class="extra-features">
+                    <h5>Additional Features</h5>
+                    <ul>
+                        <li><i class="fas fa-parking"></i><strong>{{ $property->parking ? 'Free Parking Spot' : null }}</strong></li>
+                        <li><i class="fas fa-parking"></i><strong>{{ $property->pool ? 'Pool' : null }}</strong></li>
+                        <li><i class="fas fa-parking"></i><strong>{{ $property->garden ? 'Garden' : null }}</strong></li>
+                        <li><i class="fas fa-parking"></i><strong>{{ $property->safeBox ? 'Safe Box' : null }}</strong></li>
+                        <li><i class="fas fa-parking"></i><strong>{{ $property->terrace ? 'Terrace' : null }}</strong></li>
+                        <li><i class="fas fa-parking"></i><strong>{{ $property->wifi ? 'Free wifi' : null }}</strong></li>
+                        <li><i class="fas fa-parking"></i><strong>TV:</strong> {{ $property->tv }}</li>
+                    </ul>
                 </div>
 
                 @include('components.show-date-range')
@@ -72,11 +93,11 @@
             <!-- Imágenes del Apartamento -->
             <div class="image-gallery">
                 <div class="main-image">
-                    <img src="{{ asset('images/' . $property->image_url . '/' . $mainImage) }}" alt="Main Property Image" loading="lazy">
+                    <img src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}" alt="Main Property Image" loading="lazy">
                 </div>
                 <div class="thumbnail-gallery">
                     @foreach($imagesWithoutFirst as $image)
-                    <img class="thumbnail" src="{{ asset('images/' . $property->image_url . '/' . $image) }}" alt="Property Thumbnail" loading="lazy">
+                    <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}" alt="Property Thumbnail" loading="lazy">
                     @endforeach
                 </div>
             </div>

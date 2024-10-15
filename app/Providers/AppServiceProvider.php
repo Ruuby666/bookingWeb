@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User; // Modelo de ejemplo, ajusta según tu aplicación
+use App\Models\User; 
 use App\Models\Property;
 use App\Models\Reservation;
 

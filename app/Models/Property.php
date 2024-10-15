@@ -9,37 +9,46 @@ class Property extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
-    //Añadir id
+
     protected $fillable = [
         'title',
         'description',
         'location',
         'price_per_night',
         'capacity',
-        'image_url',
+        'size',
+        'bedrooms',
+        'bathrooms',
+        'images_dir', 
+        'tv',
+        'entertainment',
+        'parking',
+        'pool',
+        'garden',
+        'safeBox',
+        'terrace',
+        'wifi',
         'lat',
         'lng',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array<string, string>
-     */
+
     protected $casts = [
         'price_per_night' => 'decimal:2',
+        'lat' => 'decimal:7',
+        'lng' => 'decimal:7',
+        'parking' => 'boolean',
+        'pool' => 'boolean',
+        'garden' => 'boolean',
+        'safeBox' => 'boolean',
+        'terrace' => 'boolean',
+        'wifi' => 'boolean',
     ];
 
-    /**
-     * Get the reservations for the property.
-     */
+
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
     }
 }
+

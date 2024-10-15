@@ -13,7 +13,7 @@ class PropertyController extends Controller
         $property = Property::findOrFail($id);  // If not found, return 404
 
         // Assuming images are stored in 'public/images/{property_id}/'
-        $imageFolder = public_path('images/' . $property->image_url);
+        $imageFolder = public_path('images/' . $property->images_div);
 
         $images = [];
 
