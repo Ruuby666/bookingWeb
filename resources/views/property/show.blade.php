@@ -27,9 +27,12 @@
                     <div class="feature">
                         <i class="fas fa-bed icon"></i>
                         <div class="bedrooms">
-                            <span>{{ json_decode($property->bedrooms, true)['1'] ?? 'N/A' }}</span>
-                            <span>{{ json_decode($property->bedrooms, true)['2'] ?? 'N/A' }}</span>
-                            <span>{{ json_decode($property->bedrooms, true)['3'] ?? 'N/A' }}</span>
+                            @php
+                                $bedrooms = json_decode($property->bedrooms, true);
+                            @endphp
+                            @foreach ($bedrooms as $key => $bed)
+                                <span>Bedroom {{ $key }}: {{ $bed }}</span>
+                            @endforeach
                         </div>
                     </div>
                     <div class="feature">
@@ -51,19 +54,33 @@
                 </div>
                 <div class="description">
                     <h2>Property Description</h2>
-                    <p>{{ $property->description }}</p>
+                    <p>{!! nl2br(e($property->description)) !!}</p> {{-- Its like that for the text spaces --}}
                 </div>
 
                 <div class="extra-features">
                     <h5>Additional Features</h5>
                     <ul>
-                        <li><i class="fas fa-parking"></i><strong>{{ $property->parking ? 'Free Parking Spot' : null }}</strong></li>
-                        <li><i class="fas fa-parking"></i><strong>{{ $property->pool ? 'Pool' : null }}</strong></li>
-                        <li><i class="fas fa-parking"></i><strong>{{ $property->garden ? 'Garden' : null }}</strong></li>
-                        <li><i class="fas fa-parking"></i><strong>{{ $property->safeBox ? 'Safe Box' : null }}</strong></li>
-                        <li><i class="fas fa-parking"></i><strong>{{ $property->terrace ? 'Terrace' : null }}</strong></li>
-                        <li><i class="fas fa-parking"></i><strong>{{ $property->wifi ? 'Free wifi' : null }}</strong></li>
-                        <li><i class="fas fa-parking"></i><strong>TV:</strong> {{ $property->tv }}</li>
+                        @if ($property->parking)
+                            <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
+                        @endif
+                        @if ($property->pool)
+                            <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
+                        @endif
+                        @if ($property->garden)
+                            <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
+                        @endif
+                        @if ($property->safeBox)
+                            <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
+                        @endif
+                        @if ($property->terrace)
+                            <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
+                        @endif
+                        @if ($property->wifi)
+                            <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
+                        @endif
+                        @if (!empty($property->tv))
+                            <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
+                        @endif
                     </ul>
                 </div>
 
@@ -93,11 +110,13 @@
             <!-- Imágenes del Apartamento -->
             <div class="image-gallery">
                 <div class="main-image">
-                    <img src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}" alt="Main Property Image" loading="lazy">
+                    <img src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}"
+                        alt="Main Property Image" loading="lazy">
                 </div>
                 <div class="thumbnail-gallery">
-                    @foreach($imagesWithoutFirst as $image)
-                    <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}" alt="Property Thumbnail" loading="lazy">
+                    @foreach ($imagesWithoutFirst as $image)
+                        <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
+                            alt="Property Thumbnail" loading="lazy">
                     @endforeach
                 </div>
             </div>
