@@ -101,9 +101,9 @@
                     </div>
                     <div class="form-group">
                         <label for="message">Message</label>
-                        <textarea id="message" rows="2" placeholder="Enter your message"></textarea>
+                        <textarea id="message" rows="5" placeholder="Enter your message"></textarea>
                     </div>
-                    <button type="submit">Submit Inquiry</button>
+                    <button type="submit">Send Your Request</button>
                 </form>
             </div>
 
