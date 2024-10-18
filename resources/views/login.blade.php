@@ -22,6 +22,11 @@
             </div>
         </div>
     </div>
+    @if (session('error'))
+        <div class="alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     @include('components.footer')
 </body>
 

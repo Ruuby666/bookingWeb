@@ -15,18 +15,13 @@ class AdminController extends Controller
             'password' => ['required']
         ]);
 
-        if (
-            $credentials['email'] === env('ADMIN_EMAIL') &&
-            $credentials['password'] === env('ADMIN_PASSWORD')
-        ) {
+        if ($credentials['email'] === env('ADMIN_EMAIL') && $credentials['password'] === env('ADMIN_PASSWORD')) {
             session(['is_admin' => true]);
 
             return redirect()->route('admin.properties')->with('success', 'Logged in as admin.');
         }
 
-        return back()->withErrors([
-            'email' => 'Invalid admin credentials.'
-        ]);
+        return back()->with('error', 'Email or password is incorrect.');
     }
 
     public function logoutFunction()
