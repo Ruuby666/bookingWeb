@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0px;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 20px;
+    white-space: nowrap;
+}
+
+main {
+    padding: 20px;
+}
+
+.admin-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    font-size: 26px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+td:first-child,
+th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2; /* Make sure the cel is above others */
+    background-color: white;
+    border: solid 1px grey;
+}
+
+.admin-table th, .admin-table td {
+    border: 1px solid grey;
+    padding: 8px;
+}
+
+.admin-table td {
+    height: 50px;
+}
+
+td:nth-child(2) {
+    max-width: 400px;
+    overflow: auto;
+}
+
+
+#footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}

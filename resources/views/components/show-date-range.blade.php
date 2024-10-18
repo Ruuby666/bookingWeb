@@ -48,11 +48,7 @@
             }
             dateArray.forEach(date => fullDates.push(date));
         }
-
-        console.log(fullDates);
-
-
-
+        
         $('#daterange').daterangepicker({
             "autoApply": true,
             "linkedCalendars": true,
