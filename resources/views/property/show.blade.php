@@ -83,10 +83,10 @@
                         @endif
                     </ul>
                 </div>
-                @include('components.show-date-range')
 
                 <form class="contact-form" action="{{ route('send.email') }}" method="POST">
                     @csrf
+                    @include('components.show-date-range')
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input id="name" name="name" type="text" placeholder="Enter your name" required>
@@ -103,6 +103,7 @@
                         <label for="message">Message</label>
                         <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
                     </div>
+                    <input type="hidden" name="property_id" value="{{ $property->id }}">
                     <button type="submit">Send Your Request</button>
                 </form>
 
