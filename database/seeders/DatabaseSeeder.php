@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         // Crear 5 usuarios
         User::factory()->count(5)->create();
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
                 'property_id' => $property->id,
                 'check_in' => $date['check_in'],
                 'check_out' => $date['check_out'],
-                'guests' => rand(1, $property->capacity), // Número de huéspedes aleatorio
+                'guests' => rand(1, $property->capacity), 
                 'total_price' => $property->price_per_night * (strtotime($date['check_out']) - strtotime($date['check_in'])) / 86400,
             ]);
         }

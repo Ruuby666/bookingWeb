@@ -36,7 +36,6 @@
             // if you want to unavailable any date '2024-09-15'(example)
         ];
 
-        // Function to display available properties
         function displayAvailableProperties(properties) {
             let container = $('#available-properties');
             container.empty();

@@ -83,28 +83,29 @@
                         @endif
                     </ul>
                 </div>
-
                 @include('components.show-date-range')
 
-                <form class="contact-form">
+                <form class="contact-form" action="{{ route('send.email') }}" method="POST">
+                    @csrf
                     <div class="form-group">
                         <label for="name">Full Name</label>
-                        <input id="name" type="text" placeholder="Enter your name">
+                        <input id="name" name="name" type="text" placeholder="Enter your name" required>
                     </div>
                     <div class="form-group">
                         <label for="number">Contact Number</label>
-                        <input id="number" type="number" placeholder="Enter your phone number">
+                        <input id="number" name="number" type="number" placeholder="Enter your phone number" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input id="email" type="email" placeholder="Enter your email">
+                        <input id="email" name="email" type="email" placeholder="Enter your email" required>
                     </div>
                     <div class="form-group">
                         <label for="message">Message</label>
-                        <textarea id="message" rows="5" placeholder="Enter your message"></textarea>
+                        <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
                     </div>
                     <button type="submit">Send Your Request</button>
                 </form>
+
             </div>
 
             <!-- Imágenes del Apartamento -->
