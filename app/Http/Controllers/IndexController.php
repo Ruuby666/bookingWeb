@@ -30,7 +30,6 @@ class IndexController extends Controller
 
             $propertyWithImages[$property->id] = $nameImage;
         }
-        error_log(print_r($propertyWithImages, true));
         return view('index', compact('propertyWithImages'));
     }
 }

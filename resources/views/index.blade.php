@@ -21,7 +21,7 @@
 
     <h1 id="properties-section">Properties</h1>
 
-    @include('components.date-range')
+    @include('components.date-range', ['propertyWithImages' => $propertyWithImages])
 
     <div class="container" id="available-properties">
         @foreach ($properties as $property)
@@ -36,10 +36,8 @@
                     <p class="txt5">{{ $property['location'] }}</p>
                     <p class="txt2">{{ $property['description'] }}</p>
                 </div>
-                <div class="footer">
-                    <p><a class="waves-effect waves-light btn" href="/property/{{ $property['id'] }}">Read
-                            More</a><a id="heart"><span class="like"><i
-                                    class="fab fa-gratipay"></i>Like</span></a></p>
+                <div class="cardfooter">
+                    <p><a class="waves-effect waves-light btn" href="/property/{{ $property['id'] }}">Read More</a></p>
                 </div>
             </div>
         </a>

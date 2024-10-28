@@ -31,6 +31,7 @@
     <script>
         let reservations = @json($reservations).filter(reservation => reservation.status === 'confirmed');
         let availableProperties = @json($properties);
+        let propertyImages = @json($propertyWithImages);
 
         var dbDates = [
             // if you want to unavailable any date '2024-09-15'(example)
@@ -46,19 +47,20 @@
             }
 
             properties.forEach(property => {
+
+
                 let propertyHtml = `
                 <div class="cardcontainer">
                     <div class="photo">
-                        <img src="/images/${property.image_url}" alt="Image not found"style="height: 200px; width: 300px;">
+                        <img src="/images/${property.images_div}/${propertyImages[property.id]}" alt="Image not found"style="height: 200px; width: 300px;">
                     </div>
                     <div class="content">
                         <p class="txt4">${property.title}</p>
                         <p class="txt5">${property.location}</p>
                         <p class="txt2">${property.description}</p>
                     </div>
-                    <div class="footer-card">
-                        <p><a class="waves-effect waves-light btn" href="/property/${property.id}">Read More</a><a
-                                id="heart"><span class="like"><i class="fab fa-gratipay"></i>Like</span></a></p>
+                    <div class="cardfooter">
+                        <p><a class="waves-effect waves-light btn" href="/property/${property.id}">Read More</a></p>
                     </div>
                 </div>
                 `;
