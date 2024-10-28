@@ -10,29 +10,19 @@ class PropertyController extends Controller
 {
     public function show($id)
     {
-        $property = Property::findOrFail($id);  // If not found, return 404
-
-        // Assuming images are stored in 'public/images/{property_id}/'
+        $property = Property::findOrFail($id); 
         $imageFolder = public_path('images/' . $property->images_div);
-
         $images = [];
 
-        // Check if the image folder exists
         if (File::exists($imageFolder)) {
-            // Get all file names in the image folder
-            $images = array_map('basename', File::files($imageFolder)); // Extract only file names
-
-            // Determine the main image and the others for thumbnails
-            $mainImage = $images[0] ?? null; // Get the first image, or null if not available
-
-            $imagesWithoutFirst = array_slice($images, 1); // All other images
-
+            $images = array_map('basename', File::files($imageFolder)); 
+            $mainImage = $images[0] ?? null; 
+            $imagesWithoutFirst = array_slice($images, 1); 
         } else {
-            $mainImage = null;  // Set mainImage to null if no images found
-            $imagesWithoutFirst = [];  // Initialize as an empty array
+            $mainImage = null;  
+            $imagesWithoutFirst = [];  
         }
 
-        // Pass the property to the view
         return view('property.show', compact('property', 'id', 'mainImage', 'imagesWithoutFirst'));
     }
 }

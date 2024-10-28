@@ -28,10 +28,10 @@
                         <i class="fas fa-bed icon"></i>
                         <div class="bedrooms">
                             @php
-                                $bedrooms = json_decode($property->bedrooms, true);
+                            $bedrooms = json_decode($property->bedrooms, true);
                             @endphp
                             @foreach ($bedrooms as $key => $bed)
-                                <span>Bedroom {{ $key }}: {{ $bed }}</span>
+                            <span>Bedroom {{ $key }}: {{ $bed }}</span>
                             @endforeach
                         </div>
                     </div>
@@ -61,25 +61,25 @@
                     <h5>Additional Features</h5>
                     <ul>
                         @if ($property->parking)
-                            <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
+                        <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
                         @endif
                         @if ($property->pool)
-                            <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
+                        <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
                         @endif
                         @if ($property->garden)
-                            <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
+                        <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
                         @endif
                         @if ($property->safeBox)
-                            <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
+                        <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
                         @endif
                         @if ($property->terrace)
-                            <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
+                        <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
                         @endif
                         @if ($property->wifi)
-                            <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
+                        <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
                         @endif
                         @if (!empty($property->tv))
-                            <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
+                        <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
                         @endif
                     </ul>
                 </div>
@@ -113,17 +113,34 @@
             <div class="image-gallery">
                 <div class="main-image">
                     <img src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}"
-                        alt="Main Property Image" loading="lazy">
+                        alt="Main Property Image" loading="lazy" onclick="openPopup('{{ $property->images_div . '/' . $mainImage }}')">
                 </div>
                 <div class="thumbnail-gallery">
                     @foreach ($imagesWithoutFirst as $image)
-                        <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
-                            alt="Property Thumbnail" loading="lazy">
+                    <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
+                        alt="Property Thumbnail" loading="lazy" onclick="openPopup('{{ $property->images_div . '/' . $image }}')">
                     @endforeach
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Popup para mostrar la imagen en grande -->
+    <div id="imagePopup" class="popup" style="display:none;">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <img class="popup-content" id="popupImage" src="" alt="Large Image">
+    </div>
+    <script>
+        function openPopup(imageUrl) {
+            document.getElementById("popupImage").src = "/images/" + imageUrl;
+            document.getElementById("imagePopup").style.display = "flex";
+        }
+
+        function closePopup() {
+            document.getElementById("imagePopup").style.display = "none";
+        }
+    </script>
+
 
     @include('components.footer')
 

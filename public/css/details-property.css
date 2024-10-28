@@ -4,12 +4,14 @@ html {
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif; /* Consider adding a default font */
+    font-family: Arial, sans-serif;
+    /* Consider adding a default font */
 }
 
 .container {
     margin: 0 auto;
-    padding: 0 1rem; /* Adjusted padding for better responsiveness */
+    padding: 0 1rem;
+    /* Adjusted padding for better responsiveness */
 }
 
 /* Content Grid */
@@ -26,7 +28,8 @@ body {
 
 @media (min-width: 768px) {
     .content-grid {
-        flex-direction: row; /* Change to flex-direction: row */
+        flex-direction: row;
+        /* Change to flex-direction: row */
     }
 }
 
@@ -93,7 +96,7 @@ body {
     margin-right: 10px;
 }
 
-.feature .bedrooms{
+.feature .bedrooms {
     display: flex;
     flex-direction: column;
 }
@@ -154,7 +157,8 @@ body {
     font-weight: bold;
 }
 
-.form-group input, .form-group textarea {
+.form-group input,
+.form-group textarea {
     padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 0.25rem;
@@ -205,6 +209,11 @@ body {
     border-radius: 0.5rem;
 }
 
+.main-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 /* Thumbnail image styling */
 .thumbnail-gallery {
     flex-grow: 1;
@@ -250,4 +259,40 @@ body {
 
 .thumbnail-gallery::-webkit-scrollbar-thumb:hover {
     background-color: #555;
+}
+
+
+/* Pop Up images */
+.popup {
+    position: fixed;
+    display: none;
+    /* Ocultado por defecto */
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Fondo semi-transparente */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    margin: auto;
+    display: block;
+    max-width: 80%;
+    /* Ajusta el tamaño máximo */
+    height: auto;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
 }
