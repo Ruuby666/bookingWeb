@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use  App\Models\Property;
+use App\Models\Reservation;
 
 class AdminController extends Controller
 {
@@ -40,5 +41,25 @@ class AdminController extends Controller
         }
 
         return redirect()->route('admin.login');
+    }
+
+    public function pending()
+    {
+        // Filtrar las reservas con el estado 'pending'
+        $reservations = Reservation::where('status', 'confirmed')->with('property','user')->get();
+        $pending = Reservation::where('status', 'pending')->with('property','user')->get();
+
+        return view('admin.pending', compact('reservations','pending'));
+    }
+
+    public function updateStatus($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        // Cambiar el estado a "completed" o cualquier otro estado que desees
+        $reservation->status = 'completed'; // O puedes definir otro estado
+        $reservation->save();
+
+        return redirect()->route('reservations.pending')->with('success', 'Reservation status updated successfully.');
     }
 }
