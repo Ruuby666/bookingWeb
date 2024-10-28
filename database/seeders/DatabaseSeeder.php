@@ -13,10 +13,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Crear 5 usuarios
+        //Antes de correr el DatabaseSeeder usa este comando:  php artisan db:seed --class=PropertiesTableSeeder
+
         User::factory()->count(5)->create();
 
-        // Crear 3 propiedades
         $properties = Property::all();
 
         // Generar reservas no solapadas para cada propiedad
@@ -39,6 +39,8 @@ class DatabaseSeeder extends Seeder
                 'property_id' => $property->id,
                 'check_in' => $date['check_in'],
                 'check_out' => $date['check_out'],
+                'status' => 'confirmed', 
+                'notes' => '', 
                 'guests' => rand(1, $property->capacity), 
                 'total_price' => $property->price_per_night * (strtotime($date['check_out']) - strtotime($date['check_in'])) / 86400,
             ]);

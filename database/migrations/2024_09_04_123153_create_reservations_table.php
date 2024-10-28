@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('property_id')->constrained('properties')->onDelete('cascade');
             $table->date('check_in');
             $table->date('check_out');
+            $table->string('status')->default('pending');
+            $table->text('notes')->nullable();
             $table->integer('guests');
             $table->decimal('total_price', 8, 2);
             $table->timestamps();

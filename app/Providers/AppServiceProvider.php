@@ -11,21 +11,14 @@ use App\Models\Reservation;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * If you change the db yo need to comment this code and run migrate
-     */
      public function boot(): void
     {
 
-        // Check if users.json exists; if not, create it
         if (!Storage::exists('users.json')) {
             $users = User::all()->toArray();
             Storage::put('users.json', json_encode($users));
@@ -35,7 +28,6 @@ class AppServiceProvider extends ServiceProvider
             error_log('Users data retrieved from JSON.');
         }
 
-        // Check if properties.json exists; if not, create it
         if (!Storage::exists('properties.json')) {
             $properties = Property::all()->toArray();
             Storage::put('properties.json', json_encode($properties));
