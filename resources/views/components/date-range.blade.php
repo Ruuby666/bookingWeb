@@ -29,7 +29,7 @@
 
     <!-- Initialize Date Range Picker -->
     <script>
-        let reservations = @json($reservations);
+        let reservations = @json($reservations).filter(reservation => reservation.status === 'confirmed');
         let availableProperties = @json($properties);
 
         var dbDates = [
@@ -105,14 +105,13 @@
                     occupiedPropertyIds.push(reservation.property_id);
                 }
             }
-            // Filter out occupied properties
+            
             let availableProperties = @json($properties).filter(property => !occupiedPropertyIds.includes(
                 property.id));
 
             console.log("Occupied Property IDs:", occupiedPropertyIds);
             console.log("Available Property IDs:", availableProperties);
 
-            // Call the function to display available properties
             displayAvailableProperties(availableProperties);
 
 
