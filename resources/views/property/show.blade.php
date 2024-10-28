@@ -113,12 +113,12 @@
             <div class="image-gallery">
                 <div class="main-image">
                     <img src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}"
-                        alt="Main Property Image" loading="lazy" onclick="openPopup('{{ $property->images_div . '/' . $mainImage }}')">
+                        alt="Main Property Image" loading="lazy"  onclick="openPopup('{{ $mainImage }}',  0 )">
                 </div>
                 <div class="thumbnail-gallery">
-                    @foreach ($imagesWithoutFirst as $image)
+                    @foreach ($imagesWithoutFirst as $index => $image)
                     <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
-                        alt="Property Thumbnail" loading="lazy" onclick="openPopup('{{ $property->images_div . '/' . $image }}')">
+                        alt="Property Thumbnail" loading="lazy" onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
                     @endforeach
                 </div>
             </div>
@@ -128,17 +128,44 @@
     <!-- Popup para mostrar la imagen en grande -->
     <div id="imagePopup" class="popup" style="display:none;">
         <span class="close" onclick="closePopup()">&times;</span>
-        <img class="popup-content" id="popupImage" src="" alt="Large Image">
+        <img class="popup-content" id="popupImage" src="" alt="Large Image" class="lazy">
+        <span class="prev" onclick="changeImage(-1)">&#10094;</span>
+        <span class="next" onclick="changeImage(1)">&#10095;</span>
     </div>
     <script>
-        function openPopup(imageUrl) {
-            document.getElementById("popupImage").src = "/images/" + imageUrl;
+        let currentIndex = 0;
+        const property = @json($property); 
+        const mainImage = @json($mainImage); 
+        let images = [mainImage];
+
+        function openPopup(imageUrl, index) {
+            currentIndex = index;
+            document.getElementById("popupImage").src = "/images/"+ property.images_div+"/"+ imageUrl;
             document.getElementById("imagePopup").style.display = "flex";
         }
 
         function closePopup() {
             document.getElementById("imagePopup").style.display = "none";
         }
+
+        function changeImage(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0) currentIndex = images.length - 1;
+            if (currentIndex >= images.length) currentIndex = 0;
+            document.getElementById("popupImage").src = "/images/" + property.images_div + "/" + images[currentIndex];
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const imageArray = @json($imagesWithoutFirst); 
+            images = images.concat(imageArray);
+        });
+
+        // Agregar manejo del teclado para cerrar con Esc
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                closePopup();
+            }
+        });
     </script>
 
 
