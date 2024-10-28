@@ -24,7 +24,7 @@
 
     <!-- Initialize Date Range Picker -->
     <script>
-        let reservations = @json($reservations);
+        let reservations = @json($reservations).filter(reservation => reservation.status === 'confirmed');
         let idProperty = {{ $id }};
         var fullDates = [];
 
@@ -80,40 +80,6 @@
 
         });
     </script>
-
-    <!-- Inicializar Date Range Picker -->
-    {{-- <script>
-
-        let reservations = @json($reservations);
-        let idProperty = {{ $id }};
-        var fullDates = [];
-
-        reservations.forEach(reservation => {
-            if (idProperty == reservation.property_id) {
-                generateAllDates(reservation.check_in, reservation.check_out);
-            }
-        });
-
-        function generateAllDates(checkIn, checkOut) {
-            let startDate = moment(checkIn);
-            let endDate = moment(checkOut);
-
-            while (startDate.isBefore(endDate) || startDate.isSame(endDate, 'day')) {
-                fullDates.push(startDate.format("YYYY-MM-DD"));
-                startDate.add(1, 'days');
-            }
-        }
-
-        $('#daterange').daterangepicker({
-            "autoApply": true,
-            "linkedCalendars": true,
-            "autoUpdateInput": false,
-            "minDate": moment(),
-            "isInvalidDate": function(date) {
-                return fullDates.includes(date.format('YYYY-MM-DD'));
-            }
-        });
-    </script> --}}
 
 </body>
 
