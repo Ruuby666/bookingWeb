@@ -65,9 +65,13 @@
         </div>
 
     </div>
+    <div id="session-data"
+        data-session-lifetime="{{ config('session.lifetime') }}"
+        data-redirect-url="{{ route('index') }}">
+    </div>
 
     @include('components.footer')
-
+    <script src="{{ asset('js/session-expiry.js') }}"></script>
 </body>
 
 </html>

@@ -5,13 +5,15 @@ html {
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    /* Consider adding a default font */
+}
+
+#footer {
+    position: sticky !important ;
 }
 
 .container {
     margin: 0 auto;
     padding: 0 1rem;
-    /* Adjusted padding for better responsiveness */
 }
 
 /* Content Grid */

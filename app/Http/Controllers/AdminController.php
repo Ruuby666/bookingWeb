@@ -40,7 +40,7 @@ class AdminController extends Controller
             return view('admin.admin', compact('properties'));
         }
 
-        return redirect()->route('admin.login');
+        return redirect()->route('login');
     }
 
     public function pending()
