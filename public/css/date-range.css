@@ -28,31 +28,26 @@
     outline: none;
 }
 
-/* Efecto hover */
 #daterange:hover {
     border-color: #0056b3; /* Color del borde más oscuro en hover */
     box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2); /* Sombra más intensa en hover */
 }
 
-/* Efecto al hacer foco en el campo */
 #daterange:focus {
     border-color: #0056b3;
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Sombra azulada en foco */
     background-color: #f8f9fa; /* Fondo ligeramente más claro */
 }
 
-/* Placeholder estilizado */
 #daterange::placeholder {
     color: #a9a9a9;
     font-style: italic;
 }
 
-/* Efecto cuando se interactúa con el campo */
 #daterange:active {
     transform: scale(1.02); /* Pequeño efecto de "zoom" al hacer clic */
 }
 
-/* Ajustes responsivos para dispositivos móviles */
 @media (max-width: 768px) {
     .daterange-container {
         flex-direction: column; /* En pantallas pequeñas, coloca el h5 encima del input */

@@ -3,6 +3,11 @@ body {
     margin: 0px;
 }
 
+#footer{
+    position: sticky !important;
+    width: auto !important;
+}
+
 .pending-container {
     padding: 20px;
     background-color: #f9f9f9;

@@ -50,7 +50,6 @@ class MailController extends Controller
         }
     }
 
-    // Método privado para crear la reserva
     private function createReservation($propertytoreserve, $data, $user)
     {
         $reservation =  Reservation::create([
@@ -64,7 +63,7 @@ class MailController extends Controller
             'total_price' => $this->calculateTotalPrice($propertytoreserve->id, $data['checkIn'], $data['checkOut']),
         ]);
 
-        $this->updateReservationJson();  
+        $this->updateReservationJson();
         return $reservation;
     }
 

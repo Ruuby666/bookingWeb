@@ -26,6 +26,8 @@ Route::get('/admin/properties', [AdminController::class, 'properties'])->name('a
 
 Route::get('/admin/reservations/pending', [AdminController::class, 'pending'])->name('admin.reservations.pending');
 
+Route::post('/admin/reservations/pending/update/{id}', [AdminController::class, 'updateStatus'])->name('admin.reservations.pending.update');
+
 Route::put('/admin/properties/update/{property}', [AdminController::class, 'updateProperty'])->name('admin.properties.update');
 
 Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email');

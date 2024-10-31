@@ -129,13 +129,13 @@
     <div id="imagePopup" class="popup" style="display:none;">
         <span class="close" onclick="closePopup()">&times;</span>
         <img class="popup-content" id="popupImage" src="" alt="Large Image" class="lazy">
-        <span class="prev" onclick="changeImage(-1)">&#10094;</span>
-        <span class="next" onclick="changeImage(1)">&#10095;</span>
+        <span class="previos" onclick="changeImage(-1)">&#10094;</span>
+        <span class="next-one" onclick="changeImage(1)">&#10095;</span>
     </div>
     <script>
         let currentIndex = 0;
-        const property = @json($property); 
-        const mainImage = @json($mainImage); 
+        const property = @json($property);
+        const mainImage = @json($mainImage);
         let images = [mainImage];
 
         function openPopup(imageUrl, index) {
@@ -156,7 +156,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            const imageArray = @json($imagesWithoutFirst); 
+            const imageArray = @json($imagesWithoutFirst);
             images = images.concat(imageArray);
         });
 

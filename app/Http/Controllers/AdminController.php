@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use  App\Models\Property;
 use App\Models\Reservation;
 
@@ -55,11 +55,16 @@ class AdminController extends Controller
     public function updateStatus($id)
     {
         $reservation = Reservation::findOrFail($id);
-
-        // Cambiar el estado a "completed" o cualquier otro estado que desees
-        $reservation->status = 'completed'; // O puedes definir otro estado
+        $reservation->status = 'confirmed';
         $reservation->save();
-
-        return redirect()->route('reservations.pending')->with('success', 'Reservation status updated successfully.');
+        $this -> updateReservationJson();
+        return redirect()->back();
+    }
+    
+    private function updateReservationJson()
+    {
+        $reservations = Reservation::all()->toArray();
+        Storage::put('reservations.json', json_encode($reservations, JSON_PRETTY_PRINT));
+        error_log("Archivo reservations.json actualizado tras creación de usuario.");
     }
 }

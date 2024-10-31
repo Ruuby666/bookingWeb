@@ -7,10 +7,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-#footer {
-    position: sticky !important ;
-}
-
 .container {
     margin: 0 auto;
     padding: 0 1rem;
@@ -293,8 +289,8 @@ body {
     }
 
 
-.prev,
-.next {
+.previous,
+.next-one {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -303,10 +299,10 @@ body {
     cursor: pointer;
 }
 
-.prev {
+.previous {
     left: 10px;
 }
 
-.next {
+.next-one {
     right: 10px;
 }
