@@ -45,7 +45,7 @@
                             <td>{{ $property->location }}</td>
                             <td>{{ $property->price_per_night }}</td>
                             <td>{{ $property->capacity }}</td>
-                            <td>{{ $property->size }}</td>
+                            <td>{{ $property->size}} m²</td>
                             <td>{{ $property->bedrooms }}</td>
                             <td>{{ $property->bathrooms }}</td>
                             <td>{{ $property->tv ? 'Yes' : 'No' }}</td>
@@ -63,7 +63,7 @@
                 </tbody>
             </table>
         </div>
-
+        <a href="{{ route('properties.create') }}" class="btn btn-primary">Add New Property</a>
     </div>
     <div id="session-data"
         data-session-lifetime="{{ config('session.lifetime') }}"

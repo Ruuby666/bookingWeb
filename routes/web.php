@@ -32,21 +32,8 @@ Route::put('/admin/properties/update/{property}', [AdminController::class, 'upda
 
 Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email');
 
-Route::get('/send-test-email', function() {
-    $data = [
-        'name' => 'Test User',
-        'number' => '123456789',
-        'email' => 'test@example.com',
-        'message' => 'This is a test email',
-        'daterange' => '2024-11-01 to 2024-11-10',
-    ];
-    $sub = 'test email';
+Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
 
-    try {
-        Mail::to('rubensepulvedareal@gmail.com')->send(new ContactMail($data, $sub));
-        return 'Email sent successfully!';
-    } catch (\Exception $e) {
-        return 'Error sending email: ' . $e->getMessage();
-    }
-});
+Route::post('/properties/store', [PropertyController::class, 'store'])->name('properties.store');
+
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('location');
             $table->decimal('price_per_night', 8, 2);
             $table->integer('capacity');
-            $table->string('size');
+            $table->integer('size');
             $table->json('bedrooms');
             $table->integer('bathrooms');
             $table->string('images_div');

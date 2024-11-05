@@ -46,10 +46,10 @@ class AdminController extends Controller
     public function pending()
     {
         // Filtrar las reservas con el estado 'pending'
-        $reservations = Reservation::where('status', 'confirmed')->with('property','user')->get();
-        $pending = Reservation::where('status', 'pending')->with('property','user')->get();
+        $reservations = Reservation::where('status', 'confirmed')->with('property', 'user')->get();
+        $pending = Reservation::where('status', 'pending')->with('property', 'user')->get();
 
-        return view('admin.pending', compact('reservations','pending'));
+        return view('admin.pending', compact('reservations', 'pending'));
     }
 
     public function updateStatus($id)
@@ -57,14 +57,16 @@ class AdminController extends Controller
         $reservation = Reservation::findOrFail($id);
         $reservation->status = 'confirmed';
         $reservation->save();
-        $this -> updateReservationJson();
+        $this->updateReservationJson();
         return redirect()->back();
     }
-    
+
     private function updateReservationJson()
     {
         $reservations = Reservation::all()->toArray();
         Storage::put('reservations.json', json_encode($reservations, JSON_PRETTY_PRINT));
         error_log("Archivo reservations.json actualizado tras creación de usuario.");
     }
+
+
 }

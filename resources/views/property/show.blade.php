@@ -41,7 +41,7 @@
                     </div>
                     <div class="feature">
                         <i class="fas fa-ruler icon"></i>
-                        <span>{{ $property->size }}</span>
+                        <span>{{ $property->size }} m²</span>
                     </div>
                     <div class="feature">
                         <i class="fas fa-user  icon"></i>
