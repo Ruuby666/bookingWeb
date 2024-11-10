@@ -3,6 +3,14 @@ body {
     margin: 0px;
 }
 
+#footer{
+    position: sticky !important;
+    width: auto !important;
+}
+.container{
+    padding-bottom: 50px;
+}
+
 .table-container {
     overflow-x: auto;
     margin: 20px;
@@ -44,6 +52,42 @@ td:nth-child(2) {
     max-width: 400px;
     overflow: auto;
 }
+
+.buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Minimalist button styling */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #058e28;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* Hover effect */
+.btn:hover {
+    background-color: #058e28;
+    color: white;
+    border-color: #000000;
+}
+
+/* Focus and active state */
+.btn:focus, .btn:active {
+    outline: none;
+    background-color: #2980b9;
+    color: #fff;
+    border-color: #2980b9;
+}
+
 
 
 #footer{

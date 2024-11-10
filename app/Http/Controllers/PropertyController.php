@@ -60,6 +60,6 @@ class PropertyController extends Controller
         // Crear la propiedad con los datos
         Property::create($data);
 
-        return redirect()->route('properties.index')->with('success', 'Property added successfully');
+        return redirect()->route('admin.properties')->with('success', 'Property added successfully');
     }
 }

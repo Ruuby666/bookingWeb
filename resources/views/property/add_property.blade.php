@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="form-item">
-                    <label for="images_div">Images</label>
+                    <label for="images_div">Folder_Images</label>
                     <input type="text" id="images_div" name="images_div" required>
                 </div>
 

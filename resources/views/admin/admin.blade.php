@@ -63,7 +63,9 @@
                 </tbody>
             </table>
         </div>
-        <a href="{{ route('properties.create') }}" class="btn btn-primary">Add New Property</a>
+        <div class="buttons">
+           <a href="{{ route('properties.create') }}" class="btn">Add New Property</a>
+        </div>
     </div>
     <div id="session-data"
         data-session-lifetime="{{ config('session.lifetime') }}"
