@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
@@ -26,11 +27,13 @@ class PropertyController extends Controller
         return view('property.show', compact('property', 'id', 'mainImage', 'imagesWithoutFirst'));
     }
 
-    public function create(){
+    public function create()
+    {
         return view('property.add_property');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -61,5 +64,12 @@ class PropertyController extends Controller
         Property::create($data);
 
         return redirect()->route('admin.properties')->with('success', 'Property added successfully');
+    }
+
+    private function updatePropertiesJson()
+    {
+        $properties = Property::all()->toArray();
+        Storage::put('properties.json', json_encode($properties, JSON_PRETTY_PRINT));
+        error_log("Archivo properties.json actualizado tras creación o modificación de propiedad.");
     }
 }
