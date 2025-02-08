@@ -1,4 +1,4 @@
-
+/* ----- Estilos generales ----- */
 .daterange-container {
     display: flex;
     align-items: center;
@@ -13,6 +13,7 @@
     font-weight: 600;
 }
 
+/* ----- Estilos del input daterange ----- */
 #daterange {
     padding: 0px 15px;
     width: auto;
@@ -29,14 +30,14 @@
 }
 
 #daterange:hover {
-    border-color: #0056b3; /* Color del borde más oscuro en hover */
-    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2); /* Sombra más intensa en hover */
+    border-color: #0056b3;
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
 }
 
 #daterange:focus {
     border-color: #0056b3;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Sombra azulada en foco */
-    background-color: #f8f9fa; /* Fondo ligeramente más claro */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+    background-color: #f8f9fa;
 }
 
 #daterange::placeholder {
@@ -45,18 +46,52 @@
 }
 
 #daterange:active {
-    transform: scale(1.02); /* Pequeño efecto de "zoom" al hacer clic */
+    transform: scale(1.02);
 }
 
-@media (max-width: 768px) {
+/* ----- Mejora en el diseño responsivo ----- */
+@media (max-width: 1024px) {  /* Tablet */
     .daterange-container {
-        flex-direction: column; /* En pantallas pequeñas, coloca el h5 encima del input */
-        align-items: flex-start;
+        gap: 15px;  /* Menor separación entre los elementos */
     }
 
     #daterange {
-        width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+        width: 30%;  /* Hace que el input ocupe un 70% del ancho */
+        font-size: 16px;  /* Ajuste el tamaño del texto en el input */
+    }
+
+    .daterange-container h5 {
+        font-size: 1.2rem;  /* Reduce el tamaño de la fuente del título */
     }
 }
 
+@media (max-width: 768px) {  /* Móvil */
+    .daterange-container {
+        gap: 10px;  /* Espaciado aún menor en pantallas más pequeñas */
+    }
 
+    #daterange {
+        width: 40%;  /* Ocupa casi todo el ancho disponible */
+        font-size: 14px;  /* Ajuste del tamaño de la fuente */
+    }
+
+    .daterange-container h5 {
+        font-size: 1rem;  /* Reduce aún más el tamaño del título en pantallas pequeñas */
+    }
+}
+
+@media (max-width: 458px) {  /* Móvil */
+    .daterange-container {
+        flex-direction: column;
+        gap: 10px;  /* Espaciado aún menor en pantallas más pequeñas */
+    }
+
+    #daterange {
+        width: 40%;  /* Ocupa casi todo el ancho disponible */
+        font-size: 14px;  /* Ajuste del tamaño de la fuente */
+    }
+
+    .daterange-container h5 {
+        font-size: 1rem;  /* Reduce aún más el tamaño del título en pantallas pequeñas */
+    }
+}

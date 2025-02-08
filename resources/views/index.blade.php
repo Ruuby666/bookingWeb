@@ -25,7 +25,7 @@
     <h1>Propiedades Disponibles</h1>
 
     <div id="carousel-container">
-        <button class="prev">&#10094;</button> <!-- Botón de retroceso -->
+        <button class="prev">&#10094;</button>
         <div id="available-properties">
             @foreach ($properties as $property)
             <a href="/property/{{ $property['id'] }}">
@@ -45,13 +45,13 @@
                 </div>
             </a>
             @endforeach
-            <!-- Agrega más tarjetas según sea necesario -->
         </div>
-        <button class="next">&#10095;</button> <!-- Botón de avance -->
+        <button class="next">&#10095;</button> 
     </div>
 
 
-    <h1 id="map-section">Map</h1>
+    <h1 id="map-title">Map</h1>
+    
     <div id="map"></div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>

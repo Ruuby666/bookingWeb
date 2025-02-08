@@ -1,4 +1,4 @@
-/* Contenedor principal del carrusel */
+/* ----- Contenedor principal del carrusel ----- */
 #carousel-container {
   display: flex;
   align-items: center;
@@ -9,7 +9,7 @@
   overflow: hidden;
 }
 
-/* Contenedor del carrusel (propiedades) */
+/* ----- Contenedor del carrusel (propiedades) ----- */
 #available-properties {
   display: flex;
   height: 500px;
@@ -18,16 +18,17 @@
   scroll-snap-type: x mandatory;
   max-width: 100%;
   align-items: center;
+  white-space: nowrap;
 }
 
-/* Tarjetas */
+/* ----- Tarjetas del carrusel ----- */
 .cardcontainer {
-  flex: auto;
-  width: 100%;
+  flex: 0 0 auto;
+  width: 300px;
   height: 90%;
   max-width: 300px;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background: white;
   scroll-snap-align: start;
@@ -35,18 +36,19 @@
   position: relative;
 }
 
+/* Efecto de hover en la tarjeta */
 .cardcontainer:hover {
   transform: scale(1.05);
 }
 
-/* Imagen de la tarjeta */
+/* ----- Imagen de la tarjeta ----- */
 .photo img {
   width: 100%;
   height: 200px;
   object-fit: cover;
 }
 
-/* Contenedor del contenido */
+/* ----- Contenedor del contenido de la tarjeta ----- */
 .content {
   padding: 10px;
   width: 100%;
@@ -56,11 +58,12 @@
   flex-direction: column;
 }
 
-P {
+/* Espaciado entre párrafos dentro de la tarjeta */
+p {
   margin-bottom: 10px !important;
 }
 
-/* Título */
+/* ----- Estilos del título de la tarjeta ----- */
 .txt4 {
   font-size: 18px;
   font-weight: bold;
@@ -70,16 +73,17 @@ P {
   text-overflow: ellipsis;
 }
 
-/* Ubicación */
+/* ----- Estilos de la ubicación ----- */
 .txt5 {
   font-size: 16px;
   color: #2b2b2b;
   overflow: hidden;
   font-weight: 500;
   text-overflow: ellipsis;
+  white-space: normal; 
 }
 
-/* Descripción */
+/* ----- Estilos de la descripción ----- */
 .txt2 {
   font-size: 14px;
   color: #464646;
@@ -88,9 +92,11 @@ P {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  white-space: normal; 
+  min-height: 2.8em;
 }
 
-
+/* ----- Footer de la tarjeta ----- */
 .cardfooter {
   position: absolute;
   bottom: 0;
@@ -101,11 +107,12 @@ P {
   padding: 10px;
 }
 
+/* Botón "Read More" dentro de la tarjeta */
 #btn-read-more {
   position: absolute;
 }
 
-/* Botones de navegación */
+/* ----- Botones de navegación ----- */
 .btn {
   position: absolute;
   bottom: 10px;
@@ -121,6 +128,25 @@ P {
   z-index: 10;
 }
 
+/* Estilos generales de los botones prev y next */
+button.prev,
+button.next {
+  background-color: transparent;
+  border: 0;
+  padding: 10px;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* Agrega sombra al hacer clic en los botones */
+button.prev:active, 
+button.next:active {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
+  transform: scale(0.95);
+}
+
+/* Posicionamiento de los botones de navegación */
 .prev {
   left: 10px;
   margin: 0 10px;
@@ -131,9 +157,10 @@ P {
   margin: 0 10px;
 }
 
+/* ----- Importación de la fuente Roboto ----- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-/* Estilo del título */
+/* ----- Estilo del títulos ----- */
 h1 {
   font-size: 2.5rem;
   font-family: 'Roboto';
@@ -144,25 +171,29 @@ h1 {
   letter-spacing: 1px;
 }
 
+h1#map-title {
+  margin-bottom: 15px !important;
+  letter-spacing: 1px;
+}
+
 h2 {
   font-size: 20px !important;
   font-family: 'Roboto';
   font-weight: 100 !important;
 }
 
-/* ----- Footer de la tarjeta ----- */
+/* ----- Estilos Responsivos ----- */
 
-/* Responsivo */
+
 @media (max-width: 768px) {
   .cardcontainer {
     width: 80%;
-    /* Ajustar el tamaño en móviles */
   }
 }
+
 
 @media (max-width: 480px) {
   .cardcontainer {
     width: 100%;
-    /* Una tarjeta por vez en pantallas más pequeñas */
   }
 }

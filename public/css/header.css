@@ -1,17 +1,17 @@
+/* ----- General styles ----- */
 html {
     scroll-behavior: smooth;
 }
-
-
 
 a {
     text-decoration: none !important;
 }
 
+/* ----- Header ----- */
 #header {
     height: 200px;
     background-image: url('/images/laGeria.jpg');
-    background-position-y: -150px;
+    background-position: center center;  /* Centra la imagen de fondo */
     background-size: cover;
     background-repeat: no-repeat;
     margin-bottom: 30px;
@@ -21,10 +21,12 @@ a {
     justify-content: space-around;
 }
 
+/* ----- Logo within header ----- */
 #nameLogo {
     height: 50%;
 }
 
+/* ----- Header menu ----- */
 #header-menu {
     display: flex;
     justify-content: center;
@@ -32,6 +34,7 @@ a {
     padding-top: 10px;
 }
 
+/* ----- Menu items ----- */
 #header-menu-word {
     margin: 0 20px;
     color: #e3e3e3;
@@ -40,12 +43,45 @@ a {
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
+/* ----- Hover effect for menu items ----- */
 #header-menu-word:hover {
-    transform: scale(1.1);
+    transform: scale(1.3);
     padding: 0px 5px;
     color: #ffffff;
-    border-left: #ffffff 2px solid;
-    border-right: #ffffff 2px solid;
     border-radius: 5px;
     text-shadow: 0 0 10px rgb(6, 6, 6);
+}
+
+/* ----- Responsivo: Ajustes para tablets y móviles ----- */
+
+@media (max-width: 1024px) { /* Tablet */
+    #header {
+        height: 350px;  /* Reduce la altura en tablets */
+        background-position: center center; /* Asegura que la imagen se mantenga centrada */
+    }
+
+    #nameLogo {
+        height: 30%;
+    }
+
+@media (max-width: 768px) { /* Móvil */
+    #header {
+        height: 250px;  /* Menor altura en móviles */
+        background-position: center center;  /* Centra la imagen de fondo */
+    }
+
+    #nameLogo {
+        height: 40%;  /* Reduce el tamaño del logo */
+    }
+
+    #header-menu {
+        flex-direction: column; /* Menú apilado */
+        justify-content: flex-start; /* Alinea al inicio */
+    }
+
+    #header-menu-word {
+        margin: 10px 0;  /* Mayor espaciado entre items */
+        font-size: 16px;  /* Reduce el tamaño del texto */
+        text-align: center; /* Centra los elementos */
+    }
 }
