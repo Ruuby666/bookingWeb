@@ -2,9 +2,10 @@ html {
     scroll-behavior: smooth;
 }
 
+/* General */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto';
 }
 
 .container {
@@ -19,21 +20,23 @@ body {
     padding: 10px;
 }
 
+@media (min-width: 768px) {
+    .content-grid {
+        flex-direction: row;
+    }
+}
+
+/* Icon */
 .fa-caret-left {
     font-size: 40px;
     margin-left: 10px;
 }
 
-@media (min-width: 768px) {
-    .content-grid {
-        flex-direction: row;
-        /* Change to flex-direction: row */
-    }
-}
-
+/* Date Range */
 #daterange {
     padding: 10px 15px !important;
     margin: 10px 0;
+    width: fit-content !important;
 }
 
 /* Property Details */
@@ -52,6 +55,7 @@ body {
     margin-bottom: 15px;
 }
 
+/* Location */
 .location {
     display: flex;
     align-items: center;
@@ -64,6 +68,7 @@ body {
     margin-right: 8px;
 }
 
+/* Features */
 .features {
     display: flex;
     flex-wrap: wrap;
@@ -99,13 +104,7 @@ body {
     flex-direction: column;
 }
 
-.description p {
-    margin-bottom: 5px;
-    font-size: 18px;
-    line-height: 1.7;
-    color: #7f8c8d;
-}
-
+/* Description */
 .description h2 {
     font-size: 1.8rem;
     font-weight: bold;
@@ -113,6 +112,14 @@ body {
     color: #34495e;
 }
 
+.description p {
+    margin-bottom: 5px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: #7f8c8d;
+}
+
+/* Extra Features */
 .extra-features h5 {
     font-size: 1.6em;
     margin: 15px 0 10px 0;
@@ -134,6 +141,7 @@ body {
 .extra-features ul li strong {
     font-weight: 600;
     margin-right: 10px;
+    font-size: 20px;
 }
 
 .extra-features ul li i {
@@ -141,9 +149,11 @@ body {
     margin-right: 8px;
 }
 
+/* Contact Form */
 .contact-form {
     display: grid;
     gap: 1rem;
+    font-weight: 100;
 }
 
 .form-group {
@@ -152,14 +162,17 @@ body {
 }
 
 .form-group label {
-    font-weight: bold;
+    font-weight: lighter;
+    font-size: 25px;
 }
 
 .form-group input,
 .form-group textarea {
     padding: 0.5rem;
     border: 1px solid #ddd;
-    border-radius: 0.25rem;
+    border-radius: 5px;
+    font-size: 20px;
+
 }
 
 .form-group textarea {
@@ -192,8 +205,6 @@ body {
     scrollbar-width: thin;
     height: 1554px;
     border-radius: 8px;
-    overflow-y: auto;
-    scrollbar-width: thin;
 }
 
 .main-image {
@@ -212,7 +223,7 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Thumbnail image styling */
+/* Thumbnail Gallery */
 .thumbnail-gallery {
     flex-grow: 1;
     display: grid;
@@ -223,7 +234,7 @@ body {
     grid-auto-flow: dense;
 }
 
-/* Thumbnail image */
+/* Thumbnail Images */
 .thumbnail {
     width: 100%;
     height: 100%;
@@ -246,6 +257,7 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Scrollbar */
 .thumbnail-gallery::-webkit-scrollbar {
     width: 8px;
 }
@@ -259,8 +271,7 @@ body {
     background-color: #555;
 }
 
-
-/* Pop Up images */
+/* Popup */
 .popup {
     display: none;
     position: fixed;
@@ -279,6 +290,7 @@ body {
     max-height: 90%;
 }
 
+/* Close Button */
 .close {
     position: absolute;
     top: 10px;
@@ -286,9 +298,9 @@ body {
     color: white;
     font-size: 30px;
     cursor: pointer;
-    }
+}
 
-
+/* Navigation Arrows */
 .previous,
 .next-one {
     position: absolute;

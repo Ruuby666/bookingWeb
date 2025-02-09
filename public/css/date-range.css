@@ -50,48 +50,48 @@
 }
 
 /* ----- Mejora en el diseño responsivo ----- */
-@media (max-width: 1024px) {  /* Tablet */
+@media (max-width: 1024px) {  
     .daterange-container {
-        gap: 15px;  /* Menor separación entre los elementos */
+        gap: 15px; 
     }
 
     #daterange {
-        width: 30%;  /* Hace que el input ocupe un 70% del ancho */
-        font-size: 16px;  /* Ajuste el tamaño del texto en el input */
+        width: 30%;
+        font-size: 16px; 
     }
 
     .daterange-container h5 {
-        font-size: 1.2rem;  /* Reduce el tamaño de la fuente del título */
+        font-size: 1.2rem; 
     }
 }
 
-@media (max-width: 768px) {  /* Móvil */
+@media (max-width: 768px) { 
     .daterange-container {
-        gap: 10px;  /* Espaciado aún menor en pantallas más pequeñas */
+        gap: 10px; 
     }
 
     #daterange {
-        width: 40%;  /* Ocupa casi todo el ancho disponible */
-        font-size: 14px;  /* Ajuste del tamaño de la fuente */
+        width: 40%;
+        font-size: 16px;
     }
 
     .daterange-container h5 {
-        font-size: 1rem;  /* Reduce aún más el tamaño del título en pantallas pequeñas */
+        font-size: 1rem;
     }
 }
 
-@media (max-width: 458px) {  /* Móvil */
+@media (max-width: 458px) { 
     .daterange-container {
         flex-direction: column;
-        gap: 10px;  /* Espaciado aún menor en pantallas más pequeñas */
+        gap: 10px; 
     }
 
     #daterange {
-        width: 40%;  /* Ocupa casi todo el ancho disponible */
-        font-size: 14px;  /* Ajuste del tamaño de la fuente */
+        width: 50%;
+        font-size: 16px;
     }
 
     .daterange-container h5 {
-        font-size: 1rem;  /* Reduce aún más el tamaño del título en pantallas pequeñas */
+        font-size: 1rem; 
     }
 }

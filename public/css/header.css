@@ -52,8 +52,11 @@ a {
     text-shadow: 0 0 10px rgb(6, 6, 6);
 }
 
-/* ----- Responsivo: Ajustes para tablets y móviles ----- */
+/* ----- Importación de la fuente Roboto ----- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+
+/* ----- Responsivo: Ajustes para tablets y móviles ----- */
 @media (max-width: 1024px) { /* Tablet */
     #header {
         height: 350px;  /* Reduce la altura en tablets */
@@ -63,7 +66,7 @@ a {
     #nameLogo {
         height: 30%;
     }
-
+}
 @media (max-width: 768px) { /* Móvil */
     #header {
         height: 250px;  /* Menor altura en móviles */
@@ -83,5 +86,10 @@ a {
         margin: 10px 0;  /* Mayor espaciado entre items */
         font-size: 16px;  /* Reduce el tamaño del texto */
         text-align: center; /* Centra los elementos */
+    }
+}
+@media (max-width: 468px) { /* Móvil */
+    #nameLogo {
+        height: 30%;  /* Reduce el tamaño del logo */
     }
 }
