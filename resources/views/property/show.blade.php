@@ -104,7 +104,7 @@
                         <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
                     </div>
                     <input type="hidden" name="property_id" value="{{ $property->id }}">
-                    <button type="submit">Send Your Request</button>
+                    <button type="submit">Send Your Request</button> <!-- TODO: Tener cuidado de como estoy enviando las cosas -->
                 </form>
 
             </div>

@@ -72,4 +72,12 @@ class PropertyController extends Controller
         Storage::put('properties.json', json_encode($properties, JSON_PRETTY_PRINT));
         error_log("Archivo properties.json actualizado tras creación o modificación de propiedad.");
     }
+
+    public function destroy($id)
+{
+    $property = Property::findOrFail($id);
+    $property->delete();
+
+    return redirect()->route('admin.properties')->with('success', 'Property deleted successfully.');
+}
 }

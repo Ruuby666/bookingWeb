@@ -84,7 +84,7 @@ a {
 
     #header-menu-word {
         margin: 10px 0;  /* Mayor espaciado entre items */
-        font-size: 16px;  /* Reduce el tamaño del texto */
+        font-size: 30px;  /* Reduce el tamaño del texto */
         text-align: center; /* Centra los elementos */
     }
 }

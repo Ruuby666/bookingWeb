@@ -4,7 +4,7 @@ html, body{
 }
 
 #footer {
-    position: sticky !important;
+    position: sticky;
     bottom: 0;
     left: 0;
     width: 100%;
