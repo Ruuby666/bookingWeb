@@ -11,4 +11,5 @@ use Illuminate\Support\Facades\Auth;
 // para un futuro
 class AdminMiddleware extends Middleware
 {
+    //TODO: Implementar middleware para admin
 }

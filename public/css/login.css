@@ -1,5 +1,7 @@
-body {
-    margin: 0px;
+html, body {
+    margin: 0;
+    padding: 0; 
+    width: 100%;
 }
 
 .content {
@@ -10,8 +12,8 @@ body {
 }
 
 .main {
-    width: 350px;
-    height: 420px;
+    width: 50%;
+    height: 40%;
     overflow: hidden;
     border-radius: 10px;
     box-shadow: 5px 20px 50px #000;
@@ -23,7 +25,7 @@ body {
 
 label {
     color: #fff;
-    font-size: 2.3em;
+    font-size: 26px;
     justify-content: center;
     display: flex;
     margin: 50px;
@@ -34,12 +36,13 @@ label {
 
 input {
     width: 60%;
-    height: 10px;
+    height: fit-content;
     background: #e0dede;
     justify-content: center;
     display: flex;
     margin: 20px auto;
     padding: 12px;
+    font-size: 26px;
     border: none;
     outline: none;
     border-radius: 5px;
@@ -71,10 +74,17 @@ button:hover {
     height: 460px;
     background: #eee;
     border-radius: 60% / 10%;
+    
 }
 
 .login label {
     color: #062bcd;
+    font-size: 30px;
+}
+
+#footer {
+    position: absolute !important;
+    width: -webkit-fill-available !important;
 }
 
 .alert-danger {
@@ -97,3 +107,19 @@ button:hover {
         opacity: 0;
     }
 }
+
+@media (max-width: 480px) {
+    .main {
+        width: 50%;
+        height: 40%;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 5px 20px 50px #000;
+    }
+
+    #header-menu-word {
+        flex-direction: column;
+        justify-content: flex-start;
+        font-size: 30px;
+    }
+  }

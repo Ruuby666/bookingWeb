@@ -7,7 +7,7 @@
     @if(session('is_admin'))
         <a id="a-footer" href="{{ route('admin.logout') }}">Log out</a> 
     @else
-        <a id="a-footer" href="{{ route('login') }}">Log in</a>
+        
     @endif
 </div>
 </div>

@@ -1,176 +1,197 @@
-/* Estilo básico del título */
-h1 {
-    text-align: center;
-    color: #333;
-    font-size: 2rem;
-    margin-bottom: 20px;
+/* ----- Contenedor principal del carrusel ----- */
+#carousel-container {
+  display: flex;
+  align-items: center;
+  height: 500px;
+  justify-content: center;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
 }
 
-/* Contenedor principal con scroll horizontal */
-.container {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-start;
-    gap: 15px; /* Espacio entre tarjetas */
-    padding: 50px 20px 20px 20px;    ;
-    overflow-x: auto; /* Scroll horizontal */
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch; /* Mejora el scroll en dispositivos táctiles */
-    white-space: nowrap; /* Mantiene los elementos en una sola línea */
+/* ----- Contenedor del carrusel (propiedades) ----- */
+#available-properties {
+  display: flex;
+  height: 500px;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  max-width: 100%;
+  align-items: center;
+  white-space: nowrap;
 }
 
-/* Ocultar scrollbar horizontal en diferentes navegadores */
-.container::-webkit-scrollbar {
-    display: none;
-}
-
-.container {
-    -ms-overflow-style: none; /* IE y Edge */
-    scrollbar-width: none; /* Firefox */
-}
-
-/* Tarjeta con ajuste de tamaño y efecto hover */
+/* ----- Tarjetas del carrusel ----- */
 .cardcontainer {
-    width: 300px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    overflow: hidden;
-    position: relative;
+  flex: 0 0 auto;
+  width: 300px;
+  height: 90%;
+  max-width: 300px;
+  border-radius: 10px;
+  overflow: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background: white;
+  scroll-snap-align: start;
+  transition: transform 0.3s ease-in-out;
+  position: relative;
 }
 
+/* Efecto de hover en la tarjeta */
 .cardcontainer:hover {
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-    transform: translateY(-30px); /* Efecto de levantar la tarjeta al hacer hover */
+  transform: scale(1.05);
 }
 
-/* Imagen dentro de la tarjeta centrada y adaptada */
-.photo {
-    height: 285px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
-}
-
+/* ----- Imagen de la tarjeta ----- */
 .photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* La imagen se adapta al contenedor manteniendo su relación de aspecto */
-    transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
-    ;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
 
-/* Efecto de zoom en la imagen al hacer hover */
-.cardcontainer:hover .photo img {
-    transform: scale(1.1); /* Zoom suave al pasar el mouse */
-}
-
-/* Etiqueta sobre la foto */
-.photos {
-    width: 90px;
-    height: 30px;
-    background-color: #E74C3C;
-    color: white;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 0.9rem;
-    line-height: 30px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-/* Contenido de la tarjeta */
+/* ----- Contenedor del contenido de la tarjeta ----- */
 .content {
-    padding: 10px 15px;
-    text-align: center;
-    flex-grow: 1;
-    transition:  transformtext 0.3s ease;
-
+  padding: 10px;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Título */
+/* Espaciado entre párrafos dentro de la tarjeta */
+p {
+  margin-bottom: 10px !important;
+}
+
+/* ----- Estilos del título de la tarjeta ----- */
 .txt4 {
-    font-size: 1.4rem;
-    color: #333;
-    margin-bottom: 5px;
-
+  font-size: 18px;
+  font-weight: bold;
+  color: #1b1b1b;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-/* Ubicación */
+/* ----- Estilos de la ubicación ----- */
 .txt5 {
-    font-size: 1.1rem;
-    color: #E74C3C;
-    margin-bottom: 10px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  font-size: 16px;
+  color: #2b2b2b;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: normal; 
 }
 
-/* Descripción */
+/* ----- Estilos de la descripción ----- */
 .txt2 {
-    font-size: 0.9rem;
-    color: #666;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  font-size: 14px;
+  color: #464646;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  white-space: normal; 
+  min-height: 2.8em;
 }
 
-/* Pie de la tarjeta */
+/* ----- Footer de la tarjeta ----- */
 .cardfooter {
-    padding: 10px 15px;
-    text-align: center;
-    background-color: white;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  padding: 10px;
 }
 
-/* Botón de acción */
+/* Botón "Read More" dentro de la tarjeta */
+#btn-read-more {
+  position: absolute;
+}
+
+/* ----- Botones de navegación ----- */
 .btn {
-    background-color: #3498db;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 2rem;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10;
 }
 
-.btn:hover {
-    background-color: #2980b9;
+/* Estilos generales de los botones prev y next */
+button.prev,
+button.next {
+  background-color: transparent;
+  border: 0;
+  padding: 10px;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
 }
 
-/* Icono de like */
-#heart {
-    cursor: pointer;
-    margin-left: 10px;
+/* Agrega sombra al hacer clic en los botones */
+button.prev:active, 
+button.next:active {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
+  transform: scale(0.95);
 }
 
-.like {
-    font-size: 1.2rem;
-    color: #333;
+/* Posicionamiento de los botones de navegación */
+.prev {
+  left: 10px;
+  margin: 0 10px;
 }
 
-.fa-gratipay {
-    margin-right: 5px;
-    transition: color 0.3s ease;
+.next {
+  right: 10px;
+  margin: 0 10px;
 }
 
-.fa-gratipay:hover {
-    color: #E74C3C;
+/* ----- Estilo del títulos ----- */
+h1 {
+  font-size: 2.5rem;
+  font-family: 'Roboto';
+  font-weight: 100 !important;
+  color: #333;
+  text-align: center;
+  margin-bottom: 0 !important;
+  letter-spacing: 1px;
 }
 
-/* Ajustes para pantallas pequeñas */
+h1#map-title {
+  margin-bottom: 15px !important;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-size: 20px !important;
+  font-family: 'Roboto';
+  font-weight: 100 !important;
+}
+
+/* ----- Estilos Responsivos ----- */
+
+
 @media (max-width: 768px) {
-    .container {
-        flex-wrap: wrap; /* Tarjetas en varias filas */
-    }
+  .cardcontainer {
+    width: 80%;
+  }
+}
 
-    .cardcontainer {
-        width: 90%;
-        margin-bottom: 20px;
-    }
+
+@media (max-width: 480px) {
+  .cardcontainer {
+    width: 90%;
+    overflow-x: hidden;
+  }
 }

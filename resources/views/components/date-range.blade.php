@@ -15,7 +15,7 @@
 
 <body>
     <div class="daterange-container">
-        <h5>Select a Date Range</h5>
+        <h2>Select a Date Range</h2>
         @csrf
         <input type="text" id="daterange" placeholder="Select a date range" />
     </div>

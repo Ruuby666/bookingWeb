@@ -30,6 +30,8 @@ Route::post('/admin/reservations/pending/update/{id}', [AdminController::class, 
 
 Route::put('/admin/properties/update/{property}', [AdminController::class, 'updateProperty'])->name('admin.properties.update');
 
+Route::delete('/properties/{id}', [PropertyController::class, 'destroy'])->name('properties.destroy');
+
 Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email');
 
 Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');

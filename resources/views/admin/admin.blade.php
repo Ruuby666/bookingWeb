@@ -39,32 +39,39 @@
                 </thead>
                 <tbody>
                     @foreach ($properties as $property)
-                        <tr>
-                            <td>{{ $property->title }}</td>
-                            <td class="description-cell" title="{{ $property->description }}">{{ $property->description }}</td>
-                            <td>{{ $property->location }}</td>
-                            <td>{{ $property->price_per_night }}</td>
-                            <td>{{ $property->capacity }}</td>
-                            <td>{{ $property->size}} m²</td>
-                            <td>{{ $property->bedrooms }}</td>
-                            <td>{{ $property->bathrooms }}</td>
-                            <td>{{ $property->tv ? 'Yes' : 'No' }}</td>
-                            <td>{{ $property->entertainment }}</td>
-                            <td>{{ $property->parking ? 'Yes' : 'No' }}</td>
-                            <td>{{ $property->pool ? 'Yes' : 'No' }}</td>
-                            <td>{{ $property->garden ? 'Yes' : 'No' }}</td>
-                            <td>{{ $property->safeBox ? 'Yes' : 'No' }}</td>
-                            <td>{{ $property->terrace ? 'Yes' : 'No' }}</td>
-                            <td>{{ $property->wifi ? 'Yes' : 'No' }}</td>
-                            <td>{{ $property->lat }}</td>
-                            <td>{{ $property->lng }}</td>
-                        </tr>
+                    <tr>
+                        <td>{{ $property->title }}</td>
+                        <td class="description-cell" title="{{ $property->description }}">{{ $property->description }}</td>
+                        <td>{{ $property->location }}</td>
+                        <td>{{ $property->price_per_night }}</td>
+                        <td>{{ $property->capacity }}</td>
+                        <td>{{ $property->size}} m²</td>
+                        <td>{{ $property->bedrooms }}</td>
+                        <td>{{ $property->bathrooms }}</td>
+                        <td>{{ $property->tv ? 'Yes' : 'No' }}</td>
+                        <td>{{ $property->entertainment }}</td>
+                        <td>{{ $property->parking ? 'Yes' : 'No' }}</td>
+                        <td>{{ $property->pool ? 'Yes' : 'No' }}</td>
+                        <td>{{ $property->garden ? 'Yes' : 'No' }}</td>
+                        <td>{{ $property->safeBox ? 'Yes' : 'No' }}</td>
+                        <td>{{ $property->terrace ? 'Yes' : 'No' }}</td>
+                        <td>{{ $property->wifi ? 'Yes' : 'No' }}</td>
+                        <td>{{ $property->lat }}</td>
+                        <td>{{ $property->lng }}</td>
+                        <td>
+                            <form action="{{ route('properties.destroy', $property->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this property?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-delete">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
         <div class="buttons">
-           <a href="{{ route('properties.create') }}" class="btn">Add New Property</a>
+            <a href="{{ route('properties.create') }}" class="btn">Add New Property</a>
         </div>
     </div>
     <div id="session-data"

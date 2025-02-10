@@ -49,7 +49,7 @@
                             <td class="pending-action">
                                 <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
                                     @csrf
-                                    <button type="submit" class="mark-completed-button">Mark as Completed</button>
+                                    <button type="submit" class="mark-completed-button">Mark as Confirmed</button>
                                 </form>
                             </td>
                         </tr>

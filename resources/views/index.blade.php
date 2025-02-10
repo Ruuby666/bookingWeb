@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>BookingOcra</title>
 </head>
@@ -19,32 +20,38 @@
 
     @include('components.header')
 
-    <h1 id="properties-section">Properties</h1>
-
     @include('components.date-range', ['propertyWithImages' => $propertyWithImages])
 
-    <div class="container" id="available-properties">
-        @foreach ($properties as $property)
-        <a href="/property/{{ $property['id'] }}">
-            <div class="cardcontainer">
-                <div class="photo">
-                    <img src="/images/{{ $property['images_div'] }}/{{$propertyWithImages[$property['id']]}}"
-                        alt="Image not found" style="height: 200px; width: 300px;">
+    <h1>Propiedades Disponibles</h1>
+
+    <div id="carousel-container">
+        <button class="prev">&#10094;</button>
+        <div id="available-properties">
+            @foreach ($properties as $property)
+            <a href="/property/{{ $property['id'] }}">
+                <div class="cardcontainer">
+                    <div class="photo">
+                        <img src="/images/{{ $property['images_div'] }}/{{$propertyWithImages[$property['id']]}}"
+                            alt="Not found" style="height: 200px; width: 300px;">
+                    </div>
+                    <div class="content">
+                        <p class="txt4">{{ $property['title'] }}</p>
+                        <p class="txt5">{{ $property['location'] }}</p>
+                        <p class="txt2">{{ $property['description'] }}</p>
+                    </div>
+                    <div class="cardfooter">
+                        <a id="btn-read-more" class="waves-effect waves-light btn" href="/property/{{ $property['id'] }}">Read More</a>
+                    </div>
                 </div>
-                <div class="content">
-                    <p class="txt4">{{ $property['title'] }}</p>
-                    <p class="txt5">{{ $property['location'] }}</p>
-                    <p class="txt2">{{ $property['description'] }}</p>
-                </div>
-                <div class="cardfooter">
-                    <p><a class="waves-effect waves-light btn" href="/property/{{ $property['id'] }}">Read More</a></p>
-                </div>
-            </div>
-        </a>
-        @endforeach
+            </a>
+            @endforeach
+        </div>
+        <button class="next">&#10095;</button> 
     </div>
 
-    <h1 id="map-section">Map</h1>
+
+    <h1 id="map-title">Map</h1>
+    
     <div id="map"></div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
@@ -134,6 +141,41 @@
                 `;
             return content;
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const carousel = document.getElementById("available-properties");
+            const prevButton = document.querySelector(".prev");
+            const nextButton = document.querySelector(".next");
+
+            // Validar si hay tarjetas en el carrusel
+            if (!carousel || !prevButton || !nextButton) {
+                console.error("Error: No se encontraron los elementos del carrusel.");
+                return;
+            }
+
+            let cardWidth = document.querySelector(".cardcontainer").offsetWidth + 20;
+
+            // Función para mover el carrusel a la izquierda
+            prevButton.addEventListener("click", function() {
+                carousel.scrollBy({
+                    left: -cardWidth,
+                    behavior: "smooth"
+                });
+            });
+
+            // Función para mover el carrusel a la derecha
+            nextButton.addEventListener("click", function() {
+                carousel.scrollBy({
+                    left: cardWidth,
+                    behavior: "smooth"
+                });
+            });
+
+            // Ajustar el ancho de desplazamiento si la pantalla cambia de tamaño
+            window.addEventListener("resize", function() {
+                cardWidth = document.querySelector(".cardcontainer").offsetWidth + 20;
+            });
+        });
     </script>
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ env('API_GOOGLE_MAPS_KEY') }}&loading=async&callback=initMap&v=weekly&libraries=marker,core,places,routes,geocoding,geometry,elevation,drawing,visualization"
