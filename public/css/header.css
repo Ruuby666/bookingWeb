@@ -74,7 +74,7 @@ a {
     }
 
     #nameLogo {
-        height: 40%;  /* Reduce el tamaño del logo */
+        height: 35%;  /* Reduce el tamaño del logo */
     }
 
     #header-menu {
@@ -84,7 +84,7 @@ a {
 
     #header-menu-word {
         margin: 10px 0;  /* Mayor espaciado entre items */
-        font-size: 30px;  /* Reduce el tamaño del texto */
+        font-size: 20px;  /* Reduce el tamaño del texto */
         text-align: center; /* Centra los elementos */
     }
 }
@@ -92,4 +92,5 @@ a {
     #nameLogo {
         height: 30%;  /* Reduce el tamaño del logo */
     }
+
 }
