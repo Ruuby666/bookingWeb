@@ -88,6 +88,10 @@
                     @csrf
                     @include('components.show-date-range')
                     <div class="form-group">
+                        <label for="guests">Guests</label>
+                        <input id="guests" name="guests" type="number" placeholder="Guests" required>
+                    </div>
+                    <div class="form-group">
                         <label for="name">Full Name</label>
                         <input id="name" name="name" type="text" placeholder="Enter your name" required>
                     </div>

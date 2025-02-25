@@ -5,6 +5,8 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\UserController;
 use App\Mail\ContactMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
@@ -43,4 +45,7 @@ Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->
 Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update'); // Actualizar propiedad
 
 
-
+// Resource routes
+Route::resource('users', UserController::class);
+Route::resource('properties', PropertyController::class);
+Route::resource('reservations', ReservationController::class);

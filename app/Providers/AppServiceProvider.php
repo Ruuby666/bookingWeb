@@ -5,15 +5,16 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User; 
+use App\Models\User;
 use App\Models\Property;
 use App\Models\Reservation;
+use App\Services\ReservationService;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        
     }
 
      public function boot(): void

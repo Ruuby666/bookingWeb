@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Property;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +17,7 @@ class PropertiesTableSeeder extends Seeder
             {
                 "id": 1,
                 "title": "Casa Delfin Playa Blanca",
-                "description": "Situated in Playa Blanca, 1.4 km from Playa Dorada and 1.6 km from Playa Blanca...",
+                "description": "Casa Delfín Playa Blanca está en Playa Blanca, a 17 min a pie de Playa Dorada y a 1,6 km de Playa Blanca, y ofrece aire acondicionado. Esta villa tiene piscina privada, jardín, zona de barbacoa, wifi gratis y parking privado gratis. Esta villa dispone de una terraza con vistas a la piscina y también incluye TV de pantalla plana vía satélite, una cocina bien equipada con nevera, lavavajillas y horno, y 2 baños con ducha y secador de pelo. En la villa, la clientela puede disfrutar de bañera de hidromasaje. La clientela de este alojamiento puede practicar senderismo en los alrededores o disfrutar de la piscina al aire libre abierta todo el año. Parque Nacional de Timanfaya está a 20 km del alojamiento, y Montañas de Fuego está a 21 km. El aeropuerto (Aeropuerto de Lanzarote) está a 28 km.",
                 "location": "23 Calle Bonilla, 35580 Playa Blanca, Spain",
                 "price_per_night": "135.00",
                 "capacity": 6,
@@ -40,7 +39,7 @@ class PropertiesTableSeeder extends Seeder
             {
                 "id": 2,
                 "title": "El Galeon",
-                "description": "Set in Playa Blanca, 500 metres from Playa Blanca and less than 1 km from Flamingo Beach...",
+                "description": "El Galeón está en Playa Blanca, a 6 min a pie de Playa Blanca y a 900 metros de Playa Flamingo, y ofrece alojamiento con aire acondicionado, balcón y wifi gratis. El alojamiento ofrece vistas al mar y a la montaña y está a 13 min a pie de Playa Dorada. El apartamento tiene 1 dormitorio, 1 baño, ropa de cama, toallas, TV de pantalla plana con canales vía satélite, zona de comedor, cocina totalmente equipada y terraza con vistas a la ciudad. El apartamento ofrece barbacoa. Hay servicio de alquiler de bicicletas y servicio de alquiler de coches en El Galeón. Parque Nacional de Timanfaya está a 20 km del alojamiento, y Montañas de Fuego está a 22 km. El aeropuerto más cercano (Aeropuerto de Lanzarote) está a 30 km.",
                 "location": "Calle Chalana, 14., 35580 Playa Blanca, Spain",
                 "price_per_night": "90.00",
                 "capacity": 2,
@@ -62,7 +61,7 @@ class PropertiesTableSeeder extends Seeder
             {
                 "id": 3,
                 "title": "Marlin I Puerto del Carmen",
-                "description": "Marlin I Puerto del Carmen se encuentra en Puerto del Carmen, a 10 min a pie de Playa Chica...",
+                "description": "El Marlin I Puerto del Carmen ofrece alojamiento con WiFi gratuita, aire acondicionado y piscina con vistas en Puerto del Carmen, a menos de 1 km de Playa Chica y a 13 minutos a pie de la playa de Puerto del Carmen.El establecimiento tiene vistas a la piscina y está a 3,4 km del complejo de golf Lanzarote Golf Resort y a 4,4 km del Rancho Texas Park. El apartamento también dispone de zona de estar al aire libre. El apartamento cuenta con 1 dormitorio, 1 baño, ropa de cama, toallas, TV de pantalla plana con canales vía satélite, cocina totalmente equipada y terraza con vistas al mar. Una entrada privada conduce a los huéspedes al apartamento, donde pueden disfrutar de vino o champán y frutas. Este apartamento es para no fumadores y está insonorizado. Se pueden realizar visitas turísticas cerca del establecimiento. El Marlin I Puerto del Carmen está a 14 km del monumento al Campesino y a 18 km de las Montañas de Fuego. El aeropuerto de Lanzarote está a 7 km.",
                 "location": "Calle Teide 43 - Aptos Rincon C1, 35518 Puerto del Carmen, España",
                 "price_per_night": "80.00",
                 "capacity": 2,
@@ -84,7 +83,7 @@ class PropertiesTableSeeder extends Seeder
             {
                 "id": 4,
                 "title": "Marlin II Puerto del Carmen",
-                "description": "Marlin II Puerto del Carmen se encuentra en Puerto del Carmen, a 11 min a pie de Playa Chica...",
+                "description": "El Marlin II Puerto del Carmen ofrece alojamiento con aire acondicionado, piscina con vistas al mar y terraza en Puerto del Carmen. El establecimiento tiene vistas a la piscina y está a menos de 1 km de Playa Chica y a 14 minutos a pie de la playa de Puerto del Carmen. Este apartamento para no fumadores ofrece WiFi gratuita en todas las instalaciones y solárium. El apartamento está situado en la planta baja y dispone de 1 dormitorio, TV de pantalla plana con canales vía satélite y cocina totalmente equipada con microondas, tostadora, lavadora, nevera y utensilios de cocina. Se proporcionan toallas y ropa de cama en el apartamento. El establecimiento tiene zona de comedor al aire libre. El apartamento ofrece servicio de alquiler de bicicletas y coches. El complejo de golf Lanzarote se encuentra a 3,4 km del Marlin II Puerto del Carmen, mientras que el Rancho Texas Park está a 4,4 km. El aeropuerto de Lanzarote está a 7 km.",
                 "location": "Calle Teide 43 - Aptos Rincon C2, 35518 Puerto del Carmen, España",
                 "price_per_night": "70.00",
                 "capacity": 2,
@@ -108,29 +107,33 @@ class PropertiesTableSeeder extends Seeder
         $properties = json_decode($propertiesJson, true);
 
         // Insertar las propiedades en la base de datos
-        foreach ($properties as $property) {
-            Property::create([
-                'id' => $property['id'],
-                'title' => $property['title'],
-                'description' => $property['description'],
-                'location' => $property['location'],
-                'price_per_night' => $property['price_per_night'],
-                'capacity' => $property['capacity'],
-                'size' => $property['size'],
-                'bedrooms' => $property['bedrooms'],
-                'bathrooms' => $property['bathrooms'],
-                'images_div' => $property['images_div'],
-                'tv' => $property['tv'],
-                'entertainment' => $property['entertainment'],
-                'parking' => $property['parking'],
-                'pool' => $property['pool'],
-                'garden' => $property['garden'],
-                'safeBox' => $property['safeBox'],
-                'terrace' => $property['terrace'],
-                'wifi' => $property['wifi'],
-                'lat' => $property['lat'],
-                'lng' => $property['lng'],
-            ]);
+        if (is_array($properties)) {
+            foreach ($properties as $property) {
+                Property::create([
+                    'id' => $property['id'],
+                    'title' => $property['title'],
+                    'description' => $property['description'],
+                    'location' => $property['location'],
+                    'price_per_night' => $property['price_per_night'],
+                    'capacity' => $property['capacity'],
+                    'size' => $property['size'],
+                    'bedrooms' => $property['bedrooms'],
+                    'bathrooms' => $property['bathrooms'],
+                    'images_div' => $property['images_div'],
+                    'tv' => $property['tv'],
+                    'entertainment' => $property['entertainment'],
+                    'parking' => $property['parking'],
+                    'pool' => $property['pool'],
+                    'garden' => $property['garden'],
+                    'safeBox' => $property['safeBox'],
+                    'terrace' => $property['terrace'],
+                    'wifi' => $property['wifi'],
+                    'lat' => $property['lat'],
+                    'lng' => $property['lng'],
+                ]);
+            }
+        }else{
+            echo "Error al decodificar el JSON de propiedades.";
         }
     }
 }
