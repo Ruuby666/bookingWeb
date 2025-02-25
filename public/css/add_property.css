@@ -24,14 +24,13 @@ body, html {
     background-color: #ffffff;
     border-radius: 10px;
     padding: 10px 20px;
-    margin: 0px 50px 20px;
+    margin: 0px 50px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 form {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, auto);
     gap: 15px;
     width: 100%;
     max-width: 1000px;
