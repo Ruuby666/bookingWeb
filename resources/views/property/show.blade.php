@@ -108,12 +108,12 @@
                         <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
                     </div>
                     <input type="hidden" name="property_id" value="{{ $property->id }}">
-                    <button type="submit">Send Your Request</button> <!-- TODO: Tener cuidado de como estoy enviando las cosas -->
+                    <button type="submit">Send Your Request</button>
                 </form>
 
             </div>
-
-            <!-- Imágenes del Apartamento -->
+            
+            <!-- Galería de imágenes -->
             <div class="image-gallery">
                 <div class="main-image">
                     <img src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}"

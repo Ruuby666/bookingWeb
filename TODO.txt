@@ -1,0 +1,6 @@
+
+- Crear mensaje de confirmación de que se ha enviado el mensaje de la reserva
+
+- En confirmar las reservas añadir botón de editar para que cuando dos ofertas coincidan puedas hacer una contra oferta
+
+- Tener cuidado de como estoy enviando las cosas -->

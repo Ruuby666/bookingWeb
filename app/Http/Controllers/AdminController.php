@@ -80,7 +80,7 @@ class AdminController extends Controller
     private function updateReservationJson()
     {
         $reservations = Reservation::all()->toArray();
-        Storage::put('reservations.json', json_encode($reservations, JSON_PRETTY_PRINT));
+        Storage::put('reservations.json', encrypt(json_encode($reservations, JSON_PRETTY_PRINT)));
         error_log("Archivo reservations.json actualizado tras creación de usuario.");
     }
 }
