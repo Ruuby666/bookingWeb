@@ -49,6 +49,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         // 🔹 Middleware para proteger rutas de administrador
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'admin' => \App\Http\Middleware\IsAdmin::class,
     ];
 }

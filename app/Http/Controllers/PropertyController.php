@@ -69,7 +69,7 @@ class PropertyController extends Controller
     private function updatePropertiesJson()
     {
         $properties = Property::all()->toArray();
-        Storage::put('properties.json', json_encode($properties, JSON_PRETTY_PRINT));
+        Storage::put('properties.json', encrypt(json_encode($properties, JSON_PRETTY_PRINT)));
         error_log("Archivo properties.json actualizado tras creación o modificación de propiedad.");
     }
 

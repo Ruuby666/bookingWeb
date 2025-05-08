@@ -15,7 +15,14 @@ class AdminController extends Controller
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required']
+            'password' => [
+                'required',
+                'string',
+                'min:8', 
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+            ]
         ]);
 
         $user = User::where('email', $credentials['email'])->first();

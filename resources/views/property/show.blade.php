@@ -54,7 +54,7 @@
                 </div>
                 <div class="description">
                     <h2>Property Description</h2>
-                    <p>{!! nl2br(e($property->description)) !!}</p> {{-- Its like that for the text spaces --}}
+                    <p>{{ nl2br(e($property->description)) }}</p> {{-- Its like that for the text spaces --}}
                 </div>
 
                 <div class="extra-features">

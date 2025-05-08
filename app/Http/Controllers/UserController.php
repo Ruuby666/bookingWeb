@@ -16,7 +16,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'number' => $request->number,
-            'password' => Hash::make('password'),
+            'password' => 'password',
             'is_admin' => false,
         ]);
 
@@ -52,7 +52,7 @@ class UserController extends Controller
     private function updateUsersJson()
     {
         $users = User::all()->toArray();
-        Storage::put('users.json', json_encode($users, JSON_PRETTY_PRINT));
+        Storage::put('users.json', encrypt(json_encode($users, JSON_PRETTY_PRINT)));
         error_log("Archivo users.json actualizado tras creación de usuario.");
     }
 }
