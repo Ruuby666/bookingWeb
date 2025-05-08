@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use  App\Models\Property;
 use App\Models\Reservation;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -16,12 +18,17 @@ class AdminController extends Controller
             'password' => ['required']
         ]);
 
-        if ($credentials['email'] === env('ADMIN_EMAIL') && $credentials['password'] === env('ADMIN_PASSWORD')) {
-            session(['is_admin' => true]);
+        $user = User::where('email', $credentials['email'])->first();
 
-            return redirect()->route('admin.properties')->with('success', 'Logged in as admin.');
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            // Si el usuario es admin, redirigir a la página de propiedades
+            if ($user->isAdmin()) {
+                session(['is_admin' => true]);
+                return redirect()->route('admin.properties')->with('success', 'Logged in as admin.');
+            } else {
+                return back()->with('error', 'You are not authorized to access this page.');
+            }
         }
-
         return back()->with('error', 'Email or password is incorrect.');
     }
 
@@ -67,6 +74,4 @@ class AdminController extends Controller
         Storage::put('reservations.json', json_encode($reservations, JSON_PRETTY_PRINT));
         error_log("Archivo reservations.json actualizado tras creación de usuario.");
     }
-
-
 }

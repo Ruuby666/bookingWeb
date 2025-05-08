@@ -1,6 +1,6 @@
 <?php
 
-namespace database\seeders;
+namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -17,7 +17,7 @@ class AdminUserSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email' => 'oscar@gmail.com',
-            'password' => Hash::make('$2y$12$yvV9Rre6OKb9EQhOL/qxOuJlhMD702heA66vp5pCCqyp3gb1nkpZO'),
+            'password' => 'Oscar1234Q',
             'is_admin' => true,
         ]);
     }
