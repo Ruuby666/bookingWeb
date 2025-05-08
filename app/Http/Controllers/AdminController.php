@@ -8,6 +8,7 @@ use  App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -28,8 +29,9 @@ class AdminController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
-            // Si el usuario es admin, redirigir a la página de propiedades
+
             if ($user->isAdmin()) {
+                Auth::login($user);
                 session(['is_admin' => true]);
                 return redirect()->route('admin.properties')->with('success', 'Logged in as admin.');
             } else {

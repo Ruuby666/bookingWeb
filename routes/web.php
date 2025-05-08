@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
 
 
+
 Route::get('/', [IndexController::class, 'index'])->name('index');
 
 Route::get('/property/{id}', [PropertyController::class, 'show'])->name('property.show');
@@ -22,7 +23,7 @@ Route::post('/admin/login', [AdminController::class, 'loginFunction'])->name('ad
 
 Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email');
 
-Route::middleware(['admin'])->group(function () {
+Route::middleware([IsAdmin::class])->group(function () {
     Route::get('/admin/logout', [AdminController::class, 'logoutFunction'])->name('admin.logout');
 
     Route::get('/admin/properties', [AdminController::class, 'properties'])->name('admin.properties');
