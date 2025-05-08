@@ -59,11 +59,6 @@
                         <td>{{ $property->lat }}</td>
                         <td>{{ $property->lng }}</td>
                         <td>
-                            <form action="{{ route('properties.edit', $property->id) }}" method="GET">
-                                <button type="submit" class="btn-update">Update</button>
-                            </form>
-                        </td>
-                        <td>
                             <form action="{{ route('properties.destroy', $property->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this property?');">
                                 @csrf
                                 @method('DELETE')

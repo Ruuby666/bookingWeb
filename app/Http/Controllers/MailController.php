@@ -8,20 +8,32 @@ use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\UserController;
 use App\Models\Property;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 class MailController extends Controller
 {
+    protected $userController;
+    protected $reservationController;
+
+
+    public function __construct(UserController $userController, ReservationController $reservationController)
+    {
+        $this->userController = $userController;
+        $this->reservationController = $reservationController;
+    }
+
     public function sendEmail(Request $request)
     {
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            $user = $this->createUser($request);
+            $user = $this->userController->store($request);
         }
 
         $data = [
+            'guests'=> $request->guests,
             'name' => $request->name,
             'number' => $request->number,
             'email' => $request->email,
@@ -35,71 +47,15 @@ class MailController extends Controller
         $property = Property::find($request->property_id);
         $data['property'] = $property;
 
-        print_r($data);
-
         $sub = 'New Booking';
 
         try {
             Mail::to('rubensepulvedareal@gmail.com')->send(new ContactMail($data, $sub));
-
-            $this->createReservation($property, $data, $user);
+            $this->reservationController->createReservation($property, $data, $user);
 
             return redirect()->back();
         } catch (\Exception $e) {
             return 'Error sending email: ' . $e->getMessage();
         }
-    }
-
-    private function createReservation($propertytoreserve, $data, $user)
-    {
-        $reservation =  Reservation::create([
-            'property_id' => $propertytoreserve->id,
-            'user_id' =>  $user->id,
-            'check_in' =>  $data['checkIn'],
-            'check_out' =>  $data['checkOut'],
-            'status' => 'pending',
-            'notes' =>  $data['message'],
-            'guests' =>  2,
-            'total_price' => $this->calculateTotalPrice($propertytoreserve->id, $data['checkIn'], $data['checkOut']),
-        ]);
-
-        $this->updateReservationJson();
-        return $reservation;
-    }
-
-    private function updateReservationJson()
-    {
-        $reservations = Reservation::all()->toArray();
-        Storage::put('reservations.json', json_encode($reservations, JSON_PRETTY_PRINT));
-        error_log("Archivo reservations.json actualizado tras creación de usuario.");
-    }
-
-    private function calculateTotalPrice($propertyId, $checkIn, $checkOut)
-    {
-        $property = Property::find($propertyId);
-        $nights = (new \Carbon\Carbon($checkIn))->diffInDays(new \Carbon\Carbon($checkOut));
-
-        return $nights * $property->price_per_night;
-    }
-
-    private function createUser(Request $request)
-    {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'number' => $request->number,
-            'password' => Hash::make('default_password'),
-        ]);
-
-        $this->updateUsersJson();
-
-        return $user;
-    }
-
-    private function updateUsersJson()
-    {
-        $users = User::all()->toArray();
-        Storage::put('users.json', json_encode($users, JSON_PRETTY_PRINT));
-        error_log("Archivo users.json actualizado tras creación de usuario.");
     }
 }

@@ -54,7 +54,7 @@
                 </div>
                 <div class="description">
                     <h2>Property Description</h2>
-                    <p>{!! nl2br(e($property->description)) !!}</p> {{-- Its like that for the text spaces --}}
+                    <p>{{ nl2br(e($property->description)) }}</p> {{-- Its like that for the text spaces --}}
                 </div>
 
                 <div class="extra-features">
@@ -87,6 +87,10 @@
                 <form class="contact-form" action="{{ route('send.email') }}" method="POST">
                     @csrf
                     @include('components.show-date-range')
+                    <div class="form-group">
+                        <label for="guests">Guests</label>
+                        <input id="guests" name="guests" type="number" placeholder="Guests" required>
+                    </div>
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input id="name" name="name" type="text" placeholder="Enter your name" required>

@@ -69,28 +69,15 @@ class PropertyController extends Controller
     private function updatePropertiesJson()
     {
         $properties = Property::all()->toArray();
-        Storage::put('properties.json', json_encode($properties, JSON_PRETTY_PRINT));
+        Storage::put('properties.json', encrypt(json_encode($properties, JSON_PRETTY_PRINT)));
         error_log("Archivo properties.json actualizado tras creación o modificación de propiedad.");
     }
 
     public function destroy($id)
-    {
-        $property = Property::findOrFail($id);
-        $property->delete();
+{
+    $property = Property::findOrFail($id);
+    $property->delete();
 
-        return redirect()->route('admin.properties')->with('success', 'Property deleted successfully.');
-    }
-
-    public function edit($id)
-    {
-        $property = Property::findOrFail($id);
-        return view('property.add_property', compact('property'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $property = Property::findOrFail($id);
-        $property->update($request->all());
-        return redirect()->route('properties.index')->with('success', 'Property updated successfully!');
-    }
+    return redirect()->route('admin.properties')->with('success', 'Property deleted successfully.');
+}
 }

@@ -18,7 +18,7 @@ class IndexController extends Controller
 
         foreach ($properties as $property) {
             $imageFolder = public_path('images/' . $property->images_div);
-            $nameImage = null;
+            $nameImage = 'default.jpg';
 
             if (File::exists($imageFolder)) {
                 $images = File::files($imageFolder);
@@ -30,6 +30,6 @@ class IndexController extends Controller
 
             $propertyWithImages[$property->id] = $nameImage;
         }
-        return view('index', compact('propertyWithImages'));
+        return view('index', compact('propertyWithImages', 'properties'));
     }
 }
