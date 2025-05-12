@@ -4,14 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Mail\ContactMail;
 use Illuminate\Http\Request;
-use App\Models\Reservation;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\UserController;
 use App\Models\Property;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class MailController extends Controller
 {
@@ -33,7 +30,7 @@ class MailController extends Controller
         }
 
         $data = [
-            'guests'=> $request->guests,
+            'guests' => $request->guests,
             'name' => $request->name,
             'number' => $request->number,
             'email' => $request->email,
@@ -50,12 +47,12 @@ class MailController extends Controller
         $sub = 'New Booking';
 
         try {
-            Mail::to('rubensepulvedareal@gmail.com')->send(new ContactMail($data, $sub));
+            Mail::to(config('mail.mailers.smtp.username'))->send(new ContactMail($data, $sub));
             $this->reservationController->createReservation($property, $data, $user);
 
-            return redirect()->back();
+            return redirect()->back()->with('success', 'Correo enviado correctamente');
         } catch (\Exception $e) {
-            return 'Error sending email: ' . $e->getMessage();
+            return redirect()->back()->with('error', 'Error al enviar el correo: ' . $e->getMessage());
         }
     }
 }

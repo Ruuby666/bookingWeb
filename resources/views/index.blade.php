@@ -39,19 +39,16 @@
                         <p class="txt5">{{ $property['location'] }}</p>
                         <p class="txt2">{{ $property['description'] }}</p>
                     </div>
-                    <div class="cardfooter">
-                        <a id="btn-read-more" class="waves-effect waves-light btn" href="/property/{{ $property['id'] }}">Read More</a>
-                    </div>
                 </div>
             </a>
             @endforeach
         </div>
-        <button class="next">&#10095;</button> 
+        <button class="next">&#10095;</button>
     </div>
 
 
     <h1 id="map-title">Map</h1>
-    
+
     <div id="map"></div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>

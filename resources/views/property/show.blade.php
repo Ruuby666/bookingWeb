@@ -13,6 +13,9 @@
 <body>
     @include('components.header')
     <a href="{{ route('index') }}"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
+    <x-toast :message="session('success')" type="success" />
+    <x-toast :message="session('error')" type="error" />
+
     <div class="container">
         <div class="content-grid">
             <!-- Detalles del Apartamento -->
@@ -28,10 +31,10 @@
                         <i class="fas fa-bed icon"></i>
                         <div class="bedrooms">
                             @php
-                            $bedrooms = json_decode($property->bedrooms, true);
+                                $bedrooms = json_decode($property->bedrooms, true);
                             @endphp
                             @foreach ($bedrooms as $key => $bed)
-                            <span>Bedroom {{ $key }}: {{ $bed }}</span>
+                                <span>Bedroom {{ $key }}: {{ $bed }}</span>
                             @endforeach
                         </div>
                     </div>
@@ -54,32 +57,32 @@
                 </div>
                 <div class="description">
                     <h2>Property Description</h2>
-                    <p>{{ nl2br(e($property->description)) }}</p> {{-- Its like that for the text spaces --}}
+                    <p>{{ nl2br(e($property->description)) }}</p>
                 </div>
 
                 <div class="extra-features">
                     <h5>Additional Features</h5>
                     <ul>
                         @if ($property->parking)
-                        <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
+                            <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
                         @endif
                         @if ($property->pool)
-                        <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
+                            <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
                         @endif
                         @if ($property->garden)
-                        <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
+                            <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
                         @endif
                         @if ($property->safeBox)
-                        <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
+                            <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
                         @endif
                         @if ($property->terrace)
-                        <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
+                            <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
                         @endif
                         @if ($property->wifi)
-                        <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
+                            <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
                         @endif
                         @if (!empty($property->tv))
-                        <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
+                            <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
                         @endif
                     </ul>
                 </div>
@@ -97,7 +100,8 @@
                     </div>
                     <div class="form-group">
                         <label for="number">Contact Number</label>
-                        <input id="number" name="number" type="number" placeholder="Enter your phone number" required>
+                        <input id="number" name="number" type="number" placeholder="Enter your phone number"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -112,17 +116,18 @@
                 </form>
 
             </div>
-            
+
             <!-- Galería de imágenes -->
             <div class="image-gallery">
                 <div class="main-image">
                     <img src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}"
-                        alt="Main Property Image" loading="lazy"  onclick="openPopup('{{ $mainImage }}',  0 )">
+                        alt="Main Property Image" loading="lazy" onclick="openPopup('{{ $mainImage }}',  0 )">
                 </div>
                 <div class="thumbnail-gallery">
                     @foreach ($imagesWithoutFirst as $index => $image)
-                    <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
-                        alt="Property Thumbnail" loading="lazy" onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
+                        <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
+                            alt="Property Thumbnail" loading="lazy"
+                            onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
                     @endforeach
                 </div>
             </div>
@@ -144,7 +149,7 @@
 
         function openPopup(imageUrl, index) {
             currentIndex = index;
-            document.getElementById("popupImage").src = "/images/"+ property.images_div+"/"+ imageUrl;
+            document.getElementById("popupImage").src = "/images/" + property.images_div + "/" + imageUrl;
             document.getElementById("imagePopup").style.display = "flex";
         }
 
