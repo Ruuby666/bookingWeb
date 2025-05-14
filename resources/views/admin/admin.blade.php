@@ -47,7 +47,7 @@
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="{{ route('properties.edit', $property->id) }}" class="btn-edit">✏️
+                                    <a href="{{ route('properties.edit', $property) }}" class="btn-edit">✏️
                                         Edit</a>
                                     <form action="{{ route('properties.destroy', $property->id) }}" method="POST"
                                         onsubmit="return confirm('Are you sure you want to delete this property?');"

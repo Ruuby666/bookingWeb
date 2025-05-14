@@ -27,7 +27,7 @@ class PropertyController extends Controller
     }
 
     public function create(){
-        return view('property.add_property');
+        return view('property.add_or_edit_property');
     }
 
     public function store(Request $request){

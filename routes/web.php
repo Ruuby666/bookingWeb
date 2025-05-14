@@ -40,9 +40,9 @@ Route::middleware([IsAdmin::class])->group(function () {
 
     Route::post('/properties/store', [PropertyController::class, 'store'])->name('properties.store');
 
-    Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit'); // Formulario de edición
+    Route::get('/properties/{id}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
 
-    Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update'); // Actualizar propiedad
+    Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
 
 });
 
