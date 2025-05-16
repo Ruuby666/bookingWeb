@@ -29,7 +29,9 @@
                 <tbody>
                     @forelse ($properties as $property)
                         <tr>
-                            <td onclick="openModal({{ $property->id }})">{{ $property->title }}</td>
+                            <td>{{ $property->title }}
+                                <button onclick="openModal('{{ $property->id }}')"><b>ⓘ</b></button>
+                            </td>
                             <td>{{ $property->location }}</td>
                             <td>{{ $property->price_per_night }}€</td>
                             <td>{{ $property->capacity }}</td>
@@ -62,7 +64,7 @@
 
                         <div id="modal-{{ $property->id }}" class="modal hidden">
                             <div class="modal-content">
-                                <span class="close" onclick="closeModal({{ $property->id }})">&times;</span>
+                                <span class="close" onclick="closeModal('{{ $property->id }}')">&times;</span>
                                 <h2>{{ $property->title }}</h2>
                                 <ul>
                                     <li><strong>Descripción:</strong> {{ $property->description }}</li>

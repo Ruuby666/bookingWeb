@@ -16,6 +16,10 @@
     <x-toast :message="session('success')" type="success" />
     <x-toast :message="session('error')" type="error" />
 
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:9999;justify-content:center;align-items:center;">
+        <div style="border:6px solid #f3f3f3;border-top:6px solid #3498db;border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite;"></div>
+    </div>
     <div class="container">
         <div class="content-grid">
             <!-- Detalles del Apartamento -->
@@ -175,6 +179,30 @@
                 closePopup();
             }
         });
+
+        document.querySelector('.contact-form').onsubmit = function(e) {
+            e.preventDefault();
+            loadingOverlay.style.display = 'flex';
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', this.action);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('X-CSRF-TOKEN', this._token.value);
+            xhr.onload = function() {
+                loadingOverlay.style.display = 'none';
+                if (xhr.status == 200) {
+                    toastSuccess.classList.add('show');
+                    setTimeout(() => toastSuccess.classList.remove('show'), 3000);
+                    e.target.reset();
+                } else {
+                    alert('Error al enviar el mensaje');
+                }
+            };
+            xhr.onerror = function() {
+                loadingOverlay.style.display = 'none';
+                alert('Error al enviar el mensaje');
+            };
+            xhr.send(new FormData(e.target));
+        };
     </script>
 
 

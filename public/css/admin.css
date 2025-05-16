@@ -135,7 +135,6 @@ td:nth-child(2) {
 
 .modal {
     display: none;
-    /* se mostrará con JS */
     position: fixed;
     z-index: 1000;
     top: 0;
