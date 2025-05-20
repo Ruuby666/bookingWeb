@@ -10,8 +10,8 @@
         <a  id="header-menu-word">Calendar</a>
         @else
         <a href="{{ route('index') }}" id="header-menu-word">Home</a>
-        <a href="http://127.0.0.1:8000/#properties-section" id="header-menu-word">Properties</a>
-        <a href="http://127.0.0.1:8000/#map-title" id="header-menu-word">Map</a>
+        <a href="#properties-section" id="header-menu-word">Properties</a>
+        <a href="#map-title" id="header-menu-word">Map</a>
         @endif
     </div>
 </div>

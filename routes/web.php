@@ -47,11 +47,9 @@ Route::middleware([IsAdmin::class])->group(function () {
     Route::get('/suggestion/{reservation}', [AdminController::class, 'suggestionEmail'])->name('suggestion.create');
 
     Route::post('/reservations/{id}/send-suggestion', [MailController::class, 'sendSuggestion'])->name('reservations.sendSuggestion');
-
-
 });
 
 // Resource routes
 Route::resource('users', UserController::class);
-Route::resource('properties', PropertyController::class);
+Route::resource('properties', PropertyController::class)->only(['index', 'show']);
 Route::resource('reservations', ReservationController::class);
