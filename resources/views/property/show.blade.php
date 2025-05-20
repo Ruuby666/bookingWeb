@@ -187,9 +187,30 @@
             }
         });
 
-        document.querySelector('.contact-form').addEventListener('submit', function() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        });
+        document.querySelector('.contact-form').onsubmit = function(e) {
+            e.preventDefault();
+            loadingOverlay.style.display = 'flex';
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', this.action);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            xhr.onload = function() {
+                loadingOverlay.style.display = 'none';
+                if (xhr.status == 200) {
+                    toastSuccess.classList.add('show');
+                    setTimeout(() => toastSuccess.classList.remove('show'), 3000);
+                    e.target.reset();
+                } else {
+                    alert('Error al enviar el mensaje');
+                }
+            };
+            xhr.onerror = function() {
+                loadingOverlay.style.display = 'none';
+                alert('Error al enviar el mensaje');
+            };
+            xhr.send(new FormData(e.target));
+        };
     </script>
 
 
