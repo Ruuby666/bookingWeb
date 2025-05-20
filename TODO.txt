@@ -1,9 +1,9 @@
 
 - Crear mensaje de confirmación de que se ha enviado el mensaje de la reserva . ✅
 
-- Crear un mensaje de confirmación de que aceptas la reserva. 
+- Crear un mensaje de confirmación de que aceptas la reserva. ---> ✅
 
-- En confirmar las reservas añadir botón de editar para que cuando dos ofertas coincidan puedas hacer una contra oferta
+- En confirmar las reservas añadir botón de editar para que cuando dos ofertas coincidan puedas hacer una contra oferta ---> ✅
 
 - Estoy modificando el boton de editar la propiedad ------ ✅
 
