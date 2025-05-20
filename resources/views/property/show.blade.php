@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Details</title>
     <link href="{{ asset('css/details-property.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
@@ -13,6 +14,18 @@
 <body>
     @include('components.header')
     <a href="{{ route('index') }}"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
+    @if (session('success'))
+    <x-toast :message="session('success')" type="success" />
+    @endif
+
+    @if (session('error'))
+    <x-toast :message="session('error')" type="error" />
+    @endif
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:9999;justify-content:center;align-items:center;">
+        <div style="border:6px solid #f3f3f3;border-top:6px solid #3498db;border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite;"></div>
+    </div>
     <div class="container">
         <div class="content-grid">
             <!-- Detalles del Apartamento -->
@@ -54,7 +67,7 @@
                 </div>
                 <div class="description">
                     <h2>Property Description</h2>
-                    <p>{{ nl2br(e($property->description)) }}</p> {{-- Its like that for the text spaces --}}
+                    <p>{{ nl2br(e($property->description)) }}</p>
                 </div>
 
                 <div class="extra-features">
@@ -97,7 +110,8 @@
                     </div>
                     <div class="form-group">
                         <label for="number">Contact Number</label>
-                        <input id="number" name="number" type="number" placeholder="Enter your phone number" required>
+                        <input id="number" name="number" type="number" placeholder="Enter your phone number"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -108,21 +122,22 @@
                         <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
                     </div>
                     <input type="hidden" name="property_id" value="{{ $property->id }}">
-                    <button type="submit">Send Your Request</button> <!-- TODO: Tener cuidado de como estoy enviando las cosas -->
+                    <button type="submit">Send Your Request</button>
                 </form>
 
             </div>
 
-            <!-- Imágenes del Apartamento -->
+            <!-- Galería de imágenes -->
             <div class="image-gallery">
                 <div class="main-image">
                     <img src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}"
-                        alt="Main Property Image" loading="lazy"  onclick="openPopup('{{ $mainImage }}',  0 )">
+                        alt="Main Property Image" loading="lazy" onclick="openPopup('{{ $mainImage }}',  0 )">
                 </div>
                 <div class="thumbnail-gallery">
                     @foreach ($imagesWithoutFirst as $index => $image)
                     <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
-                        alt="Property Thumbnail" loading="lazy" onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
+                        alt="Property Thumbnail" loading="lazy"
+                        onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
                     @endforeach
                 </div>
             </div>
@@ -144,7 +159,7 @@
 
         function openPopup(imageUrl, index) {
             currentIndex = index;
-            document.getElementById("popupImage").src = "/images/"+ property.images_div+"/"+ imageUrl;
+            document.getElementById("popupImage").src = "/images/" + property.images_div + "/" + imageUrl;
             document.getElementById("imagePopup").style.display = "flex";
         }
 
@@ -170,6 +185,30 @@
                 closePopup();
             }
         });
+
+        document.querySelector('.contact-form').onsubmit = function(e) {
+            e.preventDefault();
+            loadingOverlay.style.display = 'flex';
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', this.action);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('X-CSRF-TOKEN', this._token.value);
+            xhr.onload = function() {
+                loadingOverlay.style.display = 'none';
+                if (xhr.status == 200) {
+                    toastSuccess.classList.add('show');
+                    setTimeout(() => toastSuccess.classList.remove('show'), 3000);
+                    e.target.reset();
+                } else {
+                    alert('Error al enviar el mensaje');
+                }
+            };
+            xhr.onerror = function() {
+                loadingOverlay.style.display = 'none';
+                alert('Error al enviar el mensaje');
+            };
+            xhr.send(new FormData(e.target));
+        };
     </script>
 
 

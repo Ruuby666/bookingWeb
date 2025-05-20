@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Mail\ContactMail;
 use Illuminate\Http\Request;
-use App\Models\Reservation;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Reservation;
+use App\Mail\ReservationSuggestionMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\UserController;
 use App\Models\Property;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class MailController extends Controller
 {
@@ -33,7 +31,7 @@ class MailController extends Controller
         }
 
         $data = [
-            'guests'=> $request->guests,
+            'guests' => $request->guests,
             'name' => $request->name,
             'number' => $request->number,
             'email' => $request->email,
@@ -50,12 +48,27 @@ class MailController extends Controller
         $sub = 'New Booking';
 
         try {
-            Mail::to('rubensepulvedareal@gmail.com')->send(new ContactMail($data, $sub));
+            Mail::to(config('mail.mailers.smtp.username'))->send(new ContactMail($data, $sub));
             $this->reservationController->createReservation($property, $data, $user);
 
-            return redirect()->back();
+            return redirect()->back()->with('success', 'Correo enviado correctamente');
         } catch (\Exception $e) {
-            return 'Error sending email: ' . $e->getMessage();
+            return redirect()->back()->with('error', 'Error al enviar el correo: ' . $e->getMessage());
         }
     }
+
+    public function sendSuggestion(Request $request, $id)
+    {
+        $request->validate([
+            'note' => 'required|string|max:1000',
+        ]);
+
+        $reservation = Reservation::with(['user', 'property'])->where('id', $id)->firstOrFail();
+        $note = $request->input('note');
+
+        Mail::to($reservation->user->email)->send(new ReservationSuggestionMail($reservation, $note));
+
+        return redirect()->route('admin.reservations.pending')->with('success', 'Sugerencia enviada al cliente.');
+    }
+    
 }

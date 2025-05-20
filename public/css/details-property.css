@@ -322,3 +322,26 @@ body {
 .next-one {
     right: 10px;
 }
+
+/* Loading Overlay */
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+.toast-success {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: #4BB543;
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    z-index: 10000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.toast-success.show {
+    opacity: 1;
+}

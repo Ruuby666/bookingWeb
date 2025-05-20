@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller{
-    //TODO La función createReservation se encarga de crear una nueva reserva en la base de datos. Pero no funciona si lo llamo de desde fuera.
     public function createReservation($property, $data, $user)
     {
         $reservation = Reservation::create([
@@ -30,7 +29,7 @@ class ReservationController extends Controller{
     private function updateReservationJson()
     {
         $reservations = Reservation::all()->toArray();
-        Storage::put('reservations.json', json_encode($reservations, JSON_PRETTY_PRINT));
+        Storage::put('reservations.json', encrypt(json_encode($reservations, JSON_PRETTY_PRINT)));
         error_log("Archivo reservations.json actualizado tras creación de usuario.");
     }
 

@@ -39,6 +39,7 @@ class Property extends Model
         'lat' => 'decimal:7',
         'lng' => 'decimal:7',
         'parking' => 'boolean',
+        'entertainment' => 'boolean',
         'pool' => 'boolean',
         'garden' => 'boolean',
         'safeBox' => 'boolean',
