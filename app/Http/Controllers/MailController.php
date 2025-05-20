@@ -51,9 +51,12 @@ class MailController extends Controller
             Mail::to(config('mail.mailers.smtp.username'))->send(new ContactMail($data, $sub));
             $this->reservationController->createReservation($property, $data, $user);
 
-            return redirect()->back()->with('success', 'Correo enviado correctamente');
+            return redirect()->route('properties.show', ['property' => $property])
+                 ->with('success', 'Correo enviado correctamente');
+
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error al enviar el correo: ' . $e->getMessage());
+            return redirect()->route('properties.show', ['property' => $property])
+                 ->with('error', 'Error al enviar el correo: ' . $e->getMessage());
         }
     }
 
