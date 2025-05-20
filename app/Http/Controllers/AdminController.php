@@ -9,6 +9,9 @@ use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationConfirmedMail;
+
 
 class AdminController extends Controller
 {
@@ -19,7 +22,7 @@ class AdminController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:8', 
+                'min:8',
                 'regex:/[a-z]/',
                 'regex:/[A-Z]/',
                 'regex:/[0-9]/',
@@ -61,7 +64,6 @@ class AdminController extends Controller
 
     public function pending()
     {
-        // Filtrar las reservas con el estado 'pending'
         $reservations = Reservation::where('status', 'confirmed')->with('property', 'user')->get();
         $pending = Reservation::where('status', 'pending')->with('property', 'user')->get();
 
@@ -70,11 +72,34 @@ class AdminController extends Controller
 
     public function updateStatus($id)
     {
-        $reservation = Reservation::findOrFail($id);
+        $reservation = Reservation::with(['user', 'property'])->where('id', $id)->firstOrFail();
+
+        // Verificar solapamiento de fechas con otras reservas confirmadas en la misma propiedad
+        $conflictingReservation = Reservation::where('property_id', $reservation->property_id)
+            ->where('status', 'confirmed')
+            ->where('id', '!=', $reservation->id)
+            ->where(function ($query) use ($reservation) {
+                $query->whereBetween('check_in', [$reservation->check_in, $reservation->check_out])
+                    ->orWhereBetween('check_out', [$reservation->check_in, $reservation->check_out])
+                    ->orWhere(function ($query) use ($reservation) {
+                        $query->where('check_in', '<=', $reservation->check_in)
+                            ->where('check_out', '>=', $reservation->check_out);
+                    });
+            })
+            ->exists();
+
+        if ($conflictingReservation) {
+            return redirect()->back()->with('error', 'No se puede confirmar: fechas ya reservadas.');
+        }
+
         $reservation->status = 'confirmed';
         $reservation->save();
+        
         $this->updateReservationJson();
-        return redirect()->back();
+
+        Mail::to($reservation->user->email)->send(new ReservationConfirmedMail($reservation));
+
+        return redirect()->back()->with('success', 'Confirmación enviada al cliente.');
     }
 
     private function updateReservationJson()
@@ -82,5 +107,10 @@ class AdminController extends Controller
         $reservations = Reservation::all()->toArray();
         Storage::put('reservations.json', encrypt(json_encode($reservations, JSON_PRETTY_PRINT)));
         error_log("Archivo reservations.json actualizado tras creación de usuario.");
+    }
+
+    public function suggestionEmail(Reservation $reservation)
+    {
+        return view('admin.suggestion', compact('reservation'));
     }
 }

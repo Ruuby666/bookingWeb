@@ -80,6 +80,11 @@ th:first-child {
     text-align: center;
 }
 
+.div-buttons{
+    display: flex;
+    justify-content: space-between;
+}
+
 .mark-completed-button {
     background-color: #28a745;
     color: white;
@@ -92,6 +97,21 @@ th:first-child {
 
 .mark-completed-button:hover {
     background-color: #218838;
+}
+
+
+.mark-sugerencia-button {
+    background-color: #a89009;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.mark-sugerencia-button:hover {
+    background-color: #b67b0c;
 }
 
 /* Oculta el modal por defecto */

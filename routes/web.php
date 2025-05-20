@@ -44,6 +44,11 @@ Route::middleware([IsAdmin::class])->group(function () {
 
     Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
 
+    Route::get('/suggestion/{reservation}', [AdminController::class, 'suggestionEmail'])->name('suggestion.create');
+
+    Route::post('/reservations/{id}/send-suggestion', [MailController::class, 'sendSuggestion'])->name('reservations.sendSuggestion');
+
+
 });
 
 // Resource routes

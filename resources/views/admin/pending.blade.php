@@ -1,4 +1,3 @@
-<!-- resources/views/admin/pending.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,10 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pending Reservations</title>
     <link href="{{ asset('css/pending.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
 </head>
 
 <body>
     @include('components.header')
+
+    @if (session('success'))
+        <x-toast :message="session('success')" type="success" />
+    @endif
+
+    @if (session('error'))
+        <x-toast :message="session('error')" type="error" />
+    @endif
 
     @php
     $sections = [
@@ -37,17 +45,16 @@
                     <th class="pending-table-header-item">Status</th>
                     <th class="pending-table-header-item">Guests</th>
                     <th class="pending-table-header-item">Total Price</th>
-                    @if ($section['showAction']) <th class="pending-table-header-item"></th> @endif
+                    @if ($section['title'] == 'Pending Reservations') <th class="pending-table-header-item"></th> @endif
                 </tr>
             </thead>
             <tbody>
                 @foreach ($section['data'] as $reservation)
                 <tr class="pending-row">
-                    <td class="pending-id">{{ $reservation->id }}</td>
-                    <td class="pending-property">
-                        {{ $reservation->property->title }}
+                    <td class="pending-id">{{ $reservation->id }}
                         <button onclick="openModal('{{ $reservation->id }}')"><b>ⓘ</b></button>
                     </td>
+                    <td class="pending-property">{{ $reservation->property->title }}</td>
                     <td class="pending-guest">{{ $reservation->user->name }}</td>
                     <td class="pending-checkin">
                         {{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y') }}
@@ -58,11 +65,11 @@
                     <td class="pending-status">{{ $reservation->status }}</td>
                     <td class="pending-guests">{{ $reservation->guests }}</td>
                     <td class="pending-total-price">€{{ number_format($reservation->total_price, 2) }}</td>
-                    @if ($section['showAction'])
+                    @if ($reservation->status == 'pending')
                     <td class="pending-action">
                         <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
                             @csrf
-                            <button type="submit" class="mark-completed-button">Mark as Confirmed</button>
+                                <button type="submit" class="mark-completed-button">Confirmed</button>
                         </form>
                     </td>
                     @endif
@@ -81,11 +88,15 @@
                             <li><strong>Guests: </strong> {{ $reservation->guests }}</li>
                             <li><strong>Total Price: </strong> €{{ number_format($reservation->total_price, 2)}}</li>
                         </ul>
-                        <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="mark-completed-button">Mark as Confirmed</button>
-                        </form>
-                        <!-- crear un boton para enviar email directamente con una fecha de recambio y un mensaje -->
+                        <div class="div-buttons">
+                            <button class="mark-suggestion-button" data-url="{{ route('suggestion.create', $reservation) }}" onclick="redirectFromButton(this)">
+                                Suggestion
+                            </button>
+                            <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="mark-completed-button">Confirmed</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
@@ -110,6 +121,13 @@
 
         function closeModal(id) {
             document.getElementById('modal-' + id).classList.add('hidden');
+        }
+
+        function redirectFromButton(button) {
+            const url = button.getAttribute('data-url');
+            if (url) {
+                window.location.href = url;
+            }
         }
     </script>
 

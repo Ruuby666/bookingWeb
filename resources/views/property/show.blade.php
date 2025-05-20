@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Details</title>
     <link href="{{ asset('css/details-property.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
@@ -13,8 +14,13 @@
 <body>
     @include('components.header')
     <a href="{{ route('index') }}"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
+    @if (session('success'))
     <x-toast :message="session('success')" type="success" />
+    @endif
+
+    @if (session('error'))
     <x-toast :message="session('error')" type="error" />
+    @endif
 
     <!-- Loading Overlay -->
     <div id="loadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:9999;justify-content:center;align-items:center;">
@@ -35,10 +41,10 @@
                         <i class="fas fa-bed icon"></i>
                         <div class="bedrooms">
                             @php
-                                $bedrooms = json_decode($property->bedrooms, true);
+                            $bedrooms = json_decode($property->bedrooms, true);
                             @endphp
                             @foreach ($bedrooms as $key => $bed)
-                                <span>Bedroom {{ $key }}: {{ $bed }}</span>
+                            <span>Bedroom {{ $key }}: {{ $bed }}</span>
                             @endforeach
                         </div>
                     </div>
@@ -68,25 +74,25 @@
                     <h5>Additional Features</h5>
                     <ul>
                         @if ($property->parking)
-                            <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
+                        <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
                         @endif
                         @if ($property->pool)
-                            <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
+                        <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
                         @endif
                         @if ($property->garden)
-                            <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
+                        <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
                         @endif
                         @if ($property->safeBox)
-                            <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
+                        <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
                         @endif
                         @if ($property->terrace)
-                            <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
+                        <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
                         @endif
                         @if ($property->wifi)
-                            <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
+                        <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
                         @endif
                         @if (!empty($property->tv))
-                            <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
+                        <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
                         @endif
                     </ul>
                 </div>
@@ -129,9 +135,9 @@
                 </div>
                 <div class="thumbnail-gallery">
                     @foreach ($imagesWithoutFirst as $index => $image)
-                        <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
-                            alt="Property Thumbnail" loading="lazy"
-                            onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
+                    <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
+                        alt="Property Thumbnail" loading="lazy"
+                        onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
                     @endforeach
                 </div>
             </div>

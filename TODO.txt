@@ -1,14 +1,14 @@
 
 - Crear mensaje de confirmación de que se ha enviado el mensaje de la reserva . ✅
 
-- Crear un mensaje de confirmación de que aceptas la reserva.
+- Crear un mensaje de confirmación de que aceptas la reserva. 
 
 - En confirmar las reservas añadir botón de editar para que cuando dos ofertas coincidan puedas hacer una contra oferta
 
-- Tener cuidado de como estoy enviando las cosas -->
-
-- Estoy modificando el boton de editar la propiedad ------ AQUI
+- Estoy modificando el boton de editar la propiedad ------ ✅
 
 - Cada mes tiene su precio
 
 - Tener cuidado de como estoy enviando las cosas --> @json($properties);
+
+- Tener el date ordenado DD-MM-YYYY

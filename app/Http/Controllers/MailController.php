@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Mail\ContactMail;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Reservation;
+use App\Mail\ReservationSuggestionMail;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\UserController;
 use App\Models\Property;
 
@@ -55,4 +56,19 @@ class MailController extends Controller
             return redirect()->back()->with('error', 'Error al enviar el correo: ' . $e->getMessage());
         }
     }
+
+    public function sendSuggestion(Request $request, $id)
+    {
+        $request->validate([
+            'note' => 'required|string|max:1000',
+        ]);
+
+        $reservation = Reservation::with(['user', 'property'])->where('id', $id)->firstOrFail();
+        $note = $request->input('note');
+
+        Mail::to($reservation->user->email)->send(new ReservationSuggestionMail($reservation, $note));
+
+        return redirect()->route('admin.reservations.pending')->with('success', 'Sugerencia enviada al cliente.');
+    }
+    
 }
