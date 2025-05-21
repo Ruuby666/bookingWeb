@@ -47,22 +47,19 @@
             }
 
             properties.forEach(property => {
-
-
                 let propertyHtml = `
-                <div class="cardcontainer">
-                    <div class="photo">
-                        <img src="/images/${property.images_div}/${propertyImages[property.id]}" alt="Image not found"style="height: 200px; width: 300px;">
+                <a href="/property/${property.id}">
+                    <div class="cardcontainer">
+                        <div class="photo">
+                            <img src="/images/${property.images_div}/${propertyImages[property.id]}" alt="Image not found"style="height: 200px; width: 300px;">
+                        </div>
+                        <div class="content">
+                            <p class="txt4">${property.title}</p>
+                            <p class="txt5">${property.location}</p>
+                            <p class="txt2">${property.description}</p>
+                        </div>
                     </div>
-                    <div class="content">
-                        <p class="txt4">${property.title}</p>
-                        <p class="txt5">${property.location}</p>
-                        <p class="txt2">${property.description}</p>
-                    </div>
-                    <div class="cardfooter">
-                        <p><a class="waves-effect waves-light btn" href="/property/${property.id}">Read More</a></p>
-                    </div>
-                </div>
+                </a>
                 `;
                 container.append(propertyHtml);
             });

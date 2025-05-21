@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Reservation;
 use App\Mail\ReservationSuggestionMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\UserController;
 use App\Models\Property;
 
@@ -25,6 +26,25 @@ class MailController extends Controller
 
     public function sendEmail(Request $request)
     {
+        $request->validate([
+            'property_id' => 'required|exists:properties,id',
+        ]);
+
+        $property = Property::find($request->property_id);
+
+        $validator = Validator::make($request->all(), [
+            'guests' => 'required|integer|min:1|max:' . $property->capacity,
+            'name' => 'required|string|max:255',
+            'number' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
+            'message' => 'nullable|string',
+            'daterange' => 'required|string|regex:/\d{2}\/\d{2}\/\d{4} - \d{2}\/\d{2}\/\d{4}/',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             $user = $this->userController->store($request);
@@ -38,11 +58,12 @@ class MailController extends Controller
             'message' => $request->message,
             'daterange' => $request->daterange,
         ];
+        
         $dates = explode(' - ', $request->daterange);
         $data['checkIn'] = trim($dates[0]);
         $data['checkOut'] = trim($dates[1]);
 
-        $property = Property::find($request->property_id);
+
         $data['property'] = $property;
 
         $sub = 'New Booking';
@@ -52,11 +73,10 @@ class MailController extends Controller
             $this->reservationController->createReservation($property, $data, $user);
 
             return redirect()->route('properties.show', ['property' => $property])
-                 ->with('success', 'Correo enviado correctamente');
-
+                ->with('success', 'Correo enviado correctamente');
         } catch (\Exception $e) {
             return redirect()->route('properties.show', ['property' => $property])
-                 ->with('error', 'Error al enviar el correo: ' . $e->getMessage());
+                ->with('error', 'Error al enviar el correo: ' . $e->getMessage());
         }
     }
 
@@ -73,5 +93,4 @@ class MailController extends Controller
 
         return redirect()->route('admin.reservations.pending')->with('success', 'Sugerencia enviada al cliente.');
     }
-    
 }

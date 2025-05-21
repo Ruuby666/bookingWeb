@@ -12,3 +12,5 @@
 - Tener cuidado de como estoy enviando las cosas --> @json($properties);
 
 - Tener el date ordenado DD-MM-YYYY
+
+- Mejorar la interfaz de las bed rooms en las propiedades
