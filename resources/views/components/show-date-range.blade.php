@@ -47,6 +47,9 @@
         }
 
         $('#daterange').daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
             "autoApply": true,
             "linkedCalendars": true,
             "autoUpdateInput": true,

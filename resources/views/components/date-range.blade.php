@@ -68,6 +68,9 @@
         displayAvailableProperties(availableProperties);
 
         $('#daterange').daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
             "autoApply": true,
             "linkedCalendars": true,
             "autoUpdateInput": true,
@@ -77,10 +80,7 @@
             "opens": "center",
             "drops": "auto",
             "isInvalidDate": function(date) {
-                // Check if the date is in the invalidDates array
                 return dbDates.includes(date.format('YYYY-MM-DD'));
-                //Cuando haga una reserva por apartamento quiero que se bloqueen todas las fechas ocupadas
-
             }
         }, function(start, end) {
             let newCheckIn = moment(start);
@@ -104,7 +104,7 @@
                     occupiedPropertyIds.push(reservation.property_id);
                 }
             }
-            
+
             let availableProperties = @json($properties).filter(property => !occupiedPropertyIds.includes(
                 property.id));
 
