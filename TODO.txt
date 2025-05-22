@@ -14,3 +14,5 @@
 - Tener el date ordenado DD-MM-YYYY
 
 - Mejorar la interfaz de las bed rooms en las propiedades
+
+- pasar de http a https
