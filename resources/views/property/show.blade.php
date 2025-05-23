@@ -101,7 +101,12 @@
                     <form class="contact-form" action="{{ route('send.email') }}" method="POST">
                         @csrf
                         <medium> All the fields with&nbsp;<b style="color:red;"> * </b>&nbsp;are required. </medium>
-                        @include('components.show-date-range')
+                        <div>
+                            @include('components.show-date-range')
+                            <b style="color:red;">*</b>
+                        </div>
+                                                   
+
                         <div class="form-group">
                             <label for="guests">Guests <b style="color:red;">*</b></label>
                             <input id="guests" name="guests" type="number" placeholder="1 - {{ $property->capacity }}" min="1" max="{{ $property->capacity }}" required>
@@ -152,8 +157,8 @@
     <!-- Popup para mostrar la imagen en grande -->
     <div id="imagePopup" class="popup" style="display:none;">
         <span class="close" onclick="closePopup()">&times;</span>
+        <span class="previous" onclick="changeImage(-1)">&#10094;</span>
         <img class="popup-content" id="popupImage" src="" alt="Large Image" class="lazy">
-        <span class="previos" onclick="changeImage(-1)">&#10094;</span>
         <span class="next-one" onclick="changeImage(1)">&#10095;</span>
     </div>
     <script>
