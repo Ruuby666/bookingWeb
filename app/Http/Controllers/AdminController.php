@@ -113,4 +113,9 @@ class AdminController extends Controller
     {
         return view('admin.suggestion', compact('reservation'));
     }
+
+    public function calendar()
+    {
+        return view('admin.calendar');
+    }
 }

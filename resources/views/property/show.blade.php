@@ -38,13 +38,12 @@
                     </div>
                     <div class="features">
                         <div class="feature">
-                            <i class="fas fa-bed icon"></i>
                             <div class="bedrooms">
                                 @php
                                 $bedrooms = json_decode($property->bedrooms, true);
                                 @endphp
                                 @foreach ($bedrooms as $key => $bed)
-                                <span>Bedroom {{ $key }}: {{ $bed }}</span>
+                                <span><i class="fas fa-bed icon"></i> {{ $bed }}</span>
                                 @endforeach
                             </div>
                         </div>

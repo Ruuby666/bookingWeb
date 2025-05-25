@@ -47,6 +47,10 @@ Route::middleware([IsAdmin::class])->group(function () {
     Route::get('/suggestion/{reservation}', [AdminController::class, 'suggestionEmail'])->name('suggestion.create');
 
     Route::post('/reservations/{id}/send-suggestion', [MailController::class, 'sendSuggestion'])->name('reservations.sendSuggestion');
+
+    Route::get('/admin/calendar', [AdminController::class, 'calendar'])->name('admin.calendar');
+
+    Route::get('/admin/calendar/reservations', [ReservationController::class, 'getConfirmedReservations']) ->name('admin.calendar.reservations');
 });
 
 // Resource routes

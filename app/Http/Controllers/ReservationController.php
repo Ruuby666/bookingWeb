@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
-class ReservationController extends Controller{
+class ReservationController extends Controller
+{
     public function createReservation($property, $data, $user)
     {
         $reservation = Reservation::create([
@@ -39,5 +40,24 @@ class ReservationController extends Controller{
         $nights = (new \Carbon\Carbon($checkIn))->diffInDays(new \Carbon\Carbon($checkOut));
 
         return $nights * $property->price_per_night;
+    }
+
+    public function getConfirmedReservations()
+    {
+        $reservations = Reservation::with(['user', 'property'])->where('status', 'confirmed')->get();
+
+        $events = $reservations->map(function ($reservation) {
+            return [
+                'id' => $reservation->id,
+                'title' => 'Reserva de ' . $reservation->user->name . ' en ' . $reservation->property->title,
+                'description' => $reservation->notes,
+                'user' => $reservation->user->name,
+                'property' => $reservation->property->title,
+                'start' => $reservation->check_in,
+                'end' => $reservation->check_out,
+            ];
+        });
+
+        return response()->json($events);
     }
 }

@@ -3,6 +3,10 @@ html, body {
     margin: 0;
 }
 
+#header {
+    margin-bottom: 0 !important;
+}
+
 .container {
     margin: 0 auto;
     padding: 0 1rem;
@@ -23,8 +27,14 @@ html, body {
 
 /* Icon */
 .fa-caret-left {
-    font-size: 40px;
-    margin-left: 10px;
+    font-size: 60px;
+    margin-left: 30px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.fa-caret-left:hover{
+    color: #3498db;
+    transform: translateX(-10px);
 }
 
 .content-details-form {
