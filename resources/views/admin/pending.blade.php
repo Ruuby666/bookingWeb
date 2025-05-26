@@ -13,11 +13,11 @@
     @include('components.header')
 
     @if (session('success'))
-        <x-toast :message="session('success')" type="success" />
+    <x-toast :message="session('success')" type="success" />
     @endif
 
     @if (session('error'))
-        <x-toast :message="session('error')" type="error" />
+    <x-toast :message="session('error')" type="error" />
     @endif
 
     @php
@@ -57,10 +57,10 @@
                     <td class="pending-property">{{ $reservation->property->title }}</td>
                     <td class="pending-guest">{{ $reservation->user->name }}</td>
                     <td class="pending-checkin">
-                        {{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y') }}
+                        {{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y - H:i') }}
                     </td>
                     <td class="pending-checkout">
-                        {{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y') }}
+                        {{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y - H:i') }}
                     </td>
                     <td class="pending-status">{{ $reservation->status }}</td>
                     <td class="pending-guests">{{ $reservation->guests }}</td>
@@ -69,7 +69,7 @@
                     <td class="pending-action">
                         <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
                             @csrf
-                                <button type="submit" class="mark-completed-button">Confirmed</button>
+                            <button type="submit" class="mark-completed-button">Confirmed</button>
                         </form>
                     </td>
                     @endif
@@ -89,13 +89,15 @@
                             <li><strong>Total Price: </strong> €{{ number_format($reservation->total_price, 2)}}</li>
                         </ul>
                         <div class="div-buttons">
-                            <button class="mark-suggestion-button" data-url="{{ route('suggestion.create', $reservation) }}" onclick="redirectFromButton(this)">
-                                Suggestion
-                            </button>
-                            <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                <button type="submit" class="mark-completed-button">Confirmed</button>
-                            </form>
+                            @if ($reservation->status == 'pending')
+                                <button class="mark-suggestion-button" data-url="{{ route('suggestion.create', $reservation) }}" onclick="redirectFromButton(this)">
+                                    Suggestion
+                                </button>
+                                <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="mark-completed-button">Confirmed</button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>

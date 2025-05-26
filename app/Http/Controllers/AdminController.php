@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReservationConfirmedMail;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ConfirmedReservationsExport;
 
 
 class AdminController extends Controller
@@ -94,7 +97,7 @@ class AdminController extends Controller
 
         $reservation->status = 'confirmed';
         $reservation->save();
-        
+
         $this->updateReservationJson();
 
         Mail::to($reservation->user->email)->send(new ReservationConfirmedMail($reservation));
@@ -117,5 +120,53 @@ class AdminController extends Controller
     public function calendar()
     {
         return view('admin.calendar');
+    }
+
+    public function getConfirmedReservations()
+    {
+        $reservations = Reservation::with(['user', 'property'])->where('status', 'confirmed')->get();
+
+        $events = $reservations->map(function ($reservation) {
+            return [
+                'id' => $reservation->id,
+                'title' => $reservation->user->name . ' en ' . $reservation->property->title,
+                'description' => $reservation->notes,
+                'user' => $reservation->user->name,
+                'property' => $reservation->property->title,
+                'start' => $reservation->check_in,
+                'end' => $reservation->check_out,
+            ];
+        });
+
+        return response()->json($events);
+    }
+
+    public function updateTime(Request $request)
+    {
+        $request->validate([
+            'event_id' => 'required|integer|exists:reservations,id',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
+        ]);
+
+        $reservation = Reservation::findOrFail($request->event_id);
+
+        $datestart = $reservation->check_in->format('Y-m-d');
+        $dateend = $reservation->check_out->format('Y-m-d');
+
+        if ($request->start_time >= $request->end_time) {
+            return back()->withErrors(['end_time' => 'La hora de salida debe ser posterior a la de entrada.']);
+        }
+
+        $reservation->check_in = Carbon::createFromFormat('Y-m-d H:i', "$datestart {$request->start_time}");
+        $reservation->check_out = Carbon::createFromFormat('Y-m-d H:i', "$dateend {$request->end_time}");
+        $reservation->save();
+
+        return redirect()->back()->with('success', 'Hora actualizada correctamente.');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new ConfirmedReservationsExport, 'reservas_confirmadas.xlsx');
     }
 }

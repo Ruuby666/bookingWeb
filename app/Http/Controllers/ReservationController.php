@@ -4,23 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Models\Property;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
     public function createReservation($property, $data, $user)
     {
+
+        $checkIn = Carbon::createFromFormat('d/m/Y', $data['checkIn'])->setTime(0, 0, 0);
+        $checkOut = Carbon::createFromFormat('d/m/Y', $data['checkOut'])->setTime(0, 0, 0);
+
+        // Comprobación de solapamiento con reservas confirmadas
+        $overlappingReservation = Reservation::where('property_id', $property->id)
+            ->where('status', 'confirmed')
+            ->where(function ($query) use ($checkIn, $checkOut) {
+                $query->whereBetween('check_in', [$checkIn, $checkOut->copy()->subDay()])
+                    ->orWhereBetween('check_out', [$checkIn->copy()->addDay(), $checkOut])
+                    ->orWhere(function ($query) use ($checkIn, $checkOut) {
+                        $query->where('check_in', '<=', $checkIn)
+                            ->where('check_out', '>=', $checkOut);
+                    });
+            })
+            ->exists();
+
+        if ($overlappingReservation) {
+            return redirect()->back()->with('error', 'Elija otra fecha hay un solapamiento.');
+        }
+
+
         $reservation = Reservation::create([
             'property_id' => $property->id,
             'user_id' => $user->id,
-            'check_in' => $data['checkIn'],
-            'check_out' => $data['checkOut'],
+            'check_in' => $checkIn,
+            'check_out' => $checkOut,
             'status' => 'pending',
             'notes' => $data['message'],
             'guests' => $data['guests'],
-            'total_price' => $this->calculateTotalPrice($property->id, $data['checkIn'], $data['checkOut']),
+            'total_price' => $this->calculateTotalPrice($property->id, $checkIn, $checkOut),
         ]);
 
         $this->updateReservationJson();
@@ -37,27 +59,10 @@ class ReservationController extends Controller
     private function calculateTotalPrice($propertyId, $checkIn, $checkOut)
     {
         $property = Property::find($propertyId);
-        $nights = (new \Carbon\Carbon($checkIn))->diffInDays(new \Carbon\Carbon($checkOut));
+        $nights = $checkIn->diffInDays($checkOut);
 
         return $nights * $property->price_per_night;
     }
 
-    public function getConfirmedReservations()
-    {
-        $reservations = Reservation::with(['user', 'property'])->where('status', 'confirmed')->get();
-
-        $events = $reservations->map(function ($reservation) {
-            return [
-                'id' => $reservation->id,
-                'title' => 'Reserva de ' . $reservation->user->name . ' en ' . $reservation->property->title,
-                'description' => $reservation->notes,
-                'user' => $reservation->user->name,
-                'property' => $reservation->property->title,
-                'start' => $reservation->check_in,
-                'end' => $reservation->check_out,
-            ];
-        });
-
-        return response()->json($events);
-    }
+    
 }

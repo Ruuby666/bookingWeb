@@ -9,6 +9,11 @@
   margin: 40px auto;
 }
 
+h3 {
+  display: flex;
+  justify-content: center;
+}
+
 .modal {
   display: none;
   position: fixed;
