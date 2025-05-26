@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReservationConfirmedMail;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConfirmedReservationsExport;
-
 
 class AdminController extends Controller
 {
@@ -167,6 +165,6 @@ class AdminController extends Controller
 
     public function exportExcel()
     {
-        return Excel::download(new ConfirmedReservationsExport, 'reservas_confirmadas.xlsx');
+        return ConfirmedReservationsExport::download();
     }
 }

@@ -1,31 +1,42 @@
 <?php
 namespace App\Exports;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Models\Reservation;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ConfirmedReservationsExport implements FromCollection, WithHeadings
+class ConfirmedReservationsExport
 {
-    public function collection()
+    public static function download()
     {
-        return Reservation::with(['user', 'property'])
+        $reservations = Reservation::with(['user', 'property'])
             ->where('status', 'confirmed')
-            ->get()
-            ->map(function ($reservation) {
-                return [
-                    'ID' => $reservation->id,
-                    'Usuario' => $reservation->user->name,
-                    'Propiedad' => $reservation->property->title,
-                    'Check-in' => $reservation->check_in,
-                    'Check-out' => $reservation->check_out,
-                    'Notas' => $reservation->notes,
-                ];
-            });
-    }
+            ->get();
 
-    public function headings(): array
-    {
-        return ['ID', 'Usuario', 'Propiedad', 'Check-in', 'Check-out', 'Notas'];
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->fromArray([
+            ['ID', 'Usuario', 'Propiedad', 'Check-in', 'Check-out', 'Notas']
+        ], null, 'A1');
+
+        $row = 2;
+        foreach ($reservations as $reservation) {
+            $sheet->fromArray([
+                $reservation->id,
+                $reservation->user->name,
+                $reservation->property->title,
+                $reservation->check_in,
+                $reservation->check_out,
+                $reservation->notes,
+            ], null, 'A' . $row++);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'reservas_confirmadas.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $filename);
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
     }
 }

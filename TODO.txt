@@ -21,3 +21,41 @@
 
 - calendario, quieres entrar en un evento 
     y ver la información y poder modificarla.  ---- aqui
+
+
+
+    El error indica que te faltan las extensiones **ext-gd** y **ext-zip** en tu instalación de PHP. Ambas son requeridas por PhpSpreadsheet.
+
+### Solución en Windows
+
+1. **Habilita las extensiones en tu php.ini:**
+
+   - Busca tu archivo `php.ini` (puedes ver la ruta ejecutando `php --ini` en la terminal).
+   - Abre el archivo y descomenta (quita el `;` al inicio) estas líneas:
+     ```
+     extension=gd
+     extension=zip
+     ```
+   - Guarda el archivo.
+
+2. **Reinicia tu servidor web** (Apache, Nginx, o cierra y abre de nuevo tu terminal si usas `php artisan serve`).
+
+3. **Verifica que están habilitadas:**
+   ```sh
+   php -m | findstr gd
+   php -m | findstr zip
+   ```
+   Ambas deben aparecer en la lista.
+
+4. **Vuelve a instalar PhpSpreadsheet:**
+   ```sh
+   composer require phpoffice/phpspreadsheet
+   ```
+
+---
+
+**Resumen:**  
+Debes habilitar las extensiones `gd` y `zip` en tu PHP antes de instalar PhpSpreadsheet. Si tienes dudas sobre cómo hacerlo, dime tu versión de PHP y cómo lo instalaste (XAMPP, WAMP, Laragon, etc.) y te ayudo con los pasos exactos.---
+
+**Resumen:**  
+Debes habilitar las extensiones `gd` y `zip` en tu PHP antes de instalar PhpSpreadsheet. Si tienes dudas sobre cómo hacerlo, dime tu versión de PHP y cómo lo instalaste (XAMPP, WAMP, Laragon, etc.) y te ayudo con los pasos exactos.

@@ -21,10 +21,12 @@
     @if (session('error'))
     <x-toast :message="session('error')" type="error" />
     @endif
-    
+
     <div class="container">
-        <h3>Calendario de Reservas Confirmadas</h3>
-        <a href="{{ route('admin.calendar.export-excel') }}" class="btn btn-success">Descargar Excel</a>
+        <div class="calendar-toolbar">
+            <h3>Calendario de Reservas Confirmadas</h3>
+            <a href="{{ route('admin.calendar.export-excel') }}" class="btn-export">Descargar Excel</a>
+        </div>
         <div id="calendar"></div>
     </div>
 
