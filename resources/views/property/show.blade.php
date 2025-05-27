@@ -9,6 +9,7 @@
     <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css" />
 </head>
 
 <body>
@@ -103,34 +104,49 @@
                         <div>
                             @include('components.show-date-range')
                             <b style="color:red;">*</b>
+                            @error('daterange')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
                         </div>
-                                                   
-
                         <div class="form-group">
                             <label for="guests">Guests <b style="color:red;">*</b></label>
-                            <input id="guests" name="guests" type="number" placeholder="1 - {{ $property->capacity }}" min="1" max="{{ $property->capacity }}" required>
+                            <input id="guests" name="guests" type="number" placeholder="1 - {{ $property->capacity }}" min="1" max="{{ $property->capacity }}" value="{{ old('guests') }}" required>
+                            @error('guests')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="name">Full Name <b style="color:red;">*</b></label>
-                            <input id="name" name="name" type="text" placeholder="Enter your name" required>
+                            <input id="name" name="name" type="text" placeholder="Enter your name" value="{{ old('name') }}" required>
+                            @error('name')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="number">Contact Number <b style="color:red;">*</b></label>
-                            <input id="number" name="number" type="number" placeholder="Enter your phone number"
-                                required>
+                            <input id="number" type="tel" placeholder="Enter your phone number" value="{{ old('number') }}" required>
+                            <input type="hidden" name="number" id="full_phone">
+                            @error('number')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="email">Email <b style="color:red;">*</b></label>
-                            <input id="email" name="email" type="email" placeholder="Enter your email" required>
+                            <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" required>
+                            @error('email')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
+                            <textarea id="message" name="message" rows="5" placeholder="Enter your message">{{ old('message') }}</textarea>
+                            @error('message')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
                         </div>
                         <input type="hidden" name="property_id" value="{{ $property->id }}">
                         <button type="submit">Send Your Request</button>
                     </form>
-
                 </div>
             </div>
             <!-- Detalles del Apartamento -->
@@ -160,6 +176,7 @@
         <img class="popup-content" id="popupImage" src="" alt="Large Image" class="lazy">
         <span class="next-one" onclick="changeImage(1)">&#10095;</span>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <script>
         let currentIndex = 0;
         const property = @json($property);
@@ -195,9 +212,18 @@
             }
         });
 
-        document.querySelector('.contact-form').onsubmit = function() {
+        const phoneInput = document.querySelector("#number");
+        const fullPhoneInput = document.querySelector("#full_phone");
+
+        const iti = window.intlTelInput(phoneInput, {
+            initialCountry: "auto",
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+        });
+
+        document.querySelector('.contact-form').addEventListener('submit', function() {
             document.getElementById('loadingOverlay').style.display = 'flex';
-        };
+            fullPhoneInput.value = iti.getNumber();
+        });
     </script>
 
 

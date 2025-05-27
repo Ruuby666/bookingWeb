@@ -33,12 +33,33 @@ class MailController extends Controller
         $property = Property::find($request->property_id);
 
         $validator = Validator::make($request->all(), [
+            'property_id' => 'required|exists:properties,id',
             'guests' => 'required|integer|min:1|max:' . $property->capacity,
             'name' => 'required|string|max:255',
             'number' => 'required|string|max:20',
             'email' => 'required|email|max:255',
             'message' => 'nullable|string',
             'daterange' => 'required|string|regex:/\d{2}\/\d{2}\/\d{4} - \d{2}\/\d{2}\/\d{4}/',
+        ], [
+            'property_id.required' => 'La propiedad es obligatoria.',
+            'property_id.exists' => 'La propiedad seleccionada no existe.',
+            'guests.required' => 'El número de invitados es obligatorio.',
+            'guests.integer' => 'El número de invitados debe ser un número entero.',
+            'guests.min' => 'Debe haber al menos un invitado.',
+            'guests.max' => 'El número máximo de invitados permitido es ' . $property->capacity . '.',
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser texto.',
+            'name.max' => 'El nombre no puede tener más de 255 caracteres.',
+            'number.required' => 'El número de teléfono es obligatorio.',
+            'number.string' => 'El número de teléfono debe ser texto.',
+            'number.max' => 'El número de teléfono no puede tener más de 20 caracteres.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Debe ser un correo electrónico válido.',
+            'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
+            'message.string' => 'El mensaje debe ser texto.',
+            'message.max' => 'El mensaje no puede tener más de 1000 caracteres.',
+            'daterange.required' => 'El rango de fechas es obligatorio.',
+            'daterange.regex' => 'El rango de fechas debe tener el formato DD/MM/AAAA - DD/MM/AAAA.',
         ]);
 
         if ($validator->fails()) {
@@ -58,10 +79,20 @@ class MailController extends Controller
             'message' => $request->message,
             'daterange' => $request->daterange,
         ];
-        
+
         $dates = explode(' - ', $request->daterange);
-        $data['checkIn'] = trim($dates[0]);
-        $data['checkOut'] = trim($dates[1]);
+        try {
+            $data['checkIn'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' 11:00');
+
+            if (str_contains($property->title, 'Casa') || str_contains($property->title, 'Villa')) {
+                $checkoutHour = '15:00';
+            } else {
+                $checkoutHour = '14:00';
+            }
+            $data['checkOut'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' ' . $checkoutHour);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['daterange' => 'Formato de fecha inválido.'])->withInput();
+        }
 
 
         $data['property'] = $property;

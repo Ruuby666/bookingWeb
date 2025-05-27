@@ -13,24 +13,22 @@ class ReservationController extends Controller
     public function createReservation($property, $data, $user)
     {
 
-        $checkIn = Carbon::createFromFormat('d/m/Y', $data['checkIn'])->setTime(0, 0, 0);
-        $checkOut = Carbon::createFromFormat('d/m/Y', $data['checkOut'])->setTime(0, 0, 0);
+        $checkIn = $data['checkIn'];
+        $checkOut = $data['checkOut'];
 
         // Comprobación de solapamiento con reservas confirmadas
         $overlappingReservation = Reservation::where('property_id', $property->id)
             ->where('status', 'confirmed')
             ->where(function ($query) use ($checkIn, $checkOut) {
-                $query->whereBetween('check_in', [$checkIn, $checkOut->copy()->subDay()])
-                    ->orWhereBetween('check_out', [$checkIn->copy()->addDay(), $checkOut])
-                    ->orWhere(function ($query) use ($checkIn, $checkOut) {
-                        $query->where('check_in', '<=', $checkIn)
-                            ->where('check_out', '>=', $checkOut);
-                    });
+                $query->where(function ($q) use ($checkIn, $checkOut) {
+                    $q->where('check_in', '<', $checkOut)
+                        ->where('check_out', '>', $checkIn);
+                });
             })
             ->exists();
 
         if ($overlappingReservation) {
-            return redirect()->back()->with('error', 'Elija otra fecha hay un solapamiento.');
+            return redirect()->back()->with('error', 'Elija otra fecha, ya existe una reserva del ' . $overlappingReservation->check_in->format('d/m/Y H:i') . ' al ' . $overlappingReservation->check_out->format('d/m/Y H:i'));
         }
 
 
@@ -59,10 +57,10 @@ class ReservationController extends Controller
     private function calculateTotalPrice($propertyId, $checkIn, $checkOut)
     {
         $property = Property::find($propertyId);
+        $checkIn = $checkIn->copy()->startOfDay();
+        $checkOut = $checkOut->copy()->startOfDay();
         $nights = $checkIn->diffInDays($checkOut);
-
+        
         return $nights * $property->price_per_night;
     }
-
-    
 }
