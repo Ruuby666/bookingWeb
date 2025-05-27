@@ -15,7 +15,7 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'number' => $request->number,
+            'phone_number' => $request->number,
             'password' => 'password',
             'is_admin' => false,
         ]);
@@ -30,12 +30,12 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'phone_number' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $user = User::findOrFail($id);
 
-        // Si se proporciona una nueva contraseña, actualízala
         if ($request->filled('password')) {
             $validatedData['password'] = Hash::make($validatedData['password']);
         } else {

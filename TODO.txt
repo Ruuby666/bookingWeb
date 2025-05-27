@@ -13,11 +13,27 @@
 
 - Tener el date ordenado DD-MM-YYYY ✅
 
-- Mejorar la interfaz de las bed rooms en las propiedades
+- Mejorar la interfaz de las bed rooms en las propiedades ✅
 
 - revisar flechas para mover las fotos ✅
 
 - pasar de http a https
+
+- añadir ccs toasts calendario
+
+- guest error message - 2 personas maximo
+
+- no se gurdo la ultima reserva en el pending - creo que esta solucionado
+
+- salida si o si 11:00
+
+- entrada villa 15:00 apartamento 14:00 según disponiblilidad ()
+
+- descripción calendario añadir email y numero
+
+- numero de telefono en cliente
+
+- pasar al ingles
 
 - calendario, quieres entrar en un evento 
     y ver la información y poder modificarla.  ---- aqui
