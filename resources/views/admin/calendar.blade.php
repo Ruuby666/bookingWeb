@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calendar</title>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" />
+        <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
 
 
@@ -37,9 +38,12 @@
             </br>
             <p><strong>Inicio:</strong> <span id="modalStart"></span></p>
             <p><strong>Fin:</strong> <span id="modalEnd"></span></p>
-            <p><strong>Descripción:</strong> <span id="modalDescription"></span></p>
             <p><strong>Usuario:</strong> <span id="modalUser"></span></p>
+            <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+            <p><strong>Phone Number:</strong> <span id="modalPhone"></span></p>
             <p><strong>Propiedad:</strong> <span id="modalProperty"></span></p>
+            </br>
+            <p><strong>Nota:</strong> <span id="modalNote"></span></p>
             </br>
             <button id="editButton">Editar hora</button>
 
@@ -76,8 +80,10 @@
                     document.getElementById('modalTitle').textContent = info.event.title;
                     document.getElementById('modalStart').textContent = info.event.start.toLocaleString();
                     document.getElementById('modalEnd').textContent = info.event.end ? info.event.end.toLocaleString() : 'No especificado';
-                    document.getElementById('modalDescription').textContent = info.event.extendedProps.description || 'Sin descripción';
-                    document.getElementById('modalUser').textContent = info.event.extendedProps.user ? info.event.extendedProps.user : 'No especificado';
+                    document.getElementById('modalNote').textContent = info.event.extendedProps.note || 'Sin descripción';
+                    document.getElementById('modalUser').textContent = info.event.extendedProps.user.name ? info.event.extendedProps.user.name : 'No especificado';
+                    document.getElementById('modalEmail').textContent = info.event.extendedProps.user.email ? info.event.extendedProps.user.email : 'No especificado';
+                    document.getElementById('modalPhone').textContent = info.event.extendedProps.user.phone_number ? info.event.extendedProps.user.name : 'No especificado';
                     document.getElementById('modalProperty').textContent = info.event.extendedProps.property ? info.event.extendedProps.property : 'No especificado';
 
                     const modal = document.getElementById('eventModal');

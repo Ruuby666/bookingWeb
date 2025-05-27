@@ -19,21 +19,27 @@
 
 - pasar de http a https
 
-- añadir ccs toasts calendario
+- añadir ccs toasts calendario ✅
 
 - guest error message - 2 personas maximo
 
-- no se gurdo la ultima reserva en el pending - creo que esta solucionado
+- no se gurdo la ultima reserva en el pending - creo que esta solucionado ✅
 
-- salida si o si 11:00
+- salida si o si 11:00 ✅
 
-- entrada villa 15:00 apartamento 14:00 según disponiblilidad ()
+- entrada villa 15:00 apartamento 14:00 según disponiblilidad () ✅
 
-- descripción calendario añadir email y numero
+- descripción calendario añadir email y numero ✅
 
-- numero de telefono en cliente
+- numero de telefono en cliente ✅
 
 - pasar al ingles
+
+- no esta funcionando lo de los errores personalizados 
+
+- arreglar lo del header del map y del properties
+
+- preguntar si cada vez que meten la info los usuarios se vuelve a añadir a la base de Datos
 
 - calendario, quieres entrar en un evento 
     y ver la información y poder modificarla.  ---- aqui

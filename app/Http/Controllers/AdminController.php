@@ -128,8 +128,8 @@ class AdminController extends Controller
             return [
                 'id' => $reservation->id,
                 'title' => $reservation->user->name . ' en ' . $reservation->property->title,
-                'description' => $reservation->notes,
-                'user' => $reservation->user->name,
+                'note' => $reservation->notes,
+                'user' => $reservation->user,
                 'property' => $reservation->property->title,
                 'start' => $reservation->check_in,
                 'end' => $reservation->check_out,

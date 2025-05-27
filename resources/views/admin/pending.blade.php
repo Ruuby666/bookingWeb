@@ -40,8 +40,6 @@
                     <th>Reservation ID</th>
                     <th class="pending-table-header-item">Property</th>
                     <th class="pending-table-header-item">Guest Name</th>
-                    <th class="pending-table.header-item">Email</th>
-                    <th class="pending-table.header-item">number Number</th>
                     <th class="pending-table-header-item">Check-in</th>
                     <th class="pending-table-header-item">Check-out</th>
                     <th class="pending-table-header-item">Status</th>
@@ -81,10 +79,10 @@
                     <div class="modal-content">
                         <span class="close" onclick="closeModal('{{ $reservation->id }}')">&times;</span>
                         <h2>Reserva en {{ $reservation->property->title }}</h2>
-                        <ul>
+                        <ul> 
                             <li><strong>Cliente: </strong> {{ $reservation->user->name }}</li>
                             <li><strong>Email: </strong>{{ $reservation->user->email }}</li>
-                            <li><strong>number Number: </strong>{{ $reservation->user->number_number }}</li>
+                            <li><strong>Phone Number: </strong>{{ $reservation->user->phone_number }}</li>
                             <li><strong>Check-in: </strong> {{ $reservation->check_in }}</li>
                             <li><strong>Check-out: </strong> {{ $reservation->check_out }}</li>
                             <li><strong>Status: </strong> {{ $reservation->status }}</li>

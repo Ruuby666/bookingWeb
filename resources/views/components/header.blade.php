@@ -10,8 +10,8 @@
         <a href="{{ route('admin.calendar') }}" id="header-menu-word">Calendar</a>
         @else
         <a href="{{ route('index') }}" id="header-menu-word">Home</a>
-        <a href="#properties-section" id="header-menu-word">Properties</a>
-        <a href="#map-title" id="header-menu-word">Map</a>
+        <a href="{{ url('/#properties-section') }}" id="header-menu-word">Properties</a>
+        <a href="{{ url('/#map-title') }}" id="header-menu-word">Map</a>
         @endif
     </div>
 </div>
