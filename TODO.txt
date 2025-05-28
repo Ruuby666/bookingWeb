@@ -21,8 +21,6 @@
 
 - añadir ccs toasts calendario ✅
 
-- guest error message - 2 personas maximo
-
 - no se gurdo la ultima reserva en el pending - creo que esta solucionado ✅
 
 - salida si o si 11:00 ✅
@@ -36,8 +34,9 @@
 - pasar al ingles
 
 - no esta funcionando lo de los errores personalizados 
+   -  guest error message - 2 personas maximo
 
-- arreglar lo del header del map y del properties
+- arreglar lo del header del map y del properties ✅
 
 - preguntar si cada vez que meten la info los usuarios se vuelve a añadir a la base de Datos
 

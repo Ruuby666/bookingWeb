@@ -1,8 +1,12 @@
 <?php
+
 namespace App\Exports;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use Illuminate\Support\Facades\Response;
 use App\Models\Reservation;
 
 class ConfirmedReservationsExport
@@ -11,31 +15,122 @@ class ConfirmedReservationsExport
     {
         $reservations = Reservation::with(['user', 'property'])
             ->where('status', 'confirmed')
-            ->get();
+            ->orderBy('check_in')
+            ->get()
+            ->groupBy(fn($r) => $r->property->title);
 
         $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $sheetIndex = 0;
 
-        $sheet->fromArray([
-            ['ID', 'Usuario', 'Propiedad', 'Check-in', 'Check-out', 'Notas']
-        ], null, 'A1');
+        foreach ($reservations as $propertyTitle => $propertyReservations) {
+            $sheet = ($sheetIndex === 0)
+                ? $spreadsheet->getActiveSheet()
+                : $spreadsheet->createSheet();
 
-        $row = 2;
-        foreach ($reservations as $reservation) {
-            $sheet->fromArray([
-                $reservation->id,
-                $reservation->user->name,
-                $reservation->property->title,
-                $reservation->check_in,
-                $reservation->check_out,
-                $reservation->notes,
-            ], null, 'A' . $row++);
+            $spreadsheet->setActiveSheetIndex($sheetIndex++);
+            $sheet->setTitle(substr($propertyTitle, 0, 31));
+
+            $row = 1;
+
+            // Título principal
+            $sheet->setCellValue("A{$row}", "TITULO = 'RESERVA {$propertyTitle}'");
+            $sheet->mergeCells("A{$row}:C{$row}");
+            $sheet->getStyle("A{$row}")->getFont()->setBold(true);
+            $sheet->getStyle("A{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $row += 2;
+
+            $lastMonth = null;
+            $lastCheckOut = null;
+            $prevReservation = null;
+
+            foreach ($propertyReservations as $reservation) {
+                $userName = $reservation->user->name ?? '';
+                $email = $reservation->user->email ?? '';
+
+                $checkInDate = \Carbon\Carbon::parse($reservation->check_in);
+                $checkOutDate = \Carbon\Carbon::parse($reservation->check_out);
+
+                $checkIn = $checkInDate->format('d.m.Y');
+                $checkOut = $checkOutDate->format('d.m.Y');
+
+                $checkInHour = $checkInDate->format('H:i');
+                $checkOutHour = $checkOutDate->format('H:i');
+
+                $checkInMonth = $checkInDate->month;
+
+                $month = ucfirst($checkInDate->locale('es')->isoFormat('MMMM'));
+
+                $guests = $reservation->guests ?? 'N/A';
+                $id = $reservation->id;
+                $totalPrice = $reservation->total_price ?? 'N/A';
+                $notes = $reservation->notes ?? '';
+                $arrivalHour = $checkInHour ?? '';
+                $departureHour = $checkOutHour ?? '';
+
+                // Mostrar el mes solo si ha cambiado
+                if ($month !== $lastMonth) {
+                    $sheet->setCellValue("A{$row}", strtoupper($month));
+                    $lastMonth = $month;
+
+                    // Solo si hay una reserva anterior
+                    if ($prevReservation) {
+                        $prevCheckOut = \Carbon\Carbon::parse($prevReservation->check_out);
+                        if ($prevCheckOut->month === $checkInMonth) {
+                            $prevName = $prevReservation->user->name ?? '';
+                            $prevCheckOutFormatted = $prevCheckOut->format('d.m.Y');
+                            $row++;
+                            $sheet->setCellValue("B{$row}", "Hasta {$prevCheckOutFormatted} {$prevName}");
+                            
+                        }
+                    }
+                    $row++;
+                }
+
+                // Línea de fechas
+                $sheet->setCellValue("B{$row}", "{$checkIn} - {$checkOut} {$userName}");
+                $row++;
+
+                $sheet->setCellValue("B{$row}", "{$email}");
+                $row++;
+
+                $sheet->setCellValue("B{$row}", "{$userName}");
+                $row++;
+
+                // Número de huéspedes
+                $sheet->setCellValue("B{$row}", "{$guests} personas");
+                $row++;
+
+                // ID de la reserva
+                $sheet->setCellValue("B{$row}", "ID reserva: {$id}");
+                $row++;
+
+                // Precio total
+                $sheet->setCellValue("B{$row}", "Total: {$totalPrice}");
+                $row++;
+
+                // Notas
+                $sheet->setCellValue("B{$row}", "Notas: {$notes}");
+                $row++;
+
+                // Dias de llegada y salida
+                $sheet->setCellValue("B{$row}", " Día Llegada: {$checkIn}, Día Salida: {$checkOut}");
+                $row++;
+
+                // Horas de llegada y salida
+                $sheet->setCellValue("B{$row}", "Llegada: {$arrivalHour}, Salida: {$departureHour}");
+                $row++;
+
+                // Espacio entre reservas
+                $row++;
+
+                $prevReservation = $reservation;
+            }
         }
 
-        $writer = new Xlsx($spreadsheet);
-        $filename = 'reservas_confirmadas.xlsx';
+        // Guardar archivo temporalmente
+        $filename = 'Reservas_actualizado_' . date('d.m.Y') . '.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $filename);
-        $writer->save($temp_file);
+        (new Xlsx($spreadsheet))->save($temp_file);
 
         return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
     }

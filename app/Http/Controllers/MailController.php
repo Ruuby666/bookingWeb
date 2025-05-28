@@ -82,14 +82,14 @@ class MailController extends Controller
 
         $dates = explode(' - ', $request->daterange);
         try {
-            $data['checkIn'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' 11:00');
+            $data['checkOut'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' 11:00');
 
             if (str_contains($property->title, 'Casa') || str_contains($property->title, 'Villa')) {
-                $checkoutHour = '15:00';
+                $checkinHour = '15:00';
             } else {
-                $checkoutHour = '14:00';
+                $checkinHour = '14:00';
             }
-            $data['checkOut'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' ' . $checkoutHour);
+            $data['checkIn'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' ' . $checkinHour);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['daterange' => 'Formato de fecha inválido.'])->withInput();
         }
