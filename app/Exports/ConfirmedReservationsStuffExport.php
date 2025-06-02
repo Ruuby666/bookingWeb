@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet\Style\Font;
 use Illuminate\Support\Facades\Response;
 use App\Models\Reservation;
 
-class ConfirmedReservationsExport
+class ConfirmedReservationsStuffExport
 {
     public static function download()
     {
@@ -45,7 +45,6 @@ class ConfirmedReservationsExport
 
             foreach ($propertyReservations as $reservation) {
                 $userName = $reservation->user->name ?? '';
-                $email = $reservation->user->email ?? '';
 
                 $checkInDate = \Carbon\Carbon::parse($reservation->check_in);
                 $checkOutDate = \Carbon\Carbon::parse($reservation->check_out);
@@ -97,14 +96,6 @@ class ConfirmedReservationsExport
                 $sheet->setCellValue("B{$row}", "{$guests} personas");
                 $row++;
 
-                // ID de la reserva
-                $sheet->setCellValue("B{$row}", "ID reserva: {$id}");
-                $row++;
-
-                // Precio total
-                $sheet->setCellValue("B{$row}", "Total: {$totalPrice}");
-                $row++;
-
                 // Notas
                 $sheet->setCellValue("B{$row}", "Observaciones: {$notes}");
                 $row++;
@@ -114,7 +105,7 @@ class ConfirmedReservationsExport
                 $row++;
 
                 // Horas de llegada y salida
-                $sheet->setCellValue("B{$row}", "Llegada: {$arrivalHour}, Salida: {$departureHour}");
+                $sheet->setCellValue("B{$row}", "Hora Llegada: {$arrivalHour}, Hora Salida: {$departureHour}");
                 $row++;
 
                 // Espacio entre reservas
@@ -125,7 +116,7 @@ class ConfirmedReservationsExport
         }
 
         // Guardar archivo temporalmente
-        $filename = 'Reservas_actualizado_' . date('d.m.Y') . '.xlsx';
+        $filename = 'Reservas_actualizado_stuff' . date('d.m.Y') . '.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $filename);
         (new Xlsx($spreadsheet))->save($temp_file);
 

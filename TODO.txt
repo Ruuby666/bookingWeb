@@ -31,13 +31,13 @@
 
 - numero de telefono en cliente ✅
 
-- verificar correo show property
+- verificar correo show property ✅
 
-- calendario globar y x apartamentos dropdown
+- calendario globar y x apartamentos dropdown ✅
 
-- dos exel con todo y otro sin total, sin correo, sin id, cambiar notas por observaciones 
+- dos exel con todo y otro sin total, sin correo, sin id, cambiar notas por observaciones ✅
 
-- cambiar guest por adultos y niños
+- cambiar guest por adultos y niños ✅
 
 - pasar al ingles
 

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ReservationConfirmedMail;
 use Carbon\Carbon;
 use App\Exports\ConfirmedReservationsExport;
+use App\Exports\ConfirmedReservationsStuffExport;
 
 class AdminController extends Controller
 {
@@ -120,9 +121,19 @@ class AdminController extends Controller
         return view('admin.calendar');
     }
 
-    public function getConfirmedReservations()
+    public function getConfirmedReservations(Request $request)
     {
-        $reservations = Reservation::with(['user', 'property'])->where('status', 'confirmed')->get();
+        $propiedad = $request->query('propiedad');
+
+        $query = Reservation::with(['user', 'property'])->where('status', 'confirmed');
+
+        if ($propiedad && $propiedad !== 'todos') {
+            $query->whereHas('property', function ($q) use ($propiedad) {
+                $q->where('title', $propiedad);
+            });
+        }
+
+        $reservations = $query->get();
 
         $events = $reservations->map(function ($reservation) {
             return [
@@ -165,6 +176,25 @@ class AdminController extends Controller
 
     public function exportExcel()
     {
-        return ConfirmedReservationsExport::download();
+        $file1 = ConfirmedReservationsExport::download()->getFile()->getPathname();
+        $file2 = ConfirmedReservationsStuffExport::download()->getFile()->getPathname();
+
+        $date = Carbon::now()->format('d_m_Y');
+
+        // Crear archivo ZIP temporal
+        $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_') . '.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zipFile, \ZipArchive::CREATE);
+        $zip->addFile($file1, 'Reservas_'. $date .'.xlsx');
+        $zip->addFile($file2, 'Reservas_stuff_'. $date .'.xlsx');
+        $zip->close();
+
+        // Descargar el ZIP y eliminarlo después
+        return response()->download($zipFile, 'Reservas_completas.zip')->deleteFileAfterSend(true);
+    }
+
+    public function exportStuffExcel()
+    {
+        return ConfirmedReservationsStuffExport::download();
     }
 }

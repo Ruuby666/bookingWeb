@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calendar</title>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" />
-        <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
 
 
@@ -26,6 +26,18 @@
     <div class="container">
         <div class="calendar-toolbar">
             <h3>Calendario de Reservas Confirmadas</h3>
+            <div>
+                <form id="propiedadForm" onsubmit="return false;">
+                    <label for="propiedad">¿Cuál?</label>
+                    <select name="propiedad" id="propiedad" class="form-control">
+                        <option selected value="todos">Todos</option>
+                        <option value="Marlin I Puerto del Carmen">Marlin C1</option>
+                        <option value="Marlin II Puerto del Carmen">Marlin C2</option>
+                        <option value="Casa Delfin Playa Blanca">Villa Delfín</option>
+                        <option value="El Galeon">El Galeon</option>
+                    </select>
+                </form>
+            </div>
             <a href="{{ route('admin.calendar.export-excel') }}" class="btn-export">Descargar Excel</a>
         </div>
         <div id="calendar"></div>
@@ -63,9 +75,9 @@
         </div>
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const propiedad = "{{ request('propiedad') ?? 'todos' }}";
             const calendarEl = document.getElementById('calendar');
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
@@ -75,7 +87,13 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                events: '/admin/calendar/reservations',
+                events: function(fetchInfo, successCallback, failureCallback) {
+                    const propiedad = document.getElementById('propiedad').value;
+                    fetch(`/admin/calendar/reservations?propiedad=${encodeURIComponent(propiedad)}`)
+                        .then(response => response.json())
+                        .then(data => successCallback(data))
+                        .catch(error => failureCallback(error));
+                },
                 eventClick: function(info) {
                     document.getElementById('modalTitle').textContent = info.event.title;
                     document.getElementById('modalStart').textContent = info.event.start.toLocaleString();
@@ -114,6 +132,15 @@
             });
 
             calendar.render();
+
+            // Escucha cambios en el select y actualiza los eventos del calendario
+            document.getElementById('propiedad').addEventListener('change', function() {
+                const propiedad = this.value;
+                calendar.removeAllEvents();
+                calendar.refetchEvents();
+                calendar.setOption('events', `/admin/calendar/reservations?propiedad=${encodeURIComponent(propiedad)}`);
+                calendar.refetchEvents();
+            });
         });
     </script>
 
