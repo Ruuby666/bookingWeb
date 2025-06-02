@@ -16,6 +16,12 @@ class ReservationController extends Controller
         $checkIn = $data['checkIn'];
         $checkOut = $data['checkOut'];
 
+        if ($checkIn->gt($checkOut)) {
+            [$checkIn, $checkOut] = [$checkOut, $checkIn];
+            $data['checkIn'] = $checkIn;
+            $data['checkOut'] = $checkOut;
+        }
+
         // Comprobación de solapamiento con reservas confirmadas
         $overlappingReservation = Reservation::where('property_id', $property->id)
             ->where('status', 'confirmed')
@@ -60,7 +66,7 @@ class ReservationController extends Controller
         $checkIn = $checkIn->copy()->startOfDay();
         $checkOut = $checkOut->copy()->startOfDay();
         $nights = $checkIn->diffInDays($checkOut);
-        
+
         return $nights * $property->price_per_night;
     }
 }

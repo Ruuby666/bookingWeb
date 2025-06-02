@@ -32,20 +32,24 @@ class MailController extends Controller
 
         $property = Property::find($request->property_id);
 
+        if ($request->email !== $request->verification_email) {
+            return redirect()->back()->with('error', 'Los correos electrónicos no coinciden');
+        }
+
         $validator = Validator::make($request->all(), [
             'property_id' => 'required|exists:properties,id',
-            'guests' => 'required|integer|min:1|max:' . $property->capacity,
+            'adults' => 'required|integer|min:1|max:' . $property->capacity,
+            'children' => 'required|integer|min:0|max:' . $property->capacity,
             'name' => 'required|string|max:255',
             'number' => 'required|string|max:20',
             'email' => 'required|email|max:255',
-            'message' => 'nullable|string',
+            'verification_email' => 'required|same:email|email|max:255',
+            'message' => 'nullable|string|max:1000',
             'daterange' => 'required|string|regex:/\d{2}\/\d{2}\/\d{4} - \d{2}\/\d{2}\/\d{4}/',
         ], [
-            'property_id.required' => 'La propiedad es obligatoria.',
-            'property_id.exists' => 'La propiedad seleccionada no existe.',
-            'guests.required' => 'El número de invitados es obligatorio.',
-            'guests.integer' => 'El número de invitados debe ser un número entero.',
-            'guests.min' => 'Debe haber al menos un invitado.',
+            'adults.required' => 'El número de adultos es obligatorio.',
+            'children.required' => 'El número de niños es obligatorio.',
+            'verification_email.same' => 'El correo de verificación debe coincidir con el correo electrónico.',
             'guests.max' => 'El número máximo de invitados permitido es ' . $property->capacity . '.',
             'name.required' => 'El nombre es obligatorio.',
             'name.string' => 'El nombre debe ser texto.',
@@ -66,13 +70,23 @@ class MailController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        // Verificar que la suma total de personas no supere la capacidad
+        $data['guests'] = $request->adults + $request->children;
+        if ($data['guests'] > $property->capacity) {
+            return redirect()->back()->withErrors([
+                'adults' => 'El total de personas no puede superar la capacidad de la propiedad (' . $property->capacity . ').'
+            ])->withInput();
+        }
+
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             $user = $this->userController->store($request);
         }
 
         $data = [
-            'guests' => $request->guests,
+            'adults' => $request->adults,
+            'children' => $request->children,
+            'guests' => $request->adults + $request->children,
             'name' => $request->name,
             'number' => $request->number,
             'email' => $request->email,

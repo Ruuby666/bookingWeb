@@ -109,8 +109,10 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="guests">Guests <b style="color:red;">*</b></label>
-                            <input id="guests" name="guests" type="number" placeholder="1 - {{ $property->capacity }}" min="1" max="{{ $property->capacity }}" value="{{ old('guests') }}" required>
+                            <label for="adults">Adults <b style="color:red;">*</b></label>
+                            <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" min="1" value="{{ old('adults') }}" required>
+                            <label for="children">Childrens <b style="color:red;">*</b></label>
+                            <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" min="0" value="{{ old('children') }}" required>
                             @error('guests')
                             <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
                             @enderror
@@ -134,6 +136,13 @@
                             <label for="email">Email <b style="color:red;">*</b></label>
                             <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" required>
                             @error('email')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="verification_email">Verify Email <b style="color:red;">*</b></label>
+                            <input id="verification_email" name="verification_email" type="email" placeholder="Verify your email" value="{{ old('verification_email') }}" required>
+                            @error('verification_email')
                             <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
                             @enderror
                         </div>
