@@ -3,9 +3,14 @@ body {
     margin: 0px;
 }
 
-#footer{
+#footer {
     position: sticky !important;
     width: auto !important;
+}
+
+.pending-id {
+    display: flex;
+    justify-content: space-around;
 }
 
 .pending-container {
@@ -44,6 +49,7 @@ body {
     background-color: #007bff;
     color: white;
 }
+
 td:first-child,
 th:first-child {
     background-color: #007bff;
@@ -80,12 +86,12 @@ th:first-child {
     text-align: center;
 }
 
-.div-buttons{
+.div-buttons {
     display: flex;
     justify-content: space-between;
 }
 
-.mark-completed-button {
+.mark-completed-button, .mark-export-button {
     background-color: #28a745;
     color: white;
     border: none;
@@ -98,7 +104,6 @@ th:first-child {
 .mark-completed-button:hover {
     background-color: #218838;
 }
-
 
 .mark-sugerencia-button {
     background-color: #a89009;
@@ -114,17 +119,44 @@ th:first-child {
     background-color: #b67b0c;
 }
 
+.crear-factura-button {
+    background-color: #28a745; 
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 20px;
+}
+
+.crear-factura-button:hover {
+    background-color: #218838;
+    transform: scale(1.03);
+}
+
+.reservation-checkbox {
+    transform: scale(1.5);
+    cursor: pointer;
+}
+
 /* Oculta el modal por defecto */
 .modal {
-    display: none; /* Oculto por defecto */
+    display: none;
+    /* Oculto por defecto */
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Scroll si es necesario */
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro translúcido */
+    overflow: auto;
+    /* Scroll si es necesario */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fondo negro translúcido */
 }
 
 /* Muestra el modal al eliminar .hidden */
@@ -171,7 +203,13 @@ th:first-child {
 
 /* Animación de aparición */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
 
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

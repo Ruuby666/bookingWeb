@@ -53,6 +53,7 @@
                 <tr class="pending-row">
                     <td class="pending-id">{{ $reservation->id }}
                         <button onclick="openModal('{{ $reservation->id }}')"><b>ⓘ</b></button>
+                        @if ($section['title'] == 'Confirmed Reservations') <input type="checkbox" value="{{ $reservation->id }}" class="reservation-checkbox"> @endif
                     </td>
                     <td class="pending-property">{{ $reservation->property->title }}</td>
                     <td class="pending-guest">{{ $reservation->user->name }}</td>
@@ -79,7 +80,7 @@
                     <div class="modal-content">
                         <span class="close" onclick="closeModal('{{ $reservation->id }}')">&times;</span>
                         <h2>Reserva en {{ $reservation->property->title }}</h2>
-                        <ul> 
+                        <ul>
                             <li><strong>Cliente: </strong> {{ $reservation->user->name }}</li>
                             <li><strong>Email: </strong>{{ $reservation->user->email }}</li>
                             <li><strong>Phone Number: </strong>{{ $reservation->user->phone_number }}</li>
@@ -92,7 +93,7 @@
                         </ul>
                         <div class="div-buttons">
                             @if ($reservation->status == 'pending')
-                            <button class="mark-suggestion-button" data-url="{{ route('suggestion.create', $reservation) }}" onclick="redirectFromButton(this)">
+                            <button class="mark-sugerencia-button" data-url="{{ route('suggestion.create', $reservation) }}" onclick="redirectFromButton(this)">
                                 Suggestion
                             </button>
                             <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
@@ -110,6 +111,22 @@
         @endif
     </div>
     @endforeach
+
+    <button class="crear-factura-button" onclick="openFacturaModal()">Crear Facturas</button>
+
+    <div id="modal-factura" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeFacturaModal()">&times;</span>
+            <h2>Reservas seleccionadas</h2>
+            <ul id="selected-reservations-list"></ul>
+            <input type="number" id="invoice-amount" placeholder="Número de la primera factura" required>
+            <div class="div-buttons">
+                <button class="mark-export-button" data-url="{{ route('admin.calendar.export-factura-excel') }}" onclick="redirectfacturaFromButton(this)">
+                    Exportar a Exel
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div id="session-data"
         data-session-lifetime="{{ config('session.lifetime') }}"
@@ -132,6 +149,53 @@
             if (url) {
                 window.location.href = url;
             }
+        }
+
+        function openFacturaModal() {
+            const checkboxes = document.querySelectorAll('.reservation-checkbox:checked');
+            const list = document.getElementById('selected-reservations-list');
+            list.innerHTML = '';
+
+            if (checkboxes.length === 0) {
+                list.innerHTML = '<li>No hay reservas seleccionadas.</li>';
+            } else {
+                checkboxes.forEach(cb => {
+                    const li = document.createElement('li');
+                    li.textContent = `Reserva ID: ${cb.value}`;
+                    list.appendChild(li);
+                });
+            }
+
+            document.getElementById('modal-factura').classList.remove('hidden');
+        }
+
+        function redirectfacturaFromButton(button) {
+            const url = button.getAttribute('data-url');
+            const checkboxes = document.querySelectorAll('.reservation-checkbox:checked');
+            const invoiceAmount = document.getElementById('invoice-amount').value;
+
+            const ids = Array.from(checkboxes).map(cb => cb.value);
+
+            if (ids.length === 0) {
+                alert("Selecciona al menos una reserva.");
+                return;
+            }
+
+            if (!invoiceAmount) {
+                alert("Introduce el número de la primera factura.");
+                return;
+            }
+
+            const params = new URLSearchParams();
+            ids.forEach(id => params.append('ids[]', id));
+            params.append('invoice_amount', invoiceAmount);
+
+            window.location.href = `${url}?${params.toString()}`;
+        }
+
+
+        function closeFacturaModal() {
+            document.getElementById('modal-factura').classList.add('hidden');
         }
     </script>
 

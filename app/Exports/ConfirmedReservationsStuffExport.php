@@ -33,14 +33,13 @@ class ConfirmedReservationsStuffExport
             $row = 1;
 
             // Título principal
-            $sheet->setCellValue("A{$row}", "TITULO = 'RESERVA {$propertyTitle}'");
+            $sheet->setCellValue("A{$row}", 'RESERVA {$propertyTitle}');
             $sheet->mergeCells("A{$row}:C{$row}");
             $sheet->getStyle("A{$row}")->getFont()->setBold(true);
             $sheet->getStyle("A{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $row += 2;
 
             $lastMonth = null;
-            $lastCheckOut = null;
             $prevReservation = null;
 
             foreach ($propertyReservations as $reservation) {
@@ -60,8 +59,6 @@ class ConfirmedReservationsStuffExport
                 $month = ucfirst($checkInDate->locale('es')->isoFormat('MMMM'));
 
                 $guests = $reservation->guests ?? 'N/A';
-                $id = $reservation->id;
-                $totalPrice = $reservation->total_price ?? 'N/A';
                 $notes = $reservation->notes ?? '';
                 $arrivalHour = $checkInHour ?? '';
                 $departureHour = $checkOutHour ?? '';

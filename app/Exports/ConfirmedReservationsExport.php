@@ -33,14 +33,13 @@ class ConfirmedReservationsExport
             $row = 1;
 
             // Título principal
-            $sheet->setCellValue("A{$row}", "TITULO = 'RESERVA {$propertyTitle}'");
+            $sheet->setCellValue("A{$row}", 'RESERVA {$propertyTitle}');
             $sheet->mergeCells("A{$row}:C{$row}");
             $sheet->getStyle("A{$row}")->getFont()->setBold(true);
             $sheet->getStyle("A{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $row += 2;
 
             $lastMonth = null;
-            $lastCheckOut = null;
             $prevReservation = null;
 
             foreach ($propertyReservations as $reservation) {
@@ -91,6 +90,9 @@ class ConfirmedReservationsExport
                 $row++;
 
                 $sheet->setCellValue("B{$row}", "{$userName}");
+                $row++;
+
+                $sheet->setCellValue("B{$row}", "{$email}");
                 $row++;
 
                 // Número de huéspedes

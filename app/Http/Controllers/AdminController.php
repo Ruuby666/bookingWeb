@@ -14,6 +14,7 @@ use App\Mail\ReservationConfirmedMail;
 use Carbon\Carbon;
 use App\Exports\ConfirmedReservationsExport;
 use App\Exports\ConfirmedReservationsStuffExport;
+use App\Exports\FacturasExport;
 
 class AdminController extends Controller
 {
@@ -185,16 +186,19 @@ class AdminController extends Controller
         $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_') . '.zip';
         $zip = new \ZipArchive();
         $zip->open($zipFile, \ZipArchive::CREATE);
-        $zip->addFile($file1, 'Reservas_'. $date .'.xlsx');
-        $zip->addFile($file2, 'Reservas_stuff_'. $date .'.xlsx');
+        $zip->addFile($file1, 'Reservas_' . $date . '.xlsx');
+        $zip->addFile($file2, 'Reservas_stuff_' . $date . '.xlsx');
         $zip->close();
 
         // Descargar el ZIP y eliminarlo después
         return response()->download($zipFile, 'Reservas_completas.zip')->deleteFileAfterSend(true);
     }
 
-    public function exportStuffExcel()
+    public function exportfacturaExcel(Request $request)
     {
-        return ConfirmedReservationsStuffExport::download();
+        $ids = $request->input('ids'); // array de IDs
+        $invoiceAmount = $request->input('invoice_amount');
+
+        return FacturasExport::download($ids, $invoiceAmount);
     }
 }

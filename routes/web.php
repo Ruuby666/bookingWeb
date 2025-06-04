@@ -55,6 +55,8 @@ Route::middleware([IsAdmin::class])->group(function () {
     Route::post('/admin/calendar/reservation/update-time', [AdminController::class, 'updateTime'])->name('admin.calendar.reservations.update-time');
 
     Route::get('/admin/calendar/export-excel', [AdminController::class, 'exportExcel'])->name('admin.calendar.export-excel');
+
+    Route::get('/admin/calendar/export-factura-excel', [AdminController::class, 'exportfacturaExcel'])->name('admin.calendar.export-factura-excel');
 });
 
 // Resource routes

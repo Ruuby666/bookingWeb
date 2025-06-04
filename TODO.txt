@@ -39,6 +39,8 @@
 
 - cambiar guest por adultos y niños ✅
 
+- crear exel factura , dar numero de factura si no es posible hacerlo de manera automatica
+
 - pasar al ingles
 
 - no esta funcionando lo de los errores personalizados 
