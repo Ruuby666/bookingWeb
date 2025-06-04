@@ -143,6 +143,12 @@ th:first-child {
     cursor: pointer;
 }
 
+#invoice-amount{
+    font-size: 15px;
+    width: 60%;
+    margin-bottom: 10px;
+}
+
 /* Oculta el modal por defecto */
 .modal {
     display: none;
