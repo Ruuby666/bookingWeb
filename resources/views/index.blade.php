@@ -25,7 +25,7 @@
 
     @include('components.date-range', ['propertyWithImages' => $propertyWithImages])
 
-    <h1>Propiedades Disponibles</h1>
+    <h1>Available Properties</h1>
 
     <div id="carousel-container">
         <button class="prev">&#10094;</button>
@@ -95,7 +95,7 @@
 
                 const marker = new google.maps.marker.AdvancedMarkerElement({
                     position: position,
-                    map: map, // requerido para renderizar individualmente antes del cluster
+                    map: map,
                     title: markerInfo.title,
                     content: pin.element,
                 });
@@ -155,7 +155,7 @@
 
             // Validar si hay tarjetas en el carrusel
             if (!carousel || !prevButton || !nextButton) {
-                console.error("Error: No se encontraron los elementos del carrusel.");
+                console.error("Error: Not elements found in carrusel.");
                 return;
             }
 

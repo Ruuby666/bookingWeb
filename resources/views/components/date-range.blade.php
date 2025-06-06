@@ -15,7 +15,7 @@
 
 <body>
     <div class="daterange-container">
-        <h2>Select a Date Range</h2>
+        <h2>Select Range</h2>
         @csrf
         <input type="text" id="daterange" placeholder="Select a date range" />
     </div>
@@ -76,7 +76,7 @@
             "autoUpdateInput": true,
             "showCustomRangeLabel": true,
             "showDropdowns": false,
-            "minDate": moment(),
+            "minDate": moment().add(1, 'days'),
             "opens": "center",
             "drops": "auto",
             "isInvalidDate": function(date) {
@@ -107,9 +107,6 @@
 
             let availableProperties = @json($properties).filter(property => !occupiedPropertyIds.includes(
                 property.id));
-
-            console.log("Occupied Property IDs:", occupiedPropertyIds);
-            console.log("Available Property IDs:", availableProperties);
 
             displayAvailableProperties(availableProperties);
 

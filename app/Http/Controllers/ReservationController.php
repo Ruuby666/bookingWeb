@@ -34,7 +34,7 @@ class ReservationController extends Controller
             ->exists();
 
         if ($overlappingReservation) {
-            return redirect()->back()->with('error', 'Elija otra fecha, ya existe una reserva del ' . $overlappingReservation->check_in->format('d/m/Y H:i') . ' al ' . $overlappingReservation->check_out->format('d/m/Y H:i'));
+            return redirect()->back()->with('error', 'Select other date range, there is a reservation already from ' . $overlappingReservation->check_in->format('d/m/Y H:i') . ' to ' . $overlappingReservation->check_out->format('d/m/Y H:i'));
         }
 
 

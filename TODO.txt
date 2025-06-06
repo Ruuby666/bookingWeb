@@ -39,7 +39,7 @@
 
 - cambiar guest por adultos y niños ✅
 
-- crear exel factura , dar numero de factura si no es posible hacerlo de manera automatica ✅
+- crear exel factura , dar numero de factura si no es posible hacerlo de manera automatica ✅ (Revisar) para no repetir las facturas debería o ocultar el checkbox o un nuevo dato en la base de datos
 
 - pasar al ingles
 

@@ -33,7 +33,7 @@ class MailController extends Controller
         $property = Property::find($request->property_id);
 
         if ($request->email !== $request->verification_email) {
-            return redirect()->back()->with('error', 'Los correos electrónicos no coinciden');
+            return redirect()->back()->with('error', "The verification email doesn't match the email you entered.");
         }
 
         $validator = Validator::make($request->all(), [
@@ -73,9 +73,9 @@ class MailController extends Controller
         // Verificar que la suma total de personas no supere la capacidad
         $data['guests'] = $request->adults + $request->children;
         if ($data['guests'] > $property->capacity) {
-            return redirect()->back()->withErrors([
-                'adults' => 'El total de personas no puede superar la capacidad de la propiedad (' . $property->capacity . ').'
-            ])->withInput();
+            return redirect()->back()->with(
+                'error',"The total number of people cannot exceed the property's capacity (' . $property->capacity . ')."
+            );
         }
 
         $user = User::where('email', $request->email)->first();
@@ -118,10 +118,10 @@ class MailController extends Controller
             $this->reservationController->createReservation($property, $data, $user);
 
             return redirect()->route('properties.show', ['property' => $property])
-                ->with('success', 'Correo enviado correctamente');
+                ->with('success', 'Email sent successfully! We will contact you shortly.');
         } catch (\Exception $e) {
             return redirect()->route('properties.show', ['property' => $property])
-                ->with('error', 'Error al enviar el correo: ' . $e->getMessage());
+                ->with('error', 'Error sending the email: ' . $e->getMessage());
         }
     }
 
