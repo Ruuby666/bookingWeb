@@ -47,3 +47,14 @@
    -  guest error message - 2 personas maximo
 
 - arreglar lo del header del map y del properties ✅
+
+
+- añadir dias factura ✅
+
+quitar iban quitar 50% añadir efectivo checkin, informacion de como obtener la llave confirma si estas de acuerdo con la hora de llegada y salida. ✅
+
+añadir script todos los dias a las 00:00 se recorre las reservas conf. que tengan para mañana y enviar información a ese correo
+
+cambiar logo
+
+comprobar la seguridad algo no funciona se puede acceder a alguno de los end points

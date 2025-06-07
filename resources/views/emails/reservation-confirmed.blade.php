@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Reservation Confirmation</title>
 </head>
+
 <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; margin: 0;">
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
         <tr style="background-color: #007BFF; color: white;">
@@ -36,11 +38,10 @@
                 </table>
 
                 <p style="margin-top: 20px;">
-                    To secure your reservation, please transfer 50% of the total amount (equivalent to <strong>€{{ number_format($reservation->total_price / 2, 2) }}</strong>) to the following bank account:
+                    The payment will be made in cash at the time of check-in. Please confirm your arrival and departure times.
                 </p>
-                <p style="font-size: 16px;"><strong>IBAN:</strong> ES984795487937549375</p>
 
-                <p style="color: #d9534f;"><strong>Important:</strong> If payment is not received within 14 days, the reservation will be automatically cancelled.</p>
+                <p style="color: #d9534f;"><strong>Important:</strong> You will receive an email the day before with the apartment information.</p>
 
                 <p style="margin-top: 30px;">Thank you for choosing us. We look forward to welcoming you!</p>
 
@@ -49,10 +50,11 @@
         </tr>
         <tr style="background-color: #f0f0f0;">
             <td style="text-align: center; padding: 20px;">
-                <img src="/images/nameEMLWhite.png" alt="Company Logo" style="margin-bottom: 10px;">
+                <img src="cid:nameEMLBlack.png" alt="Logo" style="width: 250px; margin-bottom: 10px;">
                 <p style="font-size: 12px; color: #888;">© 2025 Your Reservation Company. All rights reserved.</p>
             </td>
         </tr>
     </table>
 </body>
+
 </html>

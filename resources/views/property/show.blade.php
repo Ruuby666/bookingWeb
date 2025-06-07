@@ -110,9 +110,9 @@
                         </div>
                         <div class="form-group">
                             <label for="adults">Adults <b style="color:red;">*</b></label>
-                            <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" min="1" value="{{ old('adults') }}" required>
+                            <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" value="{{ old('adults') }}" required>
                             <label for="children">Childrens <b style="color:red;">*</b></label>
-                            <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" min="0" value="{{ old('children') }}" required>
+                            <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" value="{{ old('children') ?? 0 }}" required>
                             @error('guests')
                             <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
                             @enderror

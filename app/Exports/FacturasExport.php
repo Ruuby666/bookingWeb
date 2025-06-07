@@ -26,10 +26,10 @@ class FacturasExport
         if ($facturaNumber < 10) {
             $facturaNumber = 0 . $facturaNumber;
         }
-            
 
 
-        
+
+
         $sheetIndex = 0;
 
         foreach ($reservations as $reservation) {
@@ -47,9 +47,9 @@ class FacturasExport
             $sheet->setCellValue('B5', 'C/ BONILLA, Nº 20');
             $sheet->setCellValue('B6', '35580 COSTA PAPAGAYO');
             $sheet->setCellValue('B7', 'PLAYA BLANCA - LANZAROTE');
-            $sheet->setCellValue('B10', 'Factura: '. $facturaNumber.'/'.date('y'));
+            $sheet->setCellValue('B10', 'Factura: ' . $facturaNumber . '/' . date('y'));
 
-            $headers = ['ENTRADA', 'SALIDA', 'NOMBRE CLIENTE', 'IGIC', 'IMPORTE BASE IMPONIBLE', 'IMPORTE TOTAL'];
+            $headers = ['ENTRADA', 'SALIDA', 'DIAS',  'NOMBRE CLIENTE', 'IGIC', 'IMPORTE BASE IMPONIBLE', 'IMPORTE TOTAL'];
             $sheet->fromArray($headers, null, 'C30');
 
             // Estilo para cabecera (negrita y centrado)
@@ -67,11 +67,12 @@ class FacturasExport
                 ]
             );
 
-            $sheet->getStyle('C30:H30')->applyFromArray($headerStyle);
+            $sheet->getStyle('C30:I30')->applyFromArray($headerStyle);
 
             $userName = $reservation->user->name ?? '';
             $checkIn = \Carbon\Carbon::parse($reservation->check_in)->format('d.m.Y');
             $checkOut = \Carbon\Carbon::parse($reservation->check_out)->format('d.m.Y');
+            $days = \Carbon\Carbon::parse($checkIn)->diffInDays($checkOut);
             $baseImponible = $reservation->total_price ?? 'N/A';
             $igic = $baseImponible * 0.07;
             $importeTotal = $baseImponible + $igic;
@@ -79,21 +80,26 @@ class FacturasExport
             $data = [
                 $checkIn,
                 $checkOut,
+                $days,
                 $userName,
-                number_format($igic, 2,'.'). ' €',
-                number_format($baseImponible, 2,'.'). ' €',
-                number_format($importeTotal, 2,'.'). ' €',
+                number_format($igic, 2, '.') . ' €',
+                number_format($baseImponible, 2, '.') . ' €',
+                number_format($importeTotal, 2, '.') . ' €',
             ];
 
             $sheet->fromArray($data, null, 'C31');
 
-            $sheet->getStyle('C31:H31')->applyFromArray([
+            $sheet->getStyle('C31:I31')->applyFromArray([
                 'borders' => [
                     'allBorders' => ['borderStyle' => Border::BORDER_THIN],
                 ],
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                ],
             ]);
 
-            foreach (range('C', 'H') as $col) {
+            foreach (range('C', 'I') as $col) {
                 $sheet->getColumnDimension($col)->setAutoSize(true);
             }
 
@@ -107,7 +113,6 @@ class FacturasExport
 
             $facturaNumber++;
             $sheetIndex++;
-
         }
 
         $filename = 'Facturas' . date('d.m.Y') . '.xlsx';

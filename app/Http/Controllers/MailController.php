@@ -74,7 +74,8 @@ class MailController extends Controller
         $data['guests'] = $request->adults + $request->children;
         if ($data['guests'] > $property->capacity) {
             return redirect()->back()->with(
-                'error',"The total number of people cannot exceed the property's capacity (' . $property->capacity . ')."
+                'error',
+                "The total number of people cannot exceed the property's capacity (' . $property->capacity . ')."
             );
         }
 
@@ -94,16 +95,18 @@ class MailController extends Controller
             'daterange' => $request->daterange,
         ];
 
+
+
         $dates = explode(' - ', $request->daterange);
         try {
-            $data['checkOut'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' 11:00');
+            $data['checkOut'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
 
             if (str_contains($property->title, 'Casa') || str_contains($property->title, 'Villa')) {
                 $checkinHour = '15:00';
             } else {
                 $checkinHour = '14:00';
             }
-            $data['checkIn'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' ' . $checkinHour);
+            $data['checkIn'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' ' . $checkinHour);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['daterange' => 'Formato de fecha inválido.'])->withInput();
         }
