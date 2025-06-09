@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('check_out');
             $table->string('status')->default('pending');
             $table->text('notes')->nullable();
+            $table->boolean('invoice')->nullable();
             $table->integer('guests');
             $table->decimal('total_price', 8, 2);
             $table->timestamps();

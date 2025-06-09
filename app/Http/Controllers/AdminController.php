@@ -98,18 +98,11 @@ class AdminController extends Controller
         $reservation->status = 'confirmed';
         $reservation->save();
 
-        $this->updateReservationJson();
+        Reservation::updateReservationJson();
 
         Mail::to($reservation->user->email)->send(new ReservationConfirmedMail($reservation));
 
         return redirect()->back()->with('success', 'Confirmación enviada al cliente.');
-    }
-
-    private function updateReservationJson()
-    {
-        $reservations = Reservation::all()->toArray();
-        Storage::put('reservations.json', encrypt(json_encode($reservations, JSON_PRETTY_PRINT)));
-        error_log("Archivo reservations.json actualizado tras creación de usuario.");
     }
 
     public function suggestionEmail(Reservation $reservation)
@@ -196,8 +189,12 @@ class AdminController extends Controller
 
     public function exportfacturaExcel(Request $request)
     {
-        $ids = $request->input('ids'); // array de IDs
+        $ids = $request->input('ids');
         $invoiceAmount = $request->input('invoice_amount');
+
+        foreach ($ids as $id){
+            Reservation::markAsInvoiced($id);
+        }
 
         return FacturasExport::download($ids, $invoiceAmount);
     }

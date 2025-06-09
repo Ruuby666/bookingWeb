@@ -53,7 +53,7 @@
                 <tr class="pending-row">
                     <td class="pending-id">{{ $reservation->id }}
                         <button onclick="openModal('{{ $reservation->id }}')"><b>ⓘ</b></button>
-                        @if ($section['title'] == 'Confirmed Reservations') <input type="checkbox" value="{{ $reservation->id }}" class="reservation-checkbox"> @endif
+                        @if ($section['title'] == 'Confirmed Reservations' && $reservation->invoice == false) <input type="checkbox" value="{{ $reservation->id }}" class="reservation-checkbox"> @endif
                     </td>
                     <td class="pending-property">{{ $reservation->property->title }}</td>
                     <td class="pending-guest">{{ $reservation->user->name }}</td>
@@ -191,6 +191,9 @@
             params.append('invoice_amount', invoiceAmount);
 
             window.location.href = `${url}?${params.toString()}`;
+            
+            document.getElementById('modal-factura').classList.add('hidden');
+
         }
 
 

@@ -46,18 +46,12 @@ class ReservationController extends Controller
             'status' => 'pending',
             'notes' => $data['message'],
             'guests' => $data['guests'],
+            'invoice' => false,
             'total_price' => $this->calculateTotalPrice($property->id, $checkIn, $checkOut),
         ]);
 
-        $this->updateReservationJson();
+        Reservation::updateReservationJson();
         return $reservation;
-    }
-
-    private function updateReservationJson()
-    {
-        $reservations = Reservation::all()->toArray();
-        Storage::put('reservations.json', encrypt(json_encode($reservations, JSON_PRETTY_PRINT)));
-        error_log("Archivo reservations.json actualizado tras creación de usuario.");
     }
 
     private function calculateTotalPrice($propertyId, $checkIn, $checkOut)
@@ -69,4 +63,5 @@ class ReservationController extends Controller
 
         return $nights * $property->price_per_night;
     }
+
 }
