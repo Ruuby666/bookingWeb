@@ -33,7 +33,7 @@ class ConfirmedReservationsExport
             $row = 1;
 
             // Título principal
-            $sheet->setCellValue("A{$row}", 'RESERVA {$propertyTitle}');
+            $sheet->setCellValue("A{$row}", "RESERVA {$propertyTitle}");
             $sheet->mergeCells("A{$row}:C{$row}");
             $sheet->getStyle("A{$row}")->getFont()->setBold(true);
             $sheet->getStyle("A{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);

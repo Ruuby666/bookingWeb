@@ -26,10 +26,7 @@ class FacturasExport
         if ($facturaNumber < 10) {
             $facturaNumber = 0 . $facturaNumber;
         }
-
-
-
-
+        
         $sheetIndex = 0;
 
         foreach ($reservations as $reservation) {
