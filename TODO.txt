@@ -43,22 +43,23 @@
 
 - añadir dias factura ✅
 
-quitar iban quitar 50% añadir efectivo checkin, informacion de como obtener la llave confirma si estas de acuerdo con la hora de llegada y salida. ✅
+- quitar iban quitar 50% añadir efectivo checkin, 
+   informacion de como obtener la llave confirma si estas de acuerdo con la hora de llegada y salida. ✅
 
-- crear exel factura , dar numero de factura si no es posible hacerlo de manera automatica ✅ (Revisar) para no repetir las facturas debería o ocultar el checkbox o un nuevo dato en la base de datos
+- crear exel factura , dar numero de factura si no es posible hacerlo de manera automatica ✅
 
-añadir script todos los dias a las 00:00 se recorre las reservas conf. que tengan para mañana y enviar información a ese correo
+- cambiar logo ✅
 
-cambiar logo ✅
+- calendario excel RESERVA {$propertyTitle} ✅
 
 comprobar la seguridad algo no funciona se puede acceder a alguno de los end points (comprobar)
 
-- nombre de los apartamentos factura 
+- nombre de los apartamentos factura ✅
 
-- calendario excel RESERVA {$propertyTitle}
+- fotos piscina villa ✅
 
-- fotos piscina villa
-
+- añadir script todos los dias a las 00:00 se recorre las reservas confir. que tengan para mañana y enviar información a ese correo
+ 
 - Cada mes tiene su precio
 
 - Tener cuidado de como estoy enviando las cosas --> @json($properties);

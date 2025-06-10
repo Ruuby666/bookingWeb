@@ -22,11 +22,12 @@ class FacturasExport
 
         $spreadsheet = new Spreadsheet();
         $facturaNumber = intval($invoiceAmount);
-
         if ($facturaNumber < 10) {
             $facturaNumber = 0 . $facturaNumber;
         }
-        
+
+
+
         $sheetIndex = 0;
 
         foreach ($reservations as $reservation) {
@@ -36,14 +37,25 @@ class FacturasExport
                 $sheet = $spreadsheet->createSheet();
             }
 
+            $address = array_map('trim', explode(',', $reservation->property->location));
+            if ($reservation->property->title == 'El Galeon') {
+                $sheet->setCellValue('B2', 'TONIRETOOS SL');
+                $sheet->setCellValue('B3', 'B35632223');
+                $sheet->setCellValue('B4','APARTAMENTO EL GALEON');
+                $sheet->setCellValue('B5','VALLE DE LA DEGOLLADA 63');
+                $sheet->setCellValue('B6','LA DEGOLLADA, 35570 YAIZA');
+            } else {
+                $sheet->setCellValue('B2', 'OSCAR SEPULVEDA GUTIERREZ');
+                $sheet->setCellValue('B3', '45532610Q');
+                $sheet->setCellValue('B4', strtoupper($reservation->property->title));
+                $sheet->setCellValue('B5', strtoupper($address[0] ?? ''));
+                $sheet->setCellValue('B6', strtoupper($address[1] ?? ''));
+            }
             $sheet->setTitle("Factura {$facturaNumber}");
 
-            $sheet->setCellValue('B2', 'OSCAR SEPULVEDA GUTIERREZ');
-            $sheet->setCellValue('B3', '45532610Q');
-            $sheet->setCellValue('B4', 'CASA DELFÍN PLAYA BLANCA');
-            $sheet->setCellValue('B5', 'C/ BONILLA, Nº 20');
-            $sheet->setCellValue('B6', '35580 COSTA PAPAGAYO');
-            $sheet->setCellValue('B7', 'PLAYA BLANCA - LANZAROTE');
+
+
+            $sheet->setCellValue('B7', 'LANZAROTE');
             $sheet->setCellValue('B10', 'Factura: ' . $facturaNumber . '/' . date('y'));
 
             $headers = ['ENTRADA', 'SALIDA', 'DIAS',  'NOMBRE CLIENTE', 'IGIC', 'IMPORTE BASE IMPONIBLE', 'IMPORTE TOTAL'];
