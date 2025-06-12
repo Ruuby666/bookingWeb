@@ -48,10 +48,18 @@ Route::middleware([IsAdmin::class])->group(function () {
 
     Route::post('/reservations/{id}/send-suggestion', [MailController::class, 'sendSuggestion'])->name('reservations.sendSuggestion');
 
+    Route::get('/admin/calendar', [AdminController::class, 'calendar'])->name('admin.calendar');
 
+    Route::get('/admin/calendar/reservations', [AdminController::class, 'getConfirmedReservations'])->name('admin.calendar.reservations');
+
+    Route::post('/admin/calendar/reservation/update-time', [AdminController::class, 'updateTime'])->name('admin.calendar.reservations.update-time');
+
+    Route::get('/admin/calendar/export-excel', [AdminController::class, 'exportExcel'])->name('admin.calendar.export-excel');
+
+    Route::get('/admin/calendar/export-factura-excel', [AdminController::class, 'exportfacturaExcel'])->name('admin.calendar.export-factura-excel');
 });
 
 // Resource routes
 Route::resource('users', UserController::class);
-Route::resource('properties', PropertyController::class);
+Route::resource('properties', PropertyController::class)->only(['index', 'show']);
 Route::resource('reservations', ReservationController::class);

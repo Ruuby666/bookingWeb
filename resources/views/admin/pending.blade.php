@@ -13,11 +13,11 @@
     @include('components.header')
 
     @if (session('success'))
-        <x-toast :message="session('success')" type="success" />
+    <x-toast :message="session('success')" type="success" />
     @endif
 
     @if (session('error'))
-        <x-toast :message="session('error')" type="error" />
+    <x-toast :message="session('error')" type="error" />
     @endif
 
     @php
@@ -53,14 +53,15 @@
                 <tr class="pending-row">
                     <td class="pending-id">{{ $reservation->id }}
                         <button onclick="openModal('{{ $reservation->id }}')"><b>ⓘ</b></button>
+                        @if ($section['title'] == 'Confirmed Reservations' && $reservation->invoice == false) <input type="checkbox" value="{{ $reservation->id }}" class="reservation-checkbox"> @endif
                     </td>
                     <td class="pending-property">{{ $reservation->property->title }}</td>
                     <td class="pending-guest">{{ $reservation->user->name }}</td>
                     <td class="pending-checkin">
-                        {{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y') }}
+                        {{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y - H:i') }}
                     </td>
                     <td class="pending-checkout">
-                        {{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y') }}
+                        {{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y - H:i') }}
                     </td>
                     <td class="pending-status">{{ $reservation->status }}</td>
                     <td class="pending-guests">{{ $reservation->guests }}</td>
@@ -69,7 +70,7 @@
                     <td class="pending-action">
                         <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
                             @csrf
-                                <button type="submit" class="mark-completed-button">Confirmed</button>
+                            <button type="submit" class="mark-completed-button">Confirmed</button>
                         </form>
                     </td>
                     @endif
@@ -81,6 +82,8 @@
                         <h2>Reserva en {{ $reservation->property->title }}</h2>
                         <ul>
                             <li><strong>Cliente: </strong> {{ $reservation->user->name }}</li>
+                            <li><strong>Email: </strong>{{ $reservation->user->email }}</li>
+                            <li><strong>Phone Number: </strong>{{ $reservation->user->phone_number }}</li>
                             <li><strong>Check-in: </strong> {{ $reservation->check_in }}</li>
                             <li><strong>Check-out: </strong> {{ $reservation->check_out }}</li>
                             <li><strong>Status: </strong> {{ $reservation->status }}</li>
@@ -89,13 +92,15 @@
                             <li><strong>Total Price: </strong> €{{ number_format($reservation->total_price, 2)}}</li>
                         </ul>
                         <div class="div-buttons">
-                            <button class="mark-suggestion-button" data-url="{{ route('suggestion.create', $reservation) }}" onclick="redirectFromButton(this)">
+                            @if ($reservation->status == 'pending')
+                            <button class="mark-sugerencia-button" data-url="{{ route('suggestion.create', $reservation) }}" onclick="redirectFromButton(this)">
                                 Suggestion
                             </button>
                             <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 <button type="submit" class="mark-completed-button">Confirmed</button>
                             </form>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -106,6 +111,22 @@
         @endif
     </div>
     @endforeach
+
+    <button class="crear-factura-button" onclick="openFacturaModal()">Crear Facturas</button>
+
+    <div id="modal-factura" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeFacturaModal()">&times;</span>
+            <h2>Reservas seleccionadas</h2>
+            <ul id="selected-reservations-list"></ul>
+            <input type="number" id="invoice-amount" placeholder="Número de la primera factura" required>
+            <div class="div-buttons">
+                <button class="mark-export-button" data-url="{{ route('admin.calendar.export-factura-excel') }}" onclick="redirectfacturaFromButton(this)">
+                    Exportar a Exel
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div id="session-data"
         data-session-lifetime="{{ config('session.lifetime') }}"
@@ -128,6 +149,56 @@
             if (url) {
                 window.location.href = url;
             }
+        }
+
+        function openFacturaModal() {
+            const checkboxes = document.querySelectorAll('.reservation-checkbox:checked');
+            const list = document.getElementById('selected-reservations-list');
+            list.innerHTML = '';
+
+            if (checkboxes.length === 0) {
+                list.innerHTML = '<li>No hay reservas seleccionadas.</li>';
+            } else {
+                checkboxes.forEach(cb => {
+                    const li = document.createElement('li');
+                    li.textContent = `Reserva ID: ${cb.value}`;
+                    list.appendChild(li);
+                });
+            }
+
+            document.getElementById('modal-factura').classList.remove('hidden');
+        }
+
+        function redirectfacturaFromButton(button) {
+            const url = button.getAttribute('data-url');
+            const checkboxes = document.querySelectorAll('.reservation-checkbox:checked');
+            const invoiceAmount = document.getElementById('invoice-amount').value;
+
+            const ids = Array.from(checkboxes).map(cb => cb.value);
+
+            if (ids.length === 0) {
+                alert("Selecciona al menos una reserva.");
+                return;
+            }
+
+            if (!invoiceAmount) {
+                alert("Introduce el número de la primera factura.");
+                return;
+            }
+
+            const params = new URLSearchParams();
+            ids.forEach(id => params.append('ids[]', id));
+            params.append('invoice_amount', invoiceAmount);
+
+            window.location.href = `${url}?${params.toString()}`;
+            
+            document.getElementById('modal-factura').classList.add('hidden');
+
+        }
+
+
+        function closeFacturaModal() {
+            document.getElementById('modal-factura').classList.add('hidden');
         }
     </script>
 

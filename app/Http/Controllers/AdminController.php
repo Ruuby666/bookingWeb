@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReservationConfirmedMail;
-
+use Carbon\Carbon;
+use App\Exports\ConfirmedReservationsExport;
+use App\Exports\ConfirmedReservationsStuffExport;
+use App\Exports\FacturasExport;
 
 class AdminController extends Controller
 {
@@ -94,23 +97,105 @@ class AdminController extends Controller
 
         $reservation->status = 'confirmed';
         $reservation->save();
-        
-        $this->updateReservationJson();
+
+        Reservation::updateReservationJson();
 
         Mail::to($reservation->user->email)->send(new ReservationConfirmedMail($reservation));
 
         return redirect()->back()->with('success', 'Confirmación enviada al cliente.');
     }
 
-    private function updateReservationJson()
-    {
-        $reservations = Reservation::all()->toArray();
-        Storage::put('reservations.json', encrypt(json_encode($reservations, JSON_PRETTY_PRINT)));
-        error_log("Archivo reservations.json actualizado tras creación de usuario.");
-    }
-
     public function suggestionEmail(Reservation $reservation)
     {
         return view('admin.suggestion', compact('reservation'));
+    }
+
+    public function calendar()
+    {
+        return view('admin.calendar');
+    }
+
+    public function getConfirmedReservations(Request $request)
+    {
+        $propiedad = $request->query('propiedad');
+
+        $query = Reservation::with(['user', 'property'])->where('status', 'confirmed');
+
+        if ($propiedad && $propiedad !== 'todos') {
+            $query->whereHas('property', function ($q) use ($propiedad) {
+                $q->where('title', $propiedad);
+            });
+        }
+
+        $reservations = $query->get();
+
+        $events = $reservations->map(function ($reservation) {
+            return [
+                'id' => $reservation->id,
+                'title' => $reservation->user->name . ' en ' . $reservation->property->title,
+                'note' => $reservation->notes,
+                'user' => $reservation->user,
+                'property' => $reservation->property->title,
+                'start' => $reservation->check_in,
+                'end' => $reservation->check_out,
+            ];
+        });
+
+        return response()->json($events);
+    }
+
+    public function updateTime(Request $request)
+    {
+        $request->validate([
+            'event_id' => 'required|integer|exists:reservations,id',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
+        ]);
+
+        $reservation = Reservation::findOrFail($request->event_id);
+
+        $datestart = $reservation->check_in->format('Y-m-d');
+        $dateend = $reservation->check_out->format('Y-m-d');
+
+        if ($request->start_time >= $request->end_time) {
+            return back()->withErrors(['end_time' => 'La hora de salida debe ser posterior a la de entrada.']);
+        }
+
+        $reservation->check_in = Carbon::createFromFormat('Y-m-d H:i', "$datestart {$request->start_time}");
+        $reservation->check_out = Carbon::createFromFormat('Y-m-d H:i', "$dateend {$request->end_time}");
+        $reservation->save();
+
+        return redirect()->back()->with('success', 'Hora actualizada correctamente.');
+    }
+
+    public function exportExcel()
+    {
+        $file1 = ConfirmedReservationsExport::download()->getFile()->getPathname();
+        $file2 = ConfirmedReservationsStuffExport::download()->getFile()->getPathname();
+
+        $date = Carbon::now()->format('d_m_Y');
+
+        // Crear archivo ZIP temporal
+        $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_') . '.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zipFile, \ZipArchive::CREATE);
+        $zip->addFile($file1, 'Reservas_' . $date . '.xlsx');
+        $zip->addFile($file2, 'Reservas_stuff_' . $date . '.xlsx');
+        $zip->close();
+
+        // Descargar el ZIP y eliminarlo después
+        return response()->download($zipFile, 'Reservas_completas.zip')->deleteFileAfterSend(true);
+    }
+
+    public function exportfacturaExcel(Request $request)
+    {
+        $ids = $request->input('ids');
+        $invoiceAmount = $request->input('invoice_amount');
+
+        foreach ($ids as $id){
+            Reservation::markAsInvoiced($id);
+        }
+
+        return FacturasExport::download($ids, $invoiceAmount);
     }
 }

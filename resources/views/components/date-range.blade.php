@@ -15,7 +15,7 @@
 
 <body>
     <div class="daterange-container">
-        <h2>Select a Date Range</h2>
+        <h2>Select Range</h2>
         @csrf
         <input type="text" id="daterange" placeholder="Select a date range" />
     </div>
@@ -47,22 +47,19 @@
             }
 
             properties.forEach(property => {
-
-
                 let propertyHtml = `
-                <div class="cardcontainer">
-                    <div class="photo">
-                        <img src="/images/${property.images_div}/${propertyImages[property.id]}" alt="Image not found"style="height: 200px; width: 300px;">
+                <a href="/property/${property.id}">
+                    <div class="cardcontainer">
+                        <div class="photo">
+                            <img src="/images/${property.images_div}/${propertyImages[property.id]}" alt="Image not found"style="height: 200px; width: 300px;">
+                        </div>
+                        <div class="content">
+                            <p class="txt4">${property.title}</p>
+                            <p class="txt5">${property.location}</p>
+                            <p class="txt2">${property.description}</p>
+                        </div>
                     </div>
-                    <div class="content">
-                        <p class="txt4">${property.title}</p>
-                        <p class="txt5">${property.location}</p>
-                        <p class="txt2">${property.description}</p>
-                    </div>
-                    <div class="cardfooter">
-                        <p><a class="waves-effect waves-light btn" href="/property/${property.id}">Read More</a></p>
-                    </div>
-                </div>
+                </a>
                 `;
                 container.append(propertyHtml);
             });
@@ -71,19 +68,19 @@
         displayAvailableProperties(availableProperties);
 
         $('#daterange').daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
             "autoApply": true,
             "linkedCalendars": true,
             "autoUpdateInput": true,
             "showCustomRangeLabel": true,
             "showDropdowns": false,
-            "minDate": moment(),
+            "minDate": moment().add(1, 'days'),
             "opens": "center",
             "drops": "auto",
             "isInvalidDate": function(date) {
-                // Check if the date is in the invalidDates array
                 return dbDates.includes(date.format('YYYY-MM-DD'));
-                //Cuando haga una reserva por apartamento quiero que se bloqueen todas las fechas ocupadas
-
             }
         }, function(start, end) {
             let newCheckIn = moment(start);
@@ -107,12 +104,9 @@
                     occupiedPropertyIds.push(reservation.property_id);
                 }
             }
-            
+
             let availableProperties = @json($properties).filter(property => !occupiedPropertyIds.includes(
                 property.id));
-
-            console.log("Occupied Property IDs:", occupiedPropertyIds);
-            console.log("Available Property IDs:", availableProperties);
 
             displayAvailableProperties(availableProperties);
 

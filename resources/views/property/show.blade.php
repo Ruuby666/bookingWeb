@@ -9,6 +9,7 @@
     <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css" />
 </head>
 
 <body>
@@ -28,104 +29,137 @@
     </div>
     <div class="container">
         <div class="content-grid">
-            <!-- Detalles del Apartamento -->
-            <div class="property-details">
-                <h1 class="title">{{ $property->title }}</h1>
+            <div class="content-details-form">
+                <div class="property-details">
+                    <h1 class="title">{{ $property->title }}</h1>
 
-                <div class="location">
-                    <i class="fas fa-map-marker-alt icon"></i>
-                    <span>{{ $property->location }}</span>
-                </div>
-                <div class="features">
-                    <div class="feature">
-                        <i class="fas fa-bed icon"></i>
-                        <div class="bedrooms">
-                            @php
-                            $bedrooms = json_decode($property->bedrooms, true);
-                            @endphp
-                            @foreach ($bedrooms as $key => $bed)
-                            <span>Bedroom {{ $key }}: {{ $bed }}</span>
-                            @endforeach
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt icon"></i>
+                        <span>{{ $property->location }}</span>
+                    </div>
+                    <div class="features">
+                        <div class="feature">
+                            <div class="bedrooms">
+                                @php
+                                $bedrooms = json_decode($property->bedrooms, true);
+                                @endphp
+                                @foreach ($bedrooms as $key => $bed)
+                                <span><i class="fas fa-bed icon"></i> {{ $bed }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath icon"></i>
+                            <span>{{ $property->bathrooms }} Bathrooms</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler icon"></i>
+                            <span>{{ $property->size }} m²</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-user  icon"></i>
+                            <span>{{ $property->capacity }} Guests</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-dollar-sign icon"></i>
+                            <span>€{{ $property->price_per_night }} per night</span>
                         </div>
                     </div>
-                    <div class="feature">
-                        <i class="fas fa-bath icon"></i>
-                        <span>{{ $property->bathrooms }} Bathrooms</span>
+                    <div class="description">
+                        <h2>Property Description</h2>
+                        <p>{{ nl2br(e($property->description)) }}</p>
                     </div>
-                    <div class="feature">
-                        <i class="fas fa-ruler icon"></i>
-                        <span>{{ $property->size }} m²</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-user  icon"></i>
-                        <span>{{ $property->capacity }} Guests</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-dollar-sign icon"></i>
-                        <span>€{{ $property->price_per_night }} per night</span>
+
+                    <div class="extra-features">
+                        <h5>Additional Features</h5>
+                        <ul>
+                            @if ($property->parking)
+                            <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
+                            @endif
+                            @if ($property->pool)
+                            <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
+                            @endif
+                            @if ($property->garden)
+                            <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
+                            @endif
+                            @if ($property->safeBox)
+                            <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
+                            @endif
+                            @if ($property->terrace)
+                            <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
+                            @endif
+                            @if ($property->wifi)
+                            <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
+                            @endif
+                            @if (!empty($property->tv))
+                            <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
+                            @endif
+                        </ul>
                     </div>
                 </div>
-                <div class="description">
-                    <h2>Property Description</h2>
-                    <p>{{ nl2br(e($property->description)) }}</p>
+                <div class="property-form">
+                    <form class="contact-form" action="{{ route('send.email') }}" method="POST">
+                        @csrf
+                        <medium> All the fields with&nbsp;<b style="color:red;"> * </b>&nbsp;are required. </medium>
+                        <div>
+                            @include('components.show-date-range')
+                            <b style="color:red;">*</b>
+                            @error('daterange')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="adults">Adults <b style="color:red;">*</b></label>
+                            <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" value="{{ old('adults') }}" required>
+                            <label for="children">Childrens <b style="color:red;">*</b></label>
+                            <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" value="{{ old('children') ?? 0 }}" required>
+                            @error('guests')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Full Name <b style="color:red;">*</b></label>
+                            <input id="name" name="name" type="text" placeholder="Enter your name" value="{{ old('name') }}" required>
+                            @error('name')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="number">Contact Number <b style="color:red;">*</b></label>
+                            <input id="number" type="tel" placeholder="Enter your phone number" value="{{ old('number') }}" required>
+                            <input type="hidden" name="number" id="full_phone">
+                            @error('number')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <b style="color:red;">*</b></label>
+                            <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" required>
+                            @error('email')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="verification_email">Verify Email <b style="color:red;">*</b></label>
+                            <input id="verification_email" name="verification_email" type="email" placeholder="Verify your email" value="{{ old('verification_email') }}" required>
+                            @error('verification_email')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" placeholder="Enter your message">{{ old('message') }}</textarea>
+                            @error('message')
+                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <input type="hidden" name="property_id" value="{{ $property->id }}">
+                        <button type="submit">Send Your Request</button>
+                    </form>
                 </div>
-
-                <div class="extra-features">
-                    <h5>Additional Features</h5>
-                    <ul>
-                        @if ($property->parking)
-                        <li><i class="fas fa-parking"></i><strong>Free Parking Spot</strong></li>
-                        @endif
-                        @if ($property->pool)
-                        <li><i class="fas fa-swimming-pool"></i><strong>Pool</strong></li>
-                        @endif
-                        @if ($property->garden)
-                        <li><i class="fas fa-tree"></i><strong>Garden</strong></li>
-                        @endif
-                        @if ($property->safeBox)
-                        <li><i class="fas fa-lock"></i><strong>Safe Box</strong></li>
-                        @endif
-                        @if ($property->terrace)
-                        <li><i class="fas fa-umbrella-beach"></i><strong>Terrace</strong></li>
-                        @endif
-                        @if ($property->wifi)
-                        <li><i class="fas fa-wifi"></i><strong>Free Wi-Fi</strong></li>
-                        @endif
-                        @if (!empty($property->tv))
-                        <li><i class="fas fa-tv"></i><strong>TV:</strong> {{ $property->tv }}</li>
-                        @endif
-                    </ul>
-                </div>
-
-                <form class="contact-form" action="{{ route('send.email') }}" method="POST">
-                    @csrf
-                    @include('components.show-date-range')
-                    <div class="form-group">
-                        <label for="guests">Guests</label>
-                        <input id="guests" name="guests" type="number" placeholder="Guests" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input id="name" name="name" type="text" placeholder="Enter your name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="number">Contact Number</label>
-                        <input id="number" name="number" type="number" placeholder="Enter your phone number"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input id="email" name="email" type="email" placeholder="Enter your email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
-                    </div>
-                    <input type="hidden" name="property_id" value="{{ $property->id }}">
-                    <button type="submit">Send Your Request</button>
-                </form>
-
             </div>
+            <!-- Detalles del Apartamento -->
+
 
             <!-- Galería de imágenes -->
             <div class="image-gallery">
@@ -147,10 +181,11 @@
     <!-- Popup para mostrar la imagen en grande -->
     <div id="imagePopup" class="popup" style="display:none;">
         <span class="close" onclick="closePopup()">&times;</span>
+        <span class="previous" onclick="changeImage(-1)">&#10094;</span>
         <img class="popup-content" id="popupImage" src="" alt="Large Image" class="lazy">
-        <span class="previos" onclick="changeImage(-1)">&#10094;</span>
         <span class="next-one" onclick="changeImage(1)">&#10095;</span>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <script>
         let currentIndex = 0;
         const property = @json($property);
@@ -186,29 +221,18 @@
             }
         });
 
-        document.querySelector('.contact-form').onsubmit = function(e) {
-            e.preventDefault();
-            loadingOverlay.style.display = 'flex';
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', this.action);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.setRequestHeader('X-CSRF-TOKEN', this._token.value);
-            xhr.onload = function() {
-                loadingOverlay.style.display = 'none';
-                if (xhr.status == 200) {
-                    toastSuccess.classList.add('show');
-                    setTimeout(() => toastSuccess.classList.remove('show'), 3000);
-                    e.target.reset();
-                } else {
-                    alert('Error al enviar el mensaje');
-                }
-            };
-            xhr.onerror = function() {
-                loadingOverlay.style.display = 'none';
-                alert('Error al enviar el mensaje');
-            };
-            xhr.send(new FormData(e.target));
-        };
+        const phoneInput = document.querySelector("#number");
+        const fullPhoneInput = document.querySelector("#full_phone");
+
+        const iti = window.intlTelInput(phoneInput, {
+            initialCountry: "auto",
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+        });
+
+        document.querySelector('.contact-form').addEventListener('submit', function() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            fullPhoneInput.value = iti.getNumber();
+        });
     </script>
 
 

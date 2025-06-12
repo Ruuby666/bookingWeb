@@ -7,8 +7,61 @@
 
 - Estoy modificando el boton de editar la propiedad ------ ✅
 
+- Tener el date ordenado DD-MM-YYYY ✅
+
+- Mejorar la interfaz de las bed rooms en las propiedades ✅
+
+- revisar flechas para mover las fotos ✅
+
+- añadir ccs toasts calendario ✅
+
+- no se gurdo la ultima reserva en el pending - creo que esta solucionado ✅
+
+- salida si o si 11:00 ✅
+
+- entrada villa 15:00 apartamento 14:00 según disponiblilidad () ✅
+
+- descripción calendario añadir email y numero ✅
+
+- numero de telefono en cliente ✅
+
+- verificar correo show property ✅
+
+- calendario globar y x apartamentos dropdown ✅
+
+- dos exel con todo y otro sin total, sin correo, sin id, cambiar notas por observaciones ✅
+
+- cambiar guest por adultos y niños ✅
+
+- pasar al ingles (descripción)
+
+- no esta funcionando lo de los errores personalizados 
+   -  guest error message - 2 personas maximo
+
+- arreglar lo del header del map y del properties ✅
+
+
+- añadir dias factura ✅
+
+- quitar iban quitar 50% añadir efectivo checkin, 
+   informacion de como obtener la llave confirma si estas de acuerdo con la hora de llegada y salida. ✅
+
+- crear exel factura , dar numero de factura si no es posible hacerlo de manera automatica ✅
+
+- cambiar logo ✅
+
+- calendario excel RESERVA {$propertyTitle} ✅
+
+comprobar la seguridad algo no funciona se puede acceder a alguno de los end points (comprobar)
+
+- nombre de los apartamentos factura ✅
+
+- fotos piscina villa ✅
+
+- añadir script todos los dias a las 00:00 se recorre las reservas confir. que tengan para mañana y enviar información a ese correo
+ 
 - Cada mes tiene su precio
 
 - Tener cuidado de como estoy enviando las cosas --> @json($properties);
 
-- Tener el date ordenado DD-MM-YYYY
+- pasar de http a https

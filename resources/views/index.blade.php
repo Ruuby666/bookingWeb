@@ -12,8 +12,11 @@
     integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+
+
 
 
 <body>
@@ -22,7 +25,7 @@
 
     @include('components.date-range', ['propertyWithImages' => $propertyWithImages])
 
-    <h1>Propiedades Disponibles</h1>
+    <h1>Available Properties</h1>
 
     <div id="carousel-container">
         <button class="prev">&#10094;</button>
@@ -61,7 +64,6 @@
         let propertyWithImages = @json($propertyWithImages);
 
         async function initMap() {
-            // Initialize the map
             let map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 10,
                 center: {
@@ -71,7 +73,6 @@
                 mapId: "af934e8f21fb7b29",
             });
 
-            // Check if advanced markers are available
             map.addListener('mapcapabilities_changed', () => {
                 const mapCapabilities = map.getMapCapabilities();
                 if (!mapCapabilities.isAdvancedMarkersAvailable) {
@@ -79,23 +80,24 @@
                 }
             });
 
-            // Iterar sobre el array de marcadores y añadirlos al mapa
+            const markerElements = [];
+            let currentInfoWindow = null;
+
             markers.forEach((markerInfo) => {
-                let content = null;
-                let position = {
+                const position = {
                     lat: parseFloat(markerInfo.lat),
                     lng: parseFloat(markerInfo.lng)
                 };
-                let pin = new google.maps.marker.PinElement({
+
+                const pin = new google.maps.marker.PinElement({
                     glyphColor: "white",
                 });
-                content = pin.element;
 
-                var marker = new google.maps.marker.AdvancedMarkerElement({
+                const marker = new google.maps.marker.AdvancedMarkerElement({
                     position: position,
                     map: map,
                     title: markerInfo.title,
-                    content: content,
+                    content: pin.element,
                 });
 
                 const infoWindow = new google.maps.InfoWindow({
@@ -109,9 +111,16 @@
                     infoWindow.open(map, marker);
                     currentInfoWindow = infoWindow;
                 });
+
+                markerElements.push(marker);
+            });
+
+            // Aplicar MarkerClusterer
+            new markerClusterer.MarkerClusterer({
+                map: map,
+                markers: markerElements,
             });
         }
-        let currentInfoWindow = null;
 
         // Function to build content for InfoWindow
         function buildContent(property) {
@@ -146,7 +155,7 @@
 
             // Validar si hay tarjetas en el carrusel
             if (!carousel || !prevButton || !nextButton) {
-                console.error("Error: No se encontraron los elementos del carrusel.");
+                console.error("Error: Not elements found in carrusel.");
                 return;
             }
 
