@@ -52,5 +52,17 @@ class Property extends Model
     {
         return $this->hasMany(Reservation::class);
     }
-}
 
+    public function reservationPrices()
+    {
+        return $this->hasMany(ReservationPrice::class);
+    }
+
+    public function priceForDate($date)
+    {
+        return $this->reservationPrices()
+            ->where('start_date', '<=', $date)
+            ->where('end_date', '>=', $date)
+            ->value('price_per_night');
+    }
+}
