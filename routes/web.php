@@ -48,7 +48,7 @@ Route::middleware([IsAdmin::class])->group(function () {
 
     Route::post('/reservations/{id}/send-suggestion', [MailController::class, 'sendSuggestion'])->name('reservations.sendSuggestion');
 
-    Route::get('/admin/calendar', [AdminController::class, 'calendar'])->name('admin.calendar');
+    Route::get('/admin/calendar',  [AdminController::class, 'calendar'])->name('admin.calendar');
 
     Route::get('/admin/calendar/reservations', [AdminController::class, 'getConfirmedReservations'])->name('admin.calendar.reservations');
 
