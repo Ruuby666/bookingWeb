@@ -8,6 +8,7 @@
         <a href="{{ route('admin.properties') }}" id="header-menu-word">Properties</a>
         <a href="{{ route('admin.reservations.pending') }}" id="header-menu-word">Pending Reservations</a>
         <a href="{{ route('admin.calendar') }}" id="header-menu-word">Calendar</a>
+        <a href="{{ route('admin.reservation_prices') }}" id="header-menu-word">Reservation Prices</a>
         @else
         <a href="{{ route('index') }}" id="header-menu-word">Home</a>
         <a href="{{ url('/#properties-section') }}" id="header-menu-word">Properties</a>
