@@ -194,6 +194,11 @@ medium {
     resize: none;
 }
 
+b{
+    color: red;
+    font-size: 25px;
+}
+
 .contact-form button {
     background-color: #007bff;
     color: #fff;

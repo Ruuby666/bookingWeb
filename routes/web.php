@@ -8,6 +8,7 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\ReservationPriceController;
 
 
 
@@ -58,6 +59,9 @@ Route::middleware([IsAdmin::class])->group(function () {
 
     Route::get('/admin/calendar/export-factura-excel', [AdminController::class, 'exportfacturaExcel'])->name('admin.calendar.export-factura-excel');
 });
+
+Route::get('/api/property-price-range', [ReservationPriceController::class, 'getPriceRange']);
+
 
 // Resource routes
 Route::resource('users', UserController::class);

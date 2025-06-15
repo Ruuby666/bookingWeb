@@ -100,32 +100,31 @@
                 <div class="property-form">
                     <form class="contact-form" action="{{ route('send.email') }}" method="POST">
                         @csrf
-                        <medium> All the fields with&nbsp;<b style="color:red;"> * </b>&nbsp;are required. </medium>
+                        <medium> All the fields with&nbsp;<b> * </b>&nbsp;are required. </medium>
                         <div>
                             @include('components.show-date-range')
-                            <b style="color:red;">*</b>
                             @error('daterange')
                             <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="adults">Adults <b style="color:red;">*</b></label>
+                            <label for="adults">Adults <b>*</b></label>
                             <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" value="{{ old('adults') }}" required>
-                            <label for="children">Childrens <b style="color:red;">*</b></label>
+                            <label for="children">Childrens <b>*</b></label>
                             <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" value="{{ old('children') ?? 0 }}" required>
                             @error('guests')
                             <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="name">Full Name <b style="color:red;">*</b></label>
+                            <label for="name">Full Name <b>*</b></label>
                             <input id="name" name="name" type="text" placeholder="Enter your name" value="{{ old('name') }}" required>
                             @error('name')
                             <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="number">Contact Number <b style="color:red;">*</b></label>
+                            <label for="number">Contact Number <b>*</b></label>
                             <input id="number" type="tel" placeholder="Enter your phone number" value="{{ old('number') }}" required>
                             <input type="hidden" name="number" id="full_phone">
                             @error('number')
@@ -133,14 +132,14 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="email">Email <b style="color:red;">*</b></label>
+                            <label for="email">Email <b>*</b></label>
                             <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" required>
                             @error('email')
                             <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="verification_email">Verify Email <b style="color:red;">*</b></label>
+                            <label for="verification_email">Verify Email <b>*</b></label>
                             <input id="verification_email" name="verification_email" type="email" placeholder="Verify your email" value="{{ old('verification_email') }}" required>
                             @error('verification_email')
                             <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
