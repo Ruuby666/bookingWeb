@@ -94,9 +94,8 @@ class MailController extends Controller
             'email' => $request->email,
             'message' => $request->message,
             'daterange' => $request->daterange,
+            'total_price' => $request->total_price,
         ];
-
-
 
         $dates = explode(' - ', $request->daterange);
         try {

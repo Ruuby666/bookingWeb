@@ -153,6 +153,7 @@
                             @enderror
                         </div>
                         <input type="hidden" name="property_id" value="{{ $property->id }}">
+                        <input type="hidden" name="total_price" id="total_price_input" value="">
                         <button type="submit">Send Your Request</button>
                     </form>
                 </div>

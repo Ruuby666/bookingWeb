@@ -86,8 +86,8 @@
                 .then(res => res.json())
                 .then(data => {
                     let total = data.reduce((sum, night) => sum + parseFloat(night.price), 0);
-                    console.log("Precios por noche:", total);
                     document.getElementById('total-price').textContent = `Precio total: ${total.toFixed(2)} € (${data.length} noches)`;
+                    document.getElementById('total_price_input').value = total.toFixed(2);
                 })
                 .catch(err => {
                     console.error('Error obteniendo los precios:', err);
