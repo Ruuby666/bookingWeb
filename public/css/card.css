@@ -57,7 +57,7 @@ h2 {
   border-radius: 10px;
   overflow: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background: white;
+  background: #ffffff6e;
   scroll-snap-align: start;
   transition: transform 0.3s ease-in-out;
   position: relative;

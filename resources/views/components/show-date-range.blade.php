@@ -15,7 +15,7 @@
 
 <body>
     @csrf
-    <input type="text" id="daterange" name="daterange" placeholder="Select a date range" /><b style="color:red;">*</b>
+    <input type="text" id="daterange" name="daterange" placeholder="Select a date range" /><b> *</b>
     <p id="total-price"></p>
 
     <!-- jQuery and DateRangePicker script from CDN -->

@@ -18,10 +18,10 @@
 /* ----- Estilos del input daterange ----- */
 #daterange {
     padding: 0px 10px;
-    width:  15% !important;
+    width:  15%;
     border: 2px solid #007bff;
     border-radius: 8px;
-    background-color: #ffffff;
+    background-color: #ffffff6e;
     color: #333333;
     font-size: 18px;
     font-family: 'Roboto' !important;
