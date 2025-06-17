@@ -4,23 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Reservation Confirmation</title>
-    <link rel="stylesheet" href="{{ asset('css/email-confirmation.css') }}">
-
+    <link href="{{ asset('css/details-property.css') }}" rel="stylesheet">
 </head>
 
-<body >
-    <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <td>
-                <h1 >Reservation Confirmation</h1>
+<body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; margin: 0;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+        <tr style="background-color: #007BFF; color: white;">
+            <td style="padding: 20px; text-align: center;">
+                <h1 style="margin: 0;">Reservation Confirmation</h1>
             </td>
         </tr>
         <tr>
-            <td>
-                <h2>Hello {{ $reservation->user->name }},</h2>
+            <td style="padding: 30px;">
+                <h2 style="margin-top: 0;">Hello {{ $reservation->user->name }},</h2>
                 <p>We are pleased to confirm your reservation at <strong>{{ $reservation->property->title }}</strong>.</p>
 
-                <table>
+                <table style="width: 100%; margin-top: 20px;">
                     <tr>
                         <td><strong>Check-in:</strong></td>
                         <td>{{ $reservation->check_in }}</td>
@@ -39,21 +38,21 @@
                     </tr>
                 </table>
 
-                <p>
+                <p style="margin-top: 20px;">
                     The payment will be made in cash at the time of check-in. Please confirm your arrival and departure times.
                 </p>
 
-                <p><strong>Important:</strong> You will receive an email the day before with the apartment information.</p>
+                <p style="color: #d9534f;"><strong>Important:</strong> You will receive an email the day before with the apartment information.</p>
 
-                <p>Thank you for choosing us. We look forward to welcoming you!</p>
+                <p style="margin-top: 30px;">Thank you for choosing us. We look forward to welcoming you!</p>
 
                 <p>Best regards,<br><strong>Reservations Team</strong></p>
             </td>
         </tr>
-        <tr>
-            <td>
-                <img src="cid:nameEMLBlack.png" alt="Logo">
-                <p>© 2025 Your Reservation Company. All rights reserved.</p>
+        <tr style="background-color: #f0f0f0;">
+            <td style="text-align: center; padding: 20px;">
+                <img src="cid:nameEMLBlack.png" alt="Logo" style="width: 250px; margin-bottom: 10px;">
+                <p style="font-size: 12px; color: #888;">© 2025 Your Reservation Company. All rights reserved.</p>
             </td>
         </tr>
     </table>

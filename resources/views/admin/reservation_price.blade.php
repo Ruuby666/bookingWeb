@@ -152,10 +152,6 @@
             document.getElementById('formErrors').innerHTML = '';
             document.getElementById('priceForm').reset();
         }
-
-        window.addEventListener('load', function() {
-            document.getElementById('addPriceModal').style.display = 'block';
-        });
     </script>
 
 </body>
