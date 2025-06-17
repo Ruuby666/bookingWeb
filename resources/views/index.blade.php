@@ -24,8 +24,7 @@
     @include('components.header')
 
     @include('components.date-range', ['propertyWithImages' => $propertyWithImages])
-
-    <h1>Available Properties</h1>
+    <h1 id="aveilable-title">Available Properties</h1>
 
     <div id="carousel-container">
         <button class="prev">&#10094;</button>
