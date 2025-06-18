@@ -26,7 +26,11 @@
     <!-- Initialize Date Range Picker -->
     <script>
         let reservations = @json($reservations).filter(reservation => reservation.status === 'confirmed');
-        let idProperty = {{ $id }};
+        let idProperty = {
+            {
+                $id
+            }
+        };
         var fullDates = [];
 
         reservations.forEach(reservation => {
@@ -56,7 +60,9 @@
             "autoUpdateInput": true,
             "showCustomRangeLabel": true,
             "showDropdowns": false,
-            "minDate": moment(),
+            "minDate": moment().add(1, 'days'),
+            "startDate": moment().add(1, 'days'),
+            "endDate": moment().add(1, 'days'),
             "opens": "center",
             "drops": "auto",
             "isInvalidDate": function(date) {
@@ -86,12 +92,11 @@
                 .then(res => res.json())
                 .then(data => {
                     let total = data.reduce((sum, night) => sum + parseFloat(night.price), 0);
-                    document.getElementById('total-price').textContent = `Precio total: ${total.toFixed(2)} € (${data.length} noches)`;
+                    document.getElementById('total-price').textContent = `Total amount: ${total.toFixed(2)} € (${data.length} nights)`;
                     document.getElementById('total_price_input').value = total.toFixed(2);
                 })
                 .catch(err => {
-                    console.error('Error obteniendo los precios:', err);
-                    document.getElementById('total-price').textContent = 'Error al calcular el precio';
+                    document.getElementById('total-price').textContent = 'Error to obtein prices.';
                 });
 
         });

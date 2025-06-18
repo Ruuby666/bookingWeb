@@ -313,6 +313,10 @@ b {
     width: -webkit-fill-available !important;
 }
 
+#total-price{
+    font-weight: 400;
+}
+
 /* Popup */
 .popup {
     display: none;
