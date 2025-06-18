@@ -20,6 +20,7 @@ class Property extends Model
         'size',
         'bedrooms',
         'bathrooms',
+        'min_nights',
         'images_div',
         'tv',
         'entertainment',

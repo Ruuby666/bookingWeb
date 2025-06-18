@@ -26,11 +26,7 @@
     <!-- Initialize Date Range Picker -->
     <script>
         let reservations = @json($reservations).filter(reservation => reservation.status === 'confirmed');
-        let idProperty = {
-            {
-                $id
-            }
-        };
+        let idProperty = {{$id}};
         var fullDates = [];
 
         reservations.forEach(reservation => {

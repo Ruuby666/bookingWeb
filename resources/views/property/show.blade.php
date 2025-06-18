@@ -63,6 +63,8 @@
                         <div class="feature">
                             <i class="fas fa-dollar-sign icon"></i>
                             <span>€{{ $property->price_per_night }} per night</span>
+                            <span>&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+                            <span><b>{{ $property->min_nights }}</b> nights minimum</span>
                         </div>
                     </div>
                     <div class="description">

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('size');
             $table->json('bedrooms');
             $table->integer('bathrooms');
+            $table->integer('min_nights');
             $table->string('images_div');
             $table->string('tv') -> nullable();
             $table->boolean('entertainment') -> nullable();
