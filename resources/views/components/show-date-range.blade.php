@@ -16,7 +16,7 @@
 <body>
     @csrf
     <input type="text" id="daterange" name="daterange" placeholder="Select a date range" /><b> *</b>
-    <p id="total-price"></p>
+    <p id="total-price">Minimum {{$property->min_nights}} nights</p>
 
     <!-- jQuery and DateRangePicker script from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -67,27 +67,35 @@
         }, function(start, end) {
             let newCheckIn = moment(start);
             let newCheckOut = moment(end);
-            let occupiedPropertyIds = [];
+            let minNights = {{$property->min_nights}};
+            let nights = newCheckOut.diff(newCheckIn, 'days');
 
-            function checkOverlap(newCheckIn, newCheckOut, existingCheckIn, existingCheckOut) {
-                return newCheckIn.isBefore(existingCheckOut) && newCheckOut.isAfter(existingCheckIn) || newCheckIn
-                    .isAfter(existingCheckOut) && newCheckOut.isBefore(existingCheckIn);
+            if (nights < minNights) {
+                document.getElementById('total-price').textContent = ' The minimum stay is ' + minNights + ' nights.';
+                return;
             }
 
-            for (let i = 0; i < reservations.length; i++) {
-                let reservation = reservations[i];
-                let existingCheckIn = moment(reservation.check_in);
-                let existingCheckOut = moment(reservation.check_out);
+            let selectedDates = [];
+            let tempDate = moment(newCheckIn);
 
-                if (checkOverlap(newCheckIn, newCheckOut, existingCheckIn, existingCheckOut)) {
-                    occupiedPropertyIds.push(reservation.property_id);
-                }
+            while (tempDate.isBefore(newCheckOut)) {
+                selectedDates.push(tempDate.format('YYYY-MM-DD'));
+                tempDate.add(1, 'days');
+            }
+
+            let hasOverlap = selectedDates.some(date => fullDates.includes(date));
+
+            if (hasOverlap) {
+                document.getElementById('total-price').style.color = '#e07a5f';
+                document.getElementById('total-price').textContent = 'Selected dates overlap with an existing reservation.';
+                return;
             }
 
             fetch(`/api/property-price-range?start_date=${newCheckIn}&end_date=${newCheckOut}&property_id=${idProperty}`)
                 .then(res => res.json())
                 .then(data => {
                     let total = data.reduce((sum, night) => sum + parseFloat(night.price), 0);
+                    document.getElementById('total-price').style.color = '#2a4261';
                     document.getElementById('total-price').textContent = `Total amount: ${total.toFixed(2)} € (${data.length} nights)`;
                     document.getElementById('total_price_input').value = total.toFixed(2);
                 })
