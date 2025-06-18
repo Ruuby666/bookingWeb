@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\UserController;
 use App\Models\Property;
+use Carbon\Carbon;
 
 class MailController extends Controller
 {
@@ -93,20 +94,19 @@ class MailController extends Controller
             'email' => $request->email,
             'message' => $request->message,
             'daterange' => $request->daterange,
+            'total_price' => $request->total_price,
         ];
-
-
 
         $dates = explode(' - ', $request->daterange);
         try {
-            $data['checkOut'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
+            $data['checkOut'] = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
 
             if (str_contains($property->title, 'Casa') || str_contains($property->title, 'Villa')) {
                 $checkinHour = '15:00';
             } else {
                 $checkinHour = '14:00';
             }
-            $data['checkIn'] = \Carbon\Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' ' . $checkinHour);
+            $data['checkIn'] = Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' ' . $checkinHour);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['daterange' => 'Formato de fecha inválido.'])->withInput();
         }

@@ -8,6 +8,7 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\ReservationPriceController;
 
 
 
@@ -48,7 +49,7 @@ Route::middleware([IsAdmin::class])->group(function () {
 
     Route::post('/reservations/{id}/send-suggestion', [MailController::class, 'sendSuggestion'])->name('reservations.sendSuggestion');
 
-    Route::get('/admin/calendar', [AdminController::class, 'calendar'])->name('admin.calendar');
+    Route::get('/admin/calendar',  [AdminController::class, 'calendar'])->name('admin.calendar');
 
     Route::get('/admin/calendar/reservations', [AdminController::class, 'getConfirmedReservations'])->name('admin.calendar.reservations');
 
@@ -57,7 +58,16 @@ Route::middleware([IsAdmin::class])->group(function () {
     Route::get('/admin/calendar/export-excel', [AdminController::class, 'exportExcel'])->name('admin.calendar.export-excel');
 
     Route::get('/admin/calendar/export-factura-excel', [AdminController::class, 'exportfacturaExcel'])->name('admin.calendar.export-factura-excel');
+
+    Route::get('/admin/reservation-prices', [ReservationPriceController::class, 'index'])->name('admin.reservation_prices');
+
+    Route::delete('/reservation-prices/{id}', [ReservationPriceController::class, 'destroy'])->name('reservation-prices.destroy');
+
+    Route::post('/reservation-prices/create', [ReservationPriceController::class, 'create'])->name('reservation-prices.create');
 });
+
+Route::get('/api/property-price-range', [ReservationPriceController::class, 'getPriceRange']);
+
 
 // Resource routes
 Route::resource('users', UserController::class);

@@ -37,7 +37,7 @@ a {
 /* ----- Menu items ----- */
 #header-menu-word {
     margin: 0 20px;
-    color: #e3e3e3;
+    color: #f4f1de;
     font-size: 20px;
     cursor: pointer;
     transition: transform 0.2s ease, color 0.2s ease;

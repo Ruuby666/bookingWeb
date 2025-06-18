@@ -1,0 +1,92 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin: 0;
+}
+
+.email-container {
+    max-width: 600px;
+    margin: auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.title {
+    color: #2c3e50;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    color: #34495e;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.property-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.property-table td {
+    padding: 8px 0;
+    vertical-align: top;
+}
+
+.property-table td:first-child {
+    width: 40%;
+    font-weight: bold;
+}
+
+.price-total {
+    font-weight: bold;
+    color: #27ae60;
+}
+
+.footer-note {
+    color: #7f8c8d;
+    font-size: 13px;
+    margin-top: 25px;
+}
+
+/* === Responsive === */
+@media only screen and (max-width: 600px) {
+    .email-container {
+        padding: 20px 15px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-size: 16px;
+    }
+
+    .property-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .property-table td:first-child {
+        width: 100%;
+        font-weight: normal;
+        margin-top: 10px;
+    }
+
+    .footer-note {
+        font-size: 12px;
+    }
+}

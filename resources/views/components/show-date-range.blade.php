@@ -15,7 +15,8 @@
 
 <body>
     @csrf
-    <input type="text" id="daterange" name="daterange" placeholder="Select a date range" />
+    <input type="text" id="daterange" name="daterange" placeholder="Select a date range" /><b> *</b>
+    <p id="total-price"></p>
 
     <!-- jQuery and DateRangePicker script from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -29,7 +30,7 @@
         var fullDates = [];
 
         reservations.forEach(reservation => {
-            if (idProperty == reservation.property_id ) {
+            if (idProperty == reservation.property_id) {
                 generateAllDates(reservation.check_in, reservation.check_out);
             }
         });
@@ -80,6 +81,18 @@
                     occupiedPropertyIds.push(reservation.property_id);
                 }
             }
+
+            fetch(`/api/property-price-range?start_date=${newCheckIn}&end_date=${newCheckOut}&property_id=${idProperty}`)
+                .then(res => res.json())
+                .then(data => {
+                    let total = data.reduce((sum, night) => sum + parseFloat(night.price), 0);
+                    document.getElementById('total-price').textContent = `Precio total: ${total.toFixed(2)} € (${data.length} noches)`;
+                    document.getElementById('total_price_input').value = total.toFixed(2);
+                })
+                .catch(err => {
+                    console.error('Error obteniendo los precios:', err);
+                    document.getElementById('total-price').textContent = 'Error al calcular el precio';
+                });
 
         });
     </script>

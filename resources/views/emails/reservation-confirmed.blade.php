@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Reservation Confirmation</title>
+    <link href="{{ asset('css/details-property.css') }}" rel="stylesheet">
 </head>
 
 <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; margin: 0;">

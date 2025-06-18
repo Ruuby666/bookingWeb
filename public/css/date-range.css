@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:&family=Lato:&display=swap');
+
 /* ----- Estilos generales ----- */
 .daterange-container {
     display: flex;
@@ -7,7 +9,7 @@
 }
 
 .daterange-container h5 {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto' !important;
     color: #4a4a4a;
     font-size: 1.4rem;
     font-weight: 600;
@@ -15,14 +17,14 @@
 
 /* ----- Estilos del input daterange ----- */
 #daterange {
-    padding: 0px 15px;
-    width: auto;
+    padding: 0px 10px;
+    width:  15%;
     border: 2px solid #007bff;
     border-radius: 8px;
-    background-color: #ffffff;
+    background-color: #ffffff6e;
     color: #333333;
     font-size: 18px;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto' !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     cursor: pointer;
@@ -50,24 +52,24 @@
 }
 
 /* ----- Mejora en el diseño responsivo ----- */
-@media (max-width: 1024px) {  
+@media (max-width: 1024px) {
     .daterange-container {
-        gap: 15px; 
+        gap: 15px;
     }
 
     #daterange {
         width: 30%;
-        font-size: 16px; 
+        font-size: 16px;
     }
 
     .daterange-container h5 {
-        font-size: 1.2rem; 
+        font-size: 1.2rem;
     }
 }
 
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
     .daterange-container {
-        gap: 10px; 
+        gap: 10px;
     }
 
     #daterange {
@@ -80,10 +82,10 @@
     }
 }
 
-@media (max-width: 458px) { 
+@media (max-width: 458px) {
     .daterange-container {
         flex-direction: column;
-        gap: 10px; 
+        gap: 10px;
     }
 
     #daterange {
@@ -92,6 +94,6 @@
     }
 
     .daterange-container h5 {
-        font-size: 1rem; 
+        font-size: 1rem;
     }
 }

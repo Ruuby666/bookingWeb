@@ -16,3 +16,7 @@ html, body {
     padding: 0; 
     width: 100%;
 }
+
+body {
+    background-color: #f4f1de !important;
+}
