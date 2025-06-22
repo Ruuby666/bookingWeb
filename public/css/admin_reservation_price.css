@@ -14,8 +14,7 @@ body {
 
 /* Contenedor principal */
 .container {
-    max-width: 70%;
-    margin: 20px auto;
+    margin: 20px 10px;
     padding: 15px;
     background-color: white;
     border-radius: 8px;
@@ -188,13 +187,11 @@ body {
 
     .table th,
     .table td {
-        font-size: 14px;
         padding: 10px;
     }
 
     .floating-button {
         padding: 10px 16px;
-        font-size: 14px;
     }
 
     .modal-content {
@@ -211,7 +208,7 @@ body {
 
     .table th,
     .table td {
-        font-size: 13px;
+        font-size: 15px;
         padding: 8px;
     }
 
@@ -219,10 +216,10 @@ body {
         bottom: 15px;
         right: 15px;
         padding: 8px 14px;
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .container h2 {
-        font-size: 18px;
+        font-size: 20px;
     }
 }
