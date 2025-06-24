@@ -110,57 +110,49 @@
                         <div class="form-group">
                             <label for="adults">Adults <b>*</b></label>
                             <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" value="{{ old('adults') }}" required>
-                            <label for="children">Childrens <b>*</b></label>
+
+                            <label for="children">Children <b>*</b></label>
                             <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" value="{{ old('children') ?? 0 }}" required>
-                            @error('guests')
-                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
-                            @enderror
+                            <div id="guestsError" style="color:red; margin-top: 0.25rem;"></div>
                         </div>
+
                         <div class="form-group">
                             <label for="name">Full Name <b>*</b></label>
                             <input id="name" name="name" type="text" placeholder="Enter your name" value="{{ old('name') }}" required>
-                            @error('name')
-                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
-                            @enderror
+                            <div id="nameError" style="color:red; margin-top: 0.25rem;"></div>
                         </div>
+
                         <div class="form-group">
                             <label for="number">Contact Number <b>*</b></label>
                             <input id="number" type="tel" placeholder="Enter your phone number" value="{{ old('number') }}" required>
                             <input type="hidden" name="number" id="full_phone">
-                            @error('number')
-                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
-                            @enderror
+                            <div id="numberError" style="color:red; margin-top: 0.25rem;"></div>
                         </div>
+
                         <div class="form-group">
                             <label for="email">Email <b>*</b></label>
                             <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" required>
-                            @error('email')
-                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
-                            @enderror
+                            <div id="emailError" style="color:red; margin-top: 0.25rem;"></div>
                         </div>
+
                         <div class="form-group">
                             <label for="verification_email">Verify Email <b>*</b></label>
                             <input id="verification_email" name="verification_email" type="email" placeholder="Verify your email" value="{{ old('verification_email') }}" required>
-                            @error('verification_email')
-                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
-                            @enderror
+                            <div id="verifyEmailError" style="color:red; margin-top: 0.25rem;"></div>
                         </div>
+
                         <div class="form-group">
                             <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="5" placeholder="Enter your message">{{ old('message') }}</textarea>
-                            @error('message')
-                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
-                            @enderror
+                            <textarea id="message" name="message" rows="5" placeholder="Enter your message" maxlength="500">{{ old('message') }}</textarea>
+                            <div id="messageError" style="color:red; margin-top: 0.25rem;"></div>
                         </div>
+
                         <input type="hidden" name="property_id" value="{{ $property->id }}">
                         <input type="hidden" name="total_price" id="total_price_input" value="">
                         <button type="submit">Send Your Request</button>
                     </form>
                 </div>
             </div>
-            <!-- Detalles del Apartamento -->
-
-
             <!-- Galería de imágenes -->
             <div class="image-gallery">
                 <div class="main-image">
@@ -221,15 +213,86 @@
             }
         });
 
+        function validateForm() {
+            let valid = true;
+
+            const capacity = {{$property->capacity}};
+            const adults = parseInt(document.getElementById('adults').value);
+            const children = parseInt(document.getElementById('children').value);
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('number').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const verifyEmail = document.getElementById('verification_email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            // Reset errors
+            ['guestsError', 'nameError', 'numberError', 'emailError', 'verifyEmailError', 'messageError'].forEach(id => {
+                document.getElementById(id).textContent = '';
+            });
+
+            // Adults and Children validation
+            if (isNaN(adults) || adults < 1 || adults > capacity) {
+                document.getElementById('guestsError').textContent = `Adults must be between 1 and ${capacity}`;
+                valid = false;
+            }
+
+            if (isNaN(children) || children < 0 || children > capacity - 1) {
+                document.getElementById('guestsError').textContent += ` Children must be between 0 and ${capacity - 1}`;
+                valid = false;
+            }
+
+            if (adults + children > capacity) {
+                document.getElementById('guestsError').textContent += ` Total guests cannot exceed ${capacity}`;
+                valid = false;
+            }
+
+            // Name validation
+            if (name === '') {
+                document.getElementById('nameError').textContent = 'Full name is required.';
+                valid = false;
+            }
+
+            // Phone validation (basic)
+            const phoneRegex = /^[\d\s+\-()]{7,20}$/;
+            if (!phoneRegex.test(phone)) {
+                document.getElementById('numberError').textContent = 'Please enter a valid phone number.';
+                valid = false;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email.';
+                valid = false;
+            }
+
+            if (email !== verifyEmail) {
+                document.getElementById('verifyEmailError').textContent = 'Emails do not match.';
+                valid = false;
+            }
+
+            // Message length (optional)
+            if (message.length > 500) {
+                document.getElementById('messageError').textContent = 'Message cannot exceed 500 characters.';
+                valid = false;
+            }
+
+            return valid;
+        };
+
+
         const phoneInput = document.querySelector("#number");
         const fullPhoneInput = document.querySelector("#full_phone");
-
         const iti = window.intlTelInput(phoneInput, {
             initialCountry: "auto",
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
         });
 
         document.querySelector('.contact-form').addEventListener('submit', function() {
+            if (!validateForm()) {
+                e.preventDefault();
+                return false;
+            }
             document.getElementById('loadingOverlay').style.display = 'flex';
             fullPhoneInput.value = iti.getNumber();
         });
@@ -239,5 +302,4 @@
     @include('components.footer')
 
 </body>
-
 </html>

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-
 class Property extends Model
 {
     use HasFactory;
@@ -20,6 +19,7 @@ class Property extends Model
         'size',
         'bedrooms',
         'bathrooms',
+        'min_nights',
         'images_div',
         'tv',
         'entertainment',

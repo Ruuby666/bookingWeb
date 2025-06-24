@@ -30,7 +30,7 @@
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
                     <th>Precio por Noche</th>
-                    <th>Acciones</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>

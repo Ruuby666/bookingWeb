@@ -41,9 +41,9 @@ class FacturasExport
             if ($reservation->property->title == 'El Galeon') {
                 $sheet->setCellValue('B2', 'TONIRETOOS SL');
                 $sheet->setCellValue('B3', 'B35632223');
-                $sheet->setCellValue('B4','APARTAMENTO EL GALEON');
-                $sheet->setCellValue('B5','VALLE DE LA DEGOLLADA 63');
-                $sheet->setCellValue('B6','LA DEGOLLADA, 35570 YAIZA');
+                $sheet->setCellValue('B4', 'APARTAMENTO EL GALEON');
+                $sheet->setCellValue('B5', 'VALLE DE LA DEGOLLADA 63');
+                $sheet->setCellValue('B6', 'LA DEGOLLADA, 35570 YAIZA');
             } else {
                 $sheet->setCellValue('B2', 'OSCAR SEPULVEDA GUTIERREZ');
                 $sheet->setCellValue('B3', '45532610Q');

@@ -24,8 +24,9 @@
     @endif
 
     <div class="container">
+        <h3>Calendario de Reservas Confirmadas</h3>
         <div class="calendar-toolbar">
-            <h3>Calendario de Reservas Confirmadas</h3>
+            
             <div>
                 <form id="propiedadForm" onsubmit="return false;">
                     <label for="propiedad">¿Cuál?</label>

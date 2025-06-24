@@ -77,6 +77,8 @@
             "showCustomRangeLabel": true,
             "showDropdowns": false,
             "minDate": moment().add(1, 'days'),
+            "startDate": moment().add(1, 'days'),
+            "endDate": moment().add(1, 'days'),
             "opens": "center",
             "drops": "auto",
             "isInvalidDate": function(date) {

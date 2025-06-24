@@ -22,7 +22,6 @@ body {
 .container {
     padding: 20px;
     padding-bottom: 80px;
-    /* espacio para el footer */
 }
 
 main {
@@ -216,6 +215,10 @@ td:nth-child(2) {
 
     .close {
         font-size: 24px;
+    }
+
+    .btn-add{
+        margin-bottom: 40px;
     }
 }
 

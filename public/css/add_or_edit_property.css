@@ -35,7 +35,7 @@ form {
 }
 
 .form-item-full {
-    grid-column: 1 / -1; /* Ocupar ancho completo */
+    grid-column: 1 / -1;
 }
 
 label {
@@ -99,6 +99,12 @@ textarea {
         padding: 1rem;
     }
     form {
-        gap: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
     }
+    .form-item{
+        width: 100%;
+    }
+
 }

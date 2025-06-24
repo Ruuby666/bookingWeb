@@ -174,7 +174,7 @@ body {
 
 #daterange {
     padding: 10px 15px !important;
-    width: fit-content !important;
+    width: 32% !important;
     margin: 0 !important;
     background-color: #ffffff9c !important;
     border: 1px solid #0000009c !important;
@@ -311,6 +311,12 @@ b {
 
 #footer {
     width: -webkit-fill-available !important;
+}
+
+#total-price{
+    color: #e07a5f;
+    margin: 5px 0;
+    font-weight: 400;
 }
 
 /* Popup */

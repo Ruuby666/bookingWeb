@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:&family=Lato:&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
 }
 
 #calendar {
@@ -72,4 +75,38 @@ h3 {
 
 .close:hover {
   color: #000;
+}
+
+.fc .fc-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  #calendar {
+    margin: 40px 10px;
+  }
+
+  .calendar-toolbar {
+    margin: 0 10px;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .fc .fc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .fc .fc-toolbar>* {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
 }

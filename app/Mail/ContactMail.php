@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -9,7 +10,8 @@ use Illuminate\Queue\SerializesModels;
 
 class ContactMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
     public $data;
     public $subject;
 
@@ -18,12 +20,14 @@ class ContactMail extends Mailable
         $this->data = $data;
         $this->subject = $subject;
     }
-    public function envelope(): Envelope{
+    public function envelope(): Envelope
+    {
         return new Envelope(
             subject: $this -> subject,
         );
     }
-    public function content(): Content{
+    public function content(): Content
+    {
         return new Content(
             view: 'emails.booking',
         );

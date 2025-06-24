@@ -11,7 +11,8 @@ a {
 #header {
     height: 200px;
     background-image: url('/images/laGeria.jpg');
-    background-position: center center;  /* Centra la imagen de fondo */
+    background-position: center center;
+    /* Centra la imagen de fondo */
     background-size: cover;
     background-repeat: no-repeat;
     margin-bottom: 30px;
@@ -45,7 +46,7 @@ a {
 
 /* ----- Hover effect for menu items ----- */
 #header-menu-word:hover {
-    transform: scale(1.3);
+    transform: scale(1.2);
     padding: 0px 5px;
     color: #ffffff;
     border-radius: 5px;
@@ -55,41 +56,41 @@ a {
 /* ----- Importación de la fuente Roboto ----- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+@media (max-width: 768px) {
 
-/* ----- Responsivo: Ajustes para tablets y móviles ----- */
-@media (max-width: 1024px) { /* Tablet */
+    /* Móvil */
     #header {
-        height: 350px;  /* Reduce la altura en tablets */
-        background-position: center center; /* Asegura que la imagen se mantenga centrada */
+        height: 200px;
+        background-position: center center;
     }
 
     #nameLogo {
-        height: 30%;
-    }
-}
-@media (max-width: 768px) { /* Móvil */
-    #header {
-        height: 250px;  /* Menor altura en móviles */
-        background-position: center center;  /* Centra la imagen de fondo */
-    }
-
-    #nameLogo {
-        height: 40%;  /* Reduce el tamaño del logo */
+        height: 40%;
     }
 
     #header-menu {
-        flex-direction: column; /* Menú apilado */
-        justify-content: flex-start; /* Alinea al inicio */
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 0 10px;
     }
 
     #header-menu-word {
-        margin: 10px 0;  /* Mayor espaciado entre items */
-        font-size: 30px;  /* Reduce el tamaño del texto */
-        text-align: center; /* Centra los elementos */
+        margin: 10px 0;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    #header-menu-word:hover {
+        transform: scale(1.05);
     }
 }
-@media (max-width: 468px) { /* Móvil */
+
+@media (max-width: 468px) {
+
+    /* Móvil */
     #nameLogo {
-        height: 30%;  /* Reduce el tamaño del logo */
+        height: 30%;
     }
 }
