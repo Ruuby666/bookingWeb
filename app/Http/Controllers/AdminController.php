@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use  App\Models\Property;
+use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -192,7 +192,7 @@ class AdminController extends Controller
         $ids = $request->input('ids');
         $invoiceAmount = $request->input('invoice_amount');
 
-        foreach ($ids as $id){
+        foreach ($ids as $id) {
             Reservation::markAsInvoiced($id);
         }
 
