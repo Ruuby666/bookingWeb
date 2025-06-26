@@ -58,10 +58,18 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 
 - fotos piscina villa ✅
 
-- añadir script todos los dias a las 00:00 se recorre las reservas confir. que tengan para mañana y enviar información a ese correo
+- añadir script todos los dias a las 00:00 se recorre las reservas confir. que tengan para mañana y enviar información a ese correo -> tasksheduling
 
 - Cada mes tiene su precio  modificar email de admin cuando se reserva  y modificar admin para añadir rangos ✅
 
-- Tener cuidado de como estoy enviando las cosas --> @json($properties);
+- Tener cuidado de como estoy enviando las cosas --> @json($properties); quitar 
 
 - pasar de http a https
+
+- crear tabla roles y tabla intermedia
+
+- gates no se
+
+- historial facturas
+
+- session-expiry.js eliminar

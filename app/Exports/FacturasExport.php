@@ -22,9 +22,6 @@ class FacturasExport
 
         $spreadsheet = new Spreadsheet();
         $facturaNumber = intval($invoiceAmount);
-        if ($facturaNumber < 10) {
-            $facturaNumber = 0 . $facturaNumber;
-        }
 
 
 
