@@ -58,11 +58,11 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 
 - fotos piscina villa ✅
 
-- añadir script todos los dias a las 00:00 se recorre las reservas confir. que tengan para mañana y enviar información a ese correo -> tasksheduling
+- session-expiry.js eliminar ✅
 
 - Cada mes tiene su precio  modificar email de admin cuando se reserva  y modificar admin para añadir rangos ✅
 
-- Tener cuidado de como estoy enviando las cosas --> @json($properties); quitar 
+- Tener cuidado de como estoy enviando las cosas --> @json($properties); ✅ 
 
 - pasar de http a https
 
@@ -72,4 +72,4 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 
 - historial facturas
 
-- session-expiry.js eliminar
+- añadir script todos los dias a las 00:00 se recorre las reservas confir. que tengan para mañana y enviar información a ese correo -> tasksheduling
