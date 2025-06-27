@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Reservation extends Model
 {
@@ -39,19 +38,11 @@ class Reservation extends Model
         return $this->belongsTo(Property::class);
     }
 
-    public static function updateReservationJson()
-    {
-        $reservations = Reservation::all()->toArray();
-        Storage::put('reservations.json', encrypt(json_encode($reservations, JSON_PRETTY_PRINT)));
-        error_log("Archivo reservations.json actualizado tras creación de usuario.");
-    }
-
     public static function markAsInvoiced($reservationId)
     {
         $reservation = self::findOrFail($reservationId);
         $reservation->invoice = true;
         $reservation->save();
-        self::updateReservationJson();
         return $reservation;
     }
 }

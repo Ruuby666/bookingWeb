@@ -100,7 +100,6 @@
     </div>
 
     @include('components.footer')
-    <script src="{{ asset('js/session-expiry.js') }}"></script>
     <script>
         document.getElementById('priceForm').addEventListener('submit', function(e) {
             let errors = [];

@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Console\Scheduling\Schedule;
 
 class Kernel extends HttpKernel
 {
@@ -51,4 +52,9 @@ class Kernel extends HttpKernel
         // 🔹 Middleware para proteger rutas de administrador
         'admin' => \App\Http\Middleware\IsAdmin::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('app:send-reservation-info')->dailyAt('00:00');
+    }
 }

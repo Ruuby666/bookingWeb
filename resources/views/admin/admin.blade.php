@@ -106,7 +106,6 @@
     </div>
 
     @include('components.footer')
-    <script src="{{ asset('js/session-expiry.js') }}"></script>
     <script>
         function openModal(id) {
             document.getElementById(`modal-${id}`).style.display = 'block';

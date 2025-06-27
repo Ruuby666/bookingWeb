@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
@@ -64,13 +63,6 @@ class PropertyController extends Controller
         Property::create($data);
 
         return redirect()->route('admin.properties')->with('success', 'Property added successfully');
-    }
-
-    private function updatePropertiesJson()
-    {
-        $properties = Property::all()->toArray();
-        Storage::put('properties.json', encrypt(json_encode($properties, JSON_PRETTY_PRINT)));
-        error_log("Archivo properties.json actualizado tras creación o modificación de propiedad.");
     }
 
     public function destroy($id)

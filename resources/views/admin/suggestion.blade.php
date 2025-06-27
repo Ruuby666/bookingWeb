@@ -39,7 +39,6 @@
 
 
     @include('components.footer')
-    <script src="{{ asset('js/session-expiry.js') }}"></script>
 </body>
 
 </html>

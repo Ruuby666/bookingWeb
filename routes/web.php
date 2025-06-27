@@ -9,6 +9,8 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\ReservationPriceController;
+use App\Models\Reservation;
+use App\Models\Property;
 
 
 
@@ -68,6 +70,24 @@ Route::middleware([IsAdmin::class])->group(function () {
 
 Route::get('/api/property-price-range', [ReservationPriceController::class, 'getPriceRange']);
 
+Route::get('/api/reservations', function () {
+    return Reservation::all();
+});
+
+Route::get('/api/properties', function () {
+    return Property::all();
+});
+
+Route::get('/api/images', function () {
+    // Assuming you store the featured image per property
+    $properties = Property::all();
+
+    $images = $properties->mapWithKeys(function ($property) {
+        return [$property->id => $property->images_div];
+    });
+
+    return response()->json($images);
+});
 
 // Resource routes
 Route::resource('users', UserController::class);

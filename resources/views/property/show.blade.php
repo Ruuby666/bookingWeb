@@ -62,7 +62,7 @@
                         </div>
                         <div class="feature">
                             <i class="fas fa-dollar-sign icon"></i>
-                            <span>€{{ $property->price_per_night }} per night</span>
+                            <span>€{{ $property->price_per_night }} per night</span>  <!-- TODO -->
                         </div>
                     </div>
                     <div class="description">
@@ -104,47 +104,59 @@
                         <div>
                             @include('components.show-date-range')
                             @error('daterange')
-                            <div style="color: red; margin-top: 0.25rem;">{{ $message }}</div>
+                            <div class="error-message">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label for="adults">Adults <b>*</b></label>
-                            <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" value="{{ old('adults') }}" required>
+                            <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" value="{{ old('adults') }}" class="{{ $errors->has('adults') ? 'error' : '' }}" required>
 
                             <label for="children">Children <b>*</b></label>
-                            <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" value="{{ old('children') ?? 0 }}" required>
-                            <div id="guestsError" style="color:red; margin-top: 0.25rem;"></div>
+                            <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" value="{{ old('children') ?? 0 }}" class="{{ $errors->has('children') ? 'error' : '' }}" required>
+                            @error('guests')
+                            <error class="error-message">{{ $message }}</error>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="name">Full Name <b>*</b></label>
-                            <input id="name" name="name" type="text" placeholder="Enter your name" value="{{ old('name') }}" required>
-                            <div id="nameError" style="color:red; margin-top: 0.25rem;"></div>
+                            <input id="name" name="name" type="text" placeholder="Enter your name" value="{{ old('name') }}" class="{{ $errors->has('name') ? 'error' : '' }}"  required>
+                            @error('name')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="number">Contact Number <b>*</b></label>
-                            <input id="number" type="tel" placeholder="Enter your phone number" value="{{ old('number') }}" required>
+                            <input id="number" type="tel" placeholder="Enter your phone number" value="{{ old('number') }}" class="{{ $errors->has('number') ? 'error' : '' }}" required>
                             <input type="hidden" name="number" id="full_phone">
-                            <div id="numberError" style="color:red; margin-top: 0.25rem;"></div>
+                            @error('number')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror   
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email <b>*</b></label>
-                            <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" required>
-                            <div id="emailError" style="color:red; margin-top: 0.25rem;"></div>
+                            <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" class="{{ $errors->has('email') ? 'error' : '' }}" required>
+                            @error('email')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="verification_email">Verify Email <b>*</b></label>
-                            <input id="verification_email" name="verification_email" type="email" placeholder="Verify your email" value="{{ old('verification_email') }}" required>
-                            <div id="verifyEmailError" style="color:red; margin-top: 0.25rem;"></div>
+                            <input id="verification_email" name="verification_email" type="email" placeholder="Verify your email" value="{{ old('verification_email') }}" class="{{ $errors->has('verification_email') ? 'error' : '' }}" required>
+                            @error('verification_email')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="5" placeholder="Enter your message" maxlength="500">{{ old('message') }}</textarea>
-                            <div id="messageError" style="color:red; margin-top: 0.25rem;"></div>
+                            <textarea id="message" name="message" rows="5" placeholder="Enter your message" maxlength="500" class="{{ $errors->has('message') ? 'error' : '' }}">{{ old('message') }}</textarea>
+                            @error('message')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <input type="hidden" name="property_id" value="{{ $property->id }}">
@@ -163,7 +175,7 @@
                     @foreach ($imagesWithoutFirst as $index => $image)
                     <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
                         alt="Property Thumbnail" loading="lazy"
-                        onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
+                        onclick="openPopup('{{ $image }}', {{$index+1}})">
                     @endforeach
                 </div>
             </div>
@@ -213,73 +225,6 @@
             }
         });
 
-        function validateForm() {
-            let valid = true;
-
-            const capacity = {{$property->capacity}};
-            const adults = parseInt(document.getElementById('adults').value);
-            const children = parseInt(document.getElementById('children').value);
-            const name = document.getElementById('name').value.trim();
-            const phone = document.getElementById('number').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const verifyEmail = document.getElementById('verification_email').value.trim();
-            const message = document.getElementById('message').value.trim();
-
-            // Reset errors
-            ['guestsError', 'nameError', 'numberError', 'emailError', 'verifyEmailError', 'messageError'].forEach(id => {
-                document.getElementById(id).textContent = '';
-            });
-
-            // Adults and Children validation
-            if (isNaN(adults) || adults < 1 || adults > capacity) {
-                document.getElementById('guestsError').textContent = `Adults must be between 1 and ${capacity}`;
-                valid = false;
-            }
-
-            if (isNaN(children) || children < 0 || children > capacity - 1) {
-                document.getElementById('guestsError').textContent += ` Children must be between 0 and ${capacity - 1}`;
-                valid = false;
-            }
-
-            if (adults + children > capacity) {
-                document.getElementById('guestsError').textContent += ` Total guests cannot exceed ${capacity}`;
-                valid = false;
-            }
-
-            // Name validation
-            if (name === '') {
-                document.getElementById('nameError').textContent = 'Full name is required.';
-                valid = false;
-            }
-
-            // Phone validation (basic)
-            const phoneRegex = /^[\d\s+\-()]{7,20}$/;
-            if (!phoneRegex.test(phone)) {
-                document.getElementById('numberError').textContent = 'Please enter a valid phone number.';
-                valid = false;
-            }
-
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                document.getElementById('emailError').textContent = 'Please enter a valid email.';
-                valid = false;
-            }
-
-            if (email !== verifyEmail) {
-                document.getElementById('verifyEmailError').textContent = 'Emails do not match.';
-                valid = false;
-            }
-
-            // Message length (optional)
-            if (message.length > 500) {
-                document.getElementById('messageError').textContent = 'Message cannot exceed 500 characters.';
-                valid = false;
-            }
-
-            return valid;
-        };
-
 
         const phoneInput = document.querySelector("#number");
         const fullPhoneInput = document.querySelector("#full_phone");
@@ -288,14 +233,109 @@
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
         });
 
-        document.querySelector('.contact-form').addEventListener('submit', function() {
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = ['adults', 'children', 'name', 'number', 'email', 'verification_email'];
+            
+            // Solo limpiar errores de JavaScript, NO los del servidor
+            document.querySelectorAll('.js-error-message').forEach(el => el.remove());
+            document.querySelectorAll('.js-error').forEach(el => el.classList.remove('js-error'));
+            
+            // Validar campos requeridos
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input && !input.value.trim()) {
+                    input.classList.add('js-error');
+                    showJSError(input, 'Este campo es obligatorio');
+                    isValid = false;
+                }
+            });
+            
+            // Validar emails coincidentes
+            const email = document.getElementById('email').value;
+            const verifyEmail = document.getElementById('verification_email').value;
+            if (email && verifyEmail && email !== verifyEmail) {
+                const verifyInput = document.getElementById('verification_email');
+                verifyInput.classList.add('js-error');
+                showJSError(verifyInput, 'Los emails no coinciden');
+                isValid = false;
+            }
+            
+            // Validar capacidad total
+            const adults = parseInt(document.getElementById('adults').value) || 0;
+            const children = parseInt(document.getElementById('children').value) || 0;
+            const maxCapacity = {{$property->capacity}};
+            
+            if (adults + children > maxCapacity) {
+                const adultsInput = document.getElementById('adults');
+                const childrenInput = document.getElementById('children');
+                adultsInput.classList.add('js-error');
+                childrenInput.classList.add('js-error');
+                showJSError(adultsInput, `Total de huéspedes no puede exceder ${maxCapacity}`);
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Función para mostrar errores de JavaScript
+        function showJSError(input, message) {
+            const errorElement = document.createElement('span');
+            errorElement.className = 'error-message js-error-message';
+            errorElement.textContent = message;
+            input.parentNode.appendChild(errorElement);
+        }
+
+        // UN SOLO event listener para el formulario
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
             if (!validateForm()) {
-                e.preventDefault();
+                e.preventDefault(); // ✅ CORREGIDO: 'e' ahora está definido
                 return false;
             }
             document.getElementById('loadingOverlay').style.display = 'flex';
             fullPhoneInput.value = iti.getNumber();
         });
+
+        // Validación en tiempo real para emails
+        document.getElementById('verification_email').addEventListener('blur', function() {
+            const email = document.getElementById('email').value;
+            const verifyEmail = this.value;
+            
+            // Limpiar errores JS previos
+            this.classList.remove('js-error');
+            const jsError = this.parentNode.querySelector('.js-error-message');
+            if (jsError) jsError.remove();
+            
+            if (email && verifyEmail && email !== verifyEmail) {
+                this.classList.add('js-error');
+                showJSError(this, 'Los emails no coinciden');
+            }
+        });
+
+        // Validación en tiempo real para capacidad
+        function validateCapacity() {
+            const adults = parseInt(document.getElementById('adults').value) || 0;
+            const children = parseInt(document.getElementById('children').value) || 0;
+            const maxCapacity = {{ $property->capacity }};
+            
+            const adultsInput = document.getElementById('adults');
+            const childrenInput = document.getElementById('children');
+            
+            // Limpiar errores JS previos
+            adultsInput.classList.remove('js-error');
+            childrenInput.classList.remove('js-error');
+            const jsErrors = document.querySelectorAll('#adults ~ .js-error-message, #children ~ .js-error-message');
+            jsErrors.forEach(error => error.remove());
+            
+            if (adults + children > maxCapacity) {
+                adultsInput.classList.add('js-error');
+                childrenInput.classList.add('js-error');
+                showJSError(adultsInput, `Total no puede exceder ${maxCapacity} huéspedes`);
+            }
+        }
+
+        document.getElementById('adults').addEventListener('input', validateCapacity);
+        document.getElementById('children').addEventListener('input', validateCapacity);
     </script>
 
 

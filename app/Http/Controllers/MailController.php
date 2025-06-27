@@ -27,20 +27,12 @@ class MailController extends Controller
 
     public function sendEmail(Request $request)
     {
-        $request->validate([
-            'property_id' => 'required|exists:properties,id',
-        ]);
-
         $property = Property::find($request->property_id);
 
-        if ($request->email !== $request->verification_email) {
-            return redirect()->back()->with('error', "The verification email doesn't match the email you entered.");
-        }
-
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'property_id' => 'required|exists:properties,id',
             'adults' => 'required|integer|min:1|max:' . $property->capacity,
-            'children' => 'required|integer|min:0|max:' . $property->capacity,
+            'children' => 'required|integer|min:0|max:' . ($property->capacity - 1),
             'name' => 'required|string|max:255',
             'number' => 'required|string|max:20',
             'email' => 'required|email|max:255',
@@ -49,9 +41,12 @@ class MailController extends Controller
             'daterange' => 'required|string|regex:/\d{2}\/\d{2}\/\d{4} - \d{2}\/\d{2}\/\d{4}/',
         ], [
             'adults.required' => 'El número de adultos es obligatorio.',
+            'adults.min' => 'Debe haber al menos 1 adulto.',
+            'adults.max' => 'El número de adultos no puede exceder ' . $property->capacity . '.',
             'children.required' => 'El número de niños es obligatorio.',
+            'children.min' => 'El número de niños no puede ser negativo.',
+            'children.max' => 'El número de niños no puede exceder ' . ($property->capacity - 1) . '.',
             'verification_email.same' => 'El correo de verificación debe coincidir con el correo electrónico.',
-            'guests.max' => 'El número máximo de invitados permitido es ' . $property->capacity . '.',
             'name.required' => 'El nombre es obligatorio.',
             'name.string' => 'El nombre debe ser texto.',
             'name.max' => 'El nombre no puede tener más de 255 caracteres.',
@@ -61,42 +56,23 @@ class MailController extends Controller
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.email' => 'Debe ser un correo electrónico válido.',
             'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
+            'verification_email.required' => 'La verificación del correo es obligatoria.',
+            'verification_email.email' => 'Debe ser un correo electrónico válido.',
             'message.string' => 'El mensaje debe ser texto.',
-            'message.max' => 'El mensaje no puede tener más de 1000 caracteres.',
+            'message.max' => 'El mensaje no puede tener más de 500 caracteres.',
             'daterange.required' => 'El rango de fechas es obligatorio.',
             'daterange.regex' => 'El rango de fechas debe tener el formato DD/MM/AAAA - DD/MM/AAAA.',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+        // Validación adicional para el total de huéspedes
+        $totalGuests = $request->adults + $request->children;
+        if ($totalGuests > $property->capacity) {
+            return redirect()->back()
+                ->withErrors(['adults' => 'El número total de personas (' . $totalGuests . ') no puede exceder la capacidad de la propiedad (' . $property->capacity . ').'])
+                ->withInput();
         }
 
-        // Verificar que la suma total de personas no supere la capacidad
-        $data['guests'] = $request->adults + $request->children;
-        if ($data['guests'] > $property->capacity) {
-            return redirect()->back()->with(
-                'error',
-                "The total number of people cannot exceed the property's capacity (' . $property->capacity . ')."
-            );
-        }
-
-        $user = User::where('email', $request->email)->first();
-        if (!$user) {
-            $user = $this->userController->store($request);
-        }
-
-        $data = [
-            'adults' => $request->adults,
-            'children' => $request->children,
-            'guests' => $request->adults + $request->children,
-            'name' => $request->name,
-            'number' => $request->number,
-            'email' => $request->email,
-            'message' => $request->message,
-            'daterange' => $request->daterange,
-            'total_price' => $request->total_price,
-        ];
-
+        // Validación de fechas
         $dates = explode(' - ', $request->daterange);
         try {
             $data['checkOut'] = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
@@ -111,8 +87,29 @@ class MailController extends Controller
             return redirect()->back()->withErrors(['daterange' => 'Formato de fecha inválido.'])->withInput();
         }
 
+        // Verificar que el correo de verificación coincida con el correo ingresado
+        if ($request->email !== $request->verification_email) {
+            return redirect()->back()->with('error', "The verification email doesn't match the email you entered.");
+        }
 
-        $data['property'] = $property;
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            $user = $this->userController->store($request);
+        }
+
+        $data = [
+            'adults' => $request->adults,
+            'children' => $request->children,
+            'guests' => $totalGuests,
+            'name' => $request->name,
+            'number' => $request->number,
+            'email' => $request->email,
+            'message' => $request->message,
+            'daterange' => $request->daterange,
+            'total_price' => $request->total_price,
+            'property' => $property,
+        ];
+
 
         $sub = 'New Booking';
 

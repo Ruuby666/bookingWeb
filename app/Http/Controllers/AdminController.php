@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
@@ -157,12 +156,12 @@ class AdminController extends Controller
         $datestart = $reservation->check_in->format('Y-m-d');
         $dateend = $reservation->check_out->format('Y-m-d');
 
-        if ($request->start_time >= $request->end_time) {
-            return back()->withErrors(['end_time' => 'La hora de salida debe ser posterior a la de entrada.']);
+        if ($request->start_time >= $request->end_time && $datestart === $dateend) {
+            return back()->with('error','La hora de salida debe ser posterior a la de entrada.');
         }
 
-        $reservation->check_in = Carbon::createFromFormat('Y-m-d H:i', "$datestart {$request->start_time}");
-        $reservation->check_out = Carbon::createFromFormat('Y-m-d H:i', "$dateend {$request->end_time}");
+        $reservation->check_in = Carbon::createFromFormat('Y-m-d H:i', "$datestart $request->start_time");
+        $reservation->check_out = Carbon::createFromFormat('Y-m-d H:i', "$dateend $request->end_time");
         $reservation->save();
 
         return redirect()->back()->with('success', 'Hora actualizada correctamente.');

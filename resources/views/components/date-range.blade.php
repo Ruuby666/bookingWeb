@@ -1,121 +1,123 @@
-<!-- resources/views/daterange.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date Range Picker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Import Daterangepicker and jQuery from CDN -->
+    <!-- Estilos del DateRangePicker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="{{ asset('css/date-range.css') }}">
 </head>
 
 <body>
+
     <div class="daterange-container">
         <h2>Select Range</h2>
-        @csrf
         <input type="text" id="daterange" placeholder="Select a date range" />
     </div>
 
-
-    <!-- jQuery and DateRangePicker script from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 
-    <!-- Initialize Date Range Picker -->
     <script>
-        let reservations = @json($reservations).filter(reservation => reservation.status === 'confirmed');
-        let availableProperties = @json($properties);
-        let propertyImages = @json($propertyWithImages);
+        $(document).ready(function() {
 
-        var dbDates = [
-            // if you want to unavailable any date '2024-09-15'(example)
-        ];
-
-        function displayAvailableProperties(properties) {
-            let container = $('#available-properties');
-            container.empty();
-
-            if (properties.length === 0) {
-                container.append('<p>No properties available for the selected dates.</p>');
-                return;
-            }
-
-            properties.forEach(property => {
-                let propertyHtml = `
-                <a href="/property/${property.id}">
-                    <div class="cardcontainer">
-                        <div class="photo">
-                            <img src="/images/${property.images_div}/${propertyImages[property.id]}" alt="Image not found"style="height: 200px; width: 300px;">
-                        </div>
-                        <div class="content">
-                            <p class="txt4">${property.title}</p>
-                            <p class="txt5">${property.location}</p>
-                            <p class="txt2">${property.description}</p>
-                        </div>
-                    </div>
-                </a>
-                `;
-                container.append(propertyHtml);
+            // Inicializar Date Range Picker
+            $('#daterange').daterangepicker({
+                locale: {
+                    format: 'DD/MM/YYYY'
+                },
+                autoApply: true,
+                linkedCalendars: true,
+                autoUpdateInput: true,
+                showCustomRangeLabel: true,
+                showDropdowns: false,
+                minDate: moment().add(1, 'days'),
+                endDate: moment().add(1, 'days'),
+                opens: 'center',
+                drops: "auto",
+            }, function(start, end) {
+                fetchDataAndRenderProperties(start, end);
             });
-        }
 
-        displayAvailableProperties(availableProperties);
+            // Función principal que gestiona todo el flujo de datos
+            async function fetchDataAndRenderProperties(startDate, endDate) {
+                const start = moment(startDate).format('YYYY-MM-DD');
+                const end = moment(endDate).format('YYYY-MM-DD');
 
-        $('#daterange').daterangepicker({
-            locale: {
-                format: 'DD/MM/YYYY'
-            },
-            "autoApply": true,
-            "linkedCalendars": true,
-            "autoUpdateInput": true,
-            "showCustomRangeLabel": true,
-            "showDropdowns": false,
-            "minDate": moment().add(1, 'days'),
-            "startDate": moment().add(1, 'days'),
-            "endDate": moment().add(1, 'days'),
-            "opens": "center",
-            "drops": "auto",
-            "isInvalidDate": function(date) {
-                return dbDates.includes(date.format('YYYY-MM-DD'));
-            }
-        }, function(start, end) {
-            let newCheckIn = moment(start);
-            let newCheckOut = moment(end);
-            let occupiedPropertyIds = [];
+                try {
+                    const [reservationsRes, propertiesRes] = await Promise.all([
+                        fetch('/api/reservations'),
+                        fetch('/api/properties')
+                    ]);
 
-            // Function to check if two date ranges overlap
-            function checkOverlap(newCheckIn, newCheckOut, existingCheckIn, existingCheckOut) {
-                return newCheckIn.isBefore(existingCheckOut) && newCheckOut.isAfter(existingCheckIn) || newCheckIn
-                    .isAfter(existingCheckOut) && newCheckOut.isBefore(existingCheckIn);
-            }
+                    const reservations = await reservationsRes.json();
+                    const properties = await propertiesRes.json();
 
-            // Iterate over existing reservations to find overlaps
-            for (let i = 0; i < reservations.length; i++) {
-                let reservation = reservations[i];
-                let existingCheckIn = moment(reservation.check_in);
-                let existingCheckOut = moment(reservation.check_out);
+                    const occupiedIds = getOccupiedPropertyIds(reservations, start, end);
+                    const availableProps = properties.filter(p => !occupiedIds.includes(p.id));
 
-                // If there's an overlap, add the property ID to the occupied list
-                if (checkOverlap(newCheckIn, newCheckOut, existingCheckIn, existingCheckOut)) {
-                    occupiedPropertyIds.push(reservation.property_id);
+                    renderProperties(availableProps, propertyWithImages);
+                } catch (error) {
+                    console.error("Error fetching data:", error);
                 }
             }
 
-            let availableProperties = @json($properties).filter(property => !occupiedPropertyIds.includes(
-                property.id));
+            // Comprobar solapamiento entre fechas
+            function getOccupiedPropertyIds(reservations, newStart, newEnd) {
+                const start = moment(newStart);
+                const end = moment(newEnd);
+                let occupied = [];
 
-            displayAvailableProperties(availableProperties);
+                reservations.forEach(res => {
+                    if (res.status !== 'confirmed') return;
 
+                    const checkIn = moment(res.check_in);
+                    const checkOut = moment(res.check_out);
 
+                    const isOverlap = start.isBefore(checkOut) && end.isAfter(checkIn);
+                    if (isOverlap) {
+                        occupied.push(res.property_id);
+                    }
+                });
+
+                return occupied;
+            }
+
+            //  Mostrar propiedades disponibles
+            function renderProperties(properties, images) {
+                const container = $('#available-properties');
+                container.empty();
+
+                if (properties.length === 0) {
+                    container.append('<p>No properties available for the selected dates.</p>');
+                    return;
+                }
+
+                properties.forEach(prop => {
+                    const img = images[prop.id] || 'default.jpg';
+                    const card = `
+                <a href="/property/${prop.id}">
+                    <div class="cardcontainer">
+                        <div class="photo">
+                            <img src="/images/${prop.images_div}/${img}" alt="Image not found" style="height: 200px; width: 300px;">
+                        </div>
+                        <div class="content">
+                            <p class="txt4">${prop.title}</p>
+                            <p class="txt5">${prop.location}</p>
+                            <p class="txt2">${prop.description}</p>
+                        </div>
+                    </div>
+                </a>
+            `;
+                    container.append(card);
+                });
+            }
         });
     </script>
-
-</body>
 
 </html>

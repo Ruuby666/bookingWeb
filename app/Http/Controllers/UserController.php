@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -20,7 +19,7 @@ class UserController extends Controller
             'is_admin' => false,
         ]);
 
-        $this->updateUsersJson();
+        User::save();
 
         return $user;
     }
@@ -44,15 +43,7 @@ class UserController extends Controller
 
         $user->update($validatedData);
 
-        $this->updateUsersJson();
-
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
-    private function updateUsersJson()
-    {
-        $users = User::all()->toArray();
-        Storage::put('users.json', encrypt(json_encode($users, JSON_PRETTY_PRINT)));
-        error_log("Archivo users.json actualizado tras creación de usuario.");
-    }
 }
