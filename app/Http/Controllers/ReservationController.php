@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Models\Property;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
