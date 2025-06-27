@@ -56,6 +56,10 @@
     transform: scale(1.02);
 }
 
+td, th{
+    padding: 0 !important;
+}
+
 /* ----- Mejora en el diseño responsivo ----- */
 @media (max-width: 1024px) {
     .daterange-container {
