@@ -42,8 +42,6 @@
                         }
                     });
 
-                    console.log('Fechas reservadas:', Array.from(dates));
-
                     return dates;
                 } catch (error) {
                     console.error('Error fetching reservations:', error);
