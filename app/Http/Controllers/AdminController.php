@@ -97,8 +97,6 @@ class AdminController extends Controller
         $reservation->status = 'confirmed';
         $reservation->save();
 
-        Reservation::updateReservationJson();
-
         Mail::to($reservation->user->email)->send(new ReservationConfirmedMail($reservation));
 
         return redirect()->back()->with('success', 'Confirmación enviada al cliente.');
