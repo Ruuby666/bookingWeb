@@ -19,8 +19,6 @@ class UserController extends Controller
             'is_admin' => false,
         ]);
 
-        User::save();
-
         return $user;
     }
 

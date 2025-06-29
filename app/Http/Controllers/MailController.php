@@ -75,14 +75,14 @@ class MailController extends Controller
         // Validación de fechas
         $dates = explode(' - ', $request->daterange);
         try {
-            $data['checkOut'] = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
+            $checkOut = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
 
             if (str_contains($property->title, 'Casa') || str_contains($property->title, 'Villa')) {
                 $checkinHour = '15:00';
             } else {
                 $checkinHour = '14:00';
             }
-            $data['checkIn'] = Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' ' . $checkinHour);
+            $checkIn = Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' ' . $checkinHour);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['daterange' => 'Formato de fecha inválido.'])->withInput();
         }
@@ -106,6 +106,8 @@ class MailController extends Controller
             'email' => $request->email,
             'message' => $request->message,
             'daterange' => $request->daterange,
+            'checkIn' => $checkIn,
+            'checkOut' => $checkOut,
             'total_price' => $request->total_price,
             'property' => $property,
         ];

@@ -49,8 +49,15 @@ class ReservationController extends Controller
             'total_price' => $this->calculateTotalPrice($property->id, $checkIn, $checkOut),
         ]);
 
-        Reservation::updateReservationJson();
         return $reservation;
+    }
+
+    public function data($propertyId){
+        $reservations = Reservation::where('property_id' , $propertyId)
+            ->where('status', 'confirmed')
+            ->get();
+
+        return response()->json($reservations);
     }
 
     private function calculateTotalPrice($propertyId, $checkIn, $checkOut)

@@ -31,7 +31,7 @@
 
             async function fetchReservedDates(propertyId) {
                 try {
-                    const response = await fetch('/api/reservations');
+                    const response = await fetch(`/property/${propertyId}/reservations`);
                     const reservations = await response.json();
                     const dates = new Set();
 

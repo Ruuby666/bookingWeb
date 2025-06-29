@@ -62,7 +62,7 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 
 - Cada mes tiene su precio  modificar email de admin cuando se reserva  y modificar admin para añadir rangos ✅
 
-- Tener cuidado de como estoy enviando las cosas --> @json($properties); ✅ 
+- Tener cuidado de como estoy enviando las cosas --> @json($properties); ✅
 
 - añadir script todos los dias a las 00:00 se recorre las reservas confir. que tengan para mañana y enviar información a ese correo ✅
 
@@ -73,4 +73,6 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 - gates no se
 
 - historial facturas
+
+- crear boton reseteo para mostrar todos los apartamentos
 
