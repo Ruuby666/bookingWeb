@@ -46,7 +46,7 @@ class ReservationController extends Controller
             'notes' => $data['message'],
             'guests' => $data['guests'],
             'invoice' => false,
-            'total_price' => $this->calculateTotalPrice($property->id, $checkIn, $checkOut),
+            'total_price' => $data['total_price']
         ]);
 
         return $reservation;
@@ -58,16 +58,6 @@ class ReservationController extends Controller
             ->get();
 
         return response()->json($reservations);
-    }
-
-    private function calculateTotalPrice($propertyId, $checkIn, $checkOut)
-    {
-        $property = Property::find($propertyId);
-        $checkIn = $checkIn->copy()->startOfDay();
-        $checkOut = $checkOut->copy()->startOfDay();
-        $nights = $checkIn->diffInDays($checkOut);
-
-        return $nights * $property->price_per_night;
     }
 
 }

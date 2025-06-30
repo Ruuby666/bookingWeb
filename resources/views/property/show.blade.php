@@ -62,7 +62,7 @@
                         </div>
                         <div class="feature">
                             <i class="fas fa-dollar-sign icon"></i>
-                            <span>€{{ $property->price_per_night }} per night</span>  <!-- TODO -->
+                            <span>€{{ $property->price_per_night }} per night</span> <!-- TODO -->
                         </div>
                     </div>
                     <div class="description">
@@ -120,7 +120,7 @@
 
                         <div class="form-group">
                             <label for="name">Full Name <b>*</b></label>
-                            <input id="name" name="name" type="text" placeholder="Enter your name" value="{{ old('name') }}" class="{{ $errors->has('name') ? 'error' : '' }}"  required>
+                            <input id="name" name="name" type="text" placeholder="Enter your name" value="{{ old('name') }}" class="{{ $errors->has('name') ? 'error' : '' }}" required>
                             @error('name')
                             <div class="error-message">{{ $message }}</div>
                             @enderror
@@ -132,7 +132,7 @@
                             <input type="hidden" name="number" id="full_phone">
                             @error('number')
                             <div class="error-message">{{ $message }}</div>
-                            @enderror   
+                            @enderror
                         </div>
 
                         <div class="form-group">
@@ -236,11 +236,11 @@
         function validateForm() {
             let isValid = true;
             const requiredFields = ['adults', 'children', 'name', 'number', 'email', 'verification_email'];
-            
+
             // Solo limpiar errores de JavaScript, NO los del servidor
             document.querySelectorAll('.js-error-message').forEach(el => el.remove());
             document.querySelectorAll('.js-error').forEach(el => el.classList.remove('js-error'));
-            
+
             // Validar campos requeridos
             requiredFields.forEach(field => {
                 const input = document.getElementById(field);
@@ -250,31 +250,44 @@
                     isValid = false;
                 }
             });
-            
+
+            //Validar número de teléfono
+            if (!phoneInput.value.trim()) {
+                
+                phoneInput.classList.add('js-error');
+                showJSError(phoneInput, 'Phone number is required');
+                isValid = false;
+            }else if (iti.contains()){ 
+                fullPhoneInput.value = iti.getNumber();
+            } else {
+                phoneInput.classList.add('js-error');
+                showJSError(phoneInput, 'Prefix or phone number invalid');
+                isValid = false;
+            }
+
             // Validar emails coincidentes
             const email = document.getElementById('email').value;
             const verifyEmail = document.getElementById('verification_email').value;
             if (email && verifyEmail && email !== verifyEmail) {
                 const verifyInput = document.getElementById('verification_email');
                 verifyInput.classList.add('js-error');
-                showJSError(verifyInput, 'Los emails no coinciden');
+                showJSError(verifyInput, 'The emails do not match');
                 isValid = false;
             }
-            
+
             // Validar capacidad total
             const adults = parseInt(document.getElementById('adults').value) || 0;
             const children = parseInt(document.getElementById('children').value) || 0;
-            const maxCapacity = {{$property->capacity}};
-            
+            const maxCapacity = {{$property -> capacity}};
             if (adults + children > maxCapacity) {
                 const adultsInput = document.getElementById('adults');
                 const childrenInput = document.getElementById('children');
                 adultsInput.classList.add('js-error');
                 childrenInput.classList.add('js-error');
-                showJSError(adultsInput, `Total de huéspedes no puede exceder ${maxCapacity}`);
+                showJSError(adultsInput, `There must be no more than ${maxCapacity} guests`);
                 isValid = false;
             }
-            
+
             return isValid;
         }
 
@@ -289,7 +302,7 @@
         // UN SOLO event listener para el formulario
         document.querySelector('.contact-form').addEventListener('submit', function(e) {
             if (!validateForm()) {
-                e.preventDefault(); // ✅ CORREGIDO: 'e' ahora está definido
+                e.preventDefault();
                 return false;
             }
             document.getElementById('loadingOverlay').style.display = 'flex';
@@ -300,46 +313,23 @@
         document.getElementById('verification_email').addEventListener('blur', function() {
             const email = document.getElementById('email').value;
             const verifyEmail = this.value;
-            
+
             // Limpiar errores JS previos
             this.classList.remove('js-error');
             const jsError = this.parentNode.querySelector('.js-error-message');
             if (jsError) jsError.remove();
-            
+
             if (email && verifyEmail && email !== verifyEmail) {
                 this.classList.add('js-error');
                 showJSError(this, 'Los emails no coinciden');
             }
         });
 
-        // Validación en tiempo real para capacidad
-        function validateCapacity() {
-            const adults = parseInt(document.getElementById('adults').value) || 0;
-            const children = parseInt(document.getElementById('children').value) || 0;
-            const maxCapacity = {{ $property->capacity }};
-            
-            const adultsInput = document.getElementById('adults');
-            const childrenInput = document.getElementById('children');
-            
-            // Limpiar errores JS previos
-            adultsInput.classList.remove('js-error');
-            childrenInput.classList.remove('js-error');
-            const jsErrors = document.querySelectorAll('#adults ~ .js-error-message, #children ~ .js-error-message');
-            jsErrors.forEach(error => error.remove());
-            
-            if (adults + children > maxCapacity) {
-                adultsInput.classList.add('js-error');
-                childrenInput.classList.add('js-error');
-                showJSError(adultsInput, `Total no puede exceder ${maxCapacity} huéspedes`);
-            }
-        }
-
-        document.getElementById('adults').addEventListener('input', validateCapacity);
-        document.getElementById('children').addEventListener('input', validateCapacity);
     </script>
 
 
     @include('components.footer')
 
 </body>
+
 </html>

@@ -77,7 +77,7 @@
                 const formattedCheckIn = checkIn.format('YYYY-MM-DD');
                 const formattedCheckOut = checkOut.format('YYYY-MM-DD');
 
-                // Inserta las variables Blade de forma segurazº
+                // Inserta las variables Blade de forma segura
                 const idProperty = @json($id);
                 const minNights = @json($property->min_nights);
                 const fullDates = [];
@@ -120,7 +120,7 @@
                     const reservations = await response.json();
 
                     reservations.forEach(reservation => {
-                        if (reservation.property_id == propertyId) {
+                        if (reservation.property_id == propertyId && reservation.status === 'confirmed') {
                             const range = generateAllDates(reservation.check_in, reservation.check_out);
                             fullDates.push(...range);
                         }

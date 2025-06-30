@@ -112,7 +112,6 @@ class MailController extends Controller
             'property' => $property,
         ];
 
-
         $sub = 'New Booking';
 
         try {
@@ -123,7 +122,7 @@ class MailController extends Controller
                 ->with('success', 'Email sent successfully! We will contact you shortly.');
         } catch (\Exception $e) {
             return redirect()->route('properties.show', ['property' => $property])
-                ->with('error', 'Error sending the email: ' . $e->getMessage());
+                ->with('error', 'Error sending the email: ' . $e->getMessage())->withInput();
         }
     }
 
