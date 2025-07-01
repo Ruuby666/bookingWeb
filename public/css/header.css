@@ -62,12 +62,8 @@ a {
 
     /* Móvil */
     #header {
-        height: 200px;
+        height: 100px;
         background-position: center center;
-    }
-
-    #nameLogo {
-        height: 40%;
     }
 
     #header-menu {
@@ -87,12 +83,8 @@ a {
     #header-menu-word:hover {
         transform: scale(1.05);
     }
-}
 
-@media (max-width: 468px) {
-
-    /* Móvil */
     #nameLogo {
-        height: 30%;
+        padding-top: 10px;
     }
 }

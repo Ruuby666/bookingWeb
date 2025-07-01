@@ -21,22 +21,6 @@ class ReservationController extends Controller
             $data['checkOut'] = $checkOut;
         }
 
-        // Comprobación de solapamiento con reservas confirmadas
-        $overlappingReservation = Reservation::where('property_id', $property->id)
-            ->where('status', 'confirmed')
-            ->where(function ($query) use ($checkIn, $checkOut) {
-                $query->where(function ($q) use ($checkIn, $checkOut) {
-                    $q->where('check_in', '<', $checkOut)
-                        ->where('check_out', '>', $checkIn);
-                });
-            })
-            ->exists();
-
-        if ($overlappingReservation) {
-            return redirect()->back()->with('error', 'Select other date range, there is a reservation already from ' . $overlappingReservation->check_in->format('d/m/Y H:i') . ' to ' . $overlappingReservation->check_out->format('d/m/Y H:i'));
-        }
-
-
         $reservation = Reservation::create([
             'property_id' => $property->id,
             'user_id' => $user->id,

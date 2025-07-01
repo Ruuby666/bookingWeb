@@ -10,9 +10,9 @@ body {
 }
 
 .error-message {
-    color: red;
-    margin-top: 0.25rem;
     font-weight: 400;
+    color: #e07a5f;
+    margin: 5px 0;
 }
 
 #header {
@@ -29,12 +29,6 @@ body {
     display: flex;
     gap: 20px;
     padding: 10px;
-}
-
-@media (max-width: 768px) {
-    .content-grid {
-        flex-direction: column;
-    }
 }
 
 /* Icon */
@@ -384,3 +378,31 @@ b {
         transform: rotate(360deg);
     }
 }
+
+@media (max-width: 768px) {
+    .content-grid {
+        flex-direction: column;
+    }
+
+    .date-container #daterange {
+        width: 50% !important;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .date-container #daterange {
+        width: 80% !important;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    input#number{
+        width: 100% ;
+    }
+}
+
+

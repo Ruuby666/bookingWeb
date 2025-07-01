@@ -44,7 +44,6 @@
 
                     return dates;
                 } catch (error) {
-                    console.error('Error fetching reservations:', error);
                     return new Set();
                 }
             }

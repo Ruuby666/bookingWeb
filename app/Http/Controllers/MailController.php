@@ -28,7 +28,7 @@ class MailController extends Controller
     public function sendEmail(Request $request)
     {
         $property = Property::find($request->property_id);
-
+        // dd($request->all());
         $request->validate([
             'property_id' => 'required|exists:properties,id',
             'adults' => 'required|integer|min:1|max:' . $property->capacity,
@@ -85,6 +85,25 @@ class MailController extends Controller
             $checkIn = Carbon::createFromFormat('d/m/Y H:i', trim($dates[0]) . ' ' . $checkinHour);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['daterange' => 'Formato de fecha inválido.'])->withInput();
+        }
+
+        // Comprobación de solapamiento con reservas confirmadas
+        $overlappingReservation = Reservation::where('property_id', $property->id)
+            ->where('status', 'confirmed')
+            ->where(function ($query) use ($checkIn, $checkOut) {
+                $query->where(function ($q) use ($checkIn, $checkOut) {
+                    $q->where('check_in', '<', $checkOut)
+                        ->where('check_out', '>', $checkIn);
+                });
+            })
+            ->first();
+
+        if ($overlappingReservation) {
+            return redirect()->back()->with('error', 'Select other date range, there is a reservation already from ' . $overlappingReservation->check_in->format('d/m/Y H:i') . ' to ' . $overlappingReservation->check_out->format('d/m/Y H:i'))->withInput();
+        }
+
+        if ($request->total_price <= 0) {
+            return redirect()->back()->with('error', 'At least select the minimum nights.')->withInput();
         }
 
         // Verificar que el correo de verificación coincida con el correo ingresado

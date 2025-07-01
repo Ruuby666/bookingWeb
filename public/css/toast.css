@@ -10,7 +10,7 @@
     align-items: center;
     gap: 8px;
     z-index: 9999;
-    animation: fadeOut 5s forwards;
+    animation: fadeOut 15s forwards;
 }
 
 .toast.success {
@@ -29,4 +29,14 @@
     0% { opacity: 1; }
     80% { opacity: 1; }
     100% { opacity: 0; display: none; }
+}
+
+@media (max-width: 600px) {
+    .toast {
+        top: 5px;
+        right: 5px;
+        width: 70%;
+        font-size: 14px;
+        padding: 10px 15px;
+    }
 }

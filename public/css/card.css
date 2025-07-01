@@ -46,6 +46,7 @@ h2 {
   align-items: center;
   padding: 0 15px;
   white-space: nowrap;
+  scroll-behavior: smooth;
 }
 
 /* ----- Tarjetas del carrusel ----- */
@@ -198,5 +199,14 @@ button.next:active {
   .cardcontainer {
     width: 90%;
     overflow-x: hidden;
+  }
+
+  #carrousel-container {
+    gap: 0px;
+  }
+
+  .prev,
+  .next {
+    margin: 0px; 
   }
 }

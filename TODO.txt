@@ -74,5 +74,10 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 
 - historial facturas
 
-- crear boton reseteo para mostrar todos los apartamentos
+- crear boton reseteo para mostrar todos los apartamentos home
 
+- responsive footer home-properties ✅
+
+- revisar el error de cuando haces una reserva y no pones seleccionas fecha ✅
+
+- revisar la validacion de guests ✅
