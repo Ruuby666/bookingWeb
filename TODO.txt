@@ -66,6 +66,13 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 
 - añadir script todos los dias a las 00:00 se recorre las reservas confir. que tengan para mañana y enviar información a ese correo ✅
 
+- responsive footer home-properties ✅
+
+- revisar el error de cuando haces una reserva y no pones seleccionas fecha ✅
+
+- revisar la validacion de guests ✅
+
+- crear boton reseteo para mostrar todos los apartamentos home ✅
 - pasar de http a https
 
 - crear tabla roles y tabla intermedia
@@ -73,11 +80,3 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 - gates no se
 
 - historial facturas
-
-- crear boton reseteo para mostrar todos los apartamentos home
-
-- responsive footer home-properties ✅
-
-- revisar el error de cuando haces una reserva y no pones seleccionas fecha ✅
-
-- revisar la validacion de guests ✅
