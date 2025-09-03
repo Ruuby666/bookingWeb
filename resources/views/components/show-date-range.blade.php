@@ -138,7 +138,6 @@
                 try {
                     const response = await fetch(`/api/property-price-range?start_date=${startDate}&end_date=${endDate}&property_id=${propertyId}`);
                     const data = await response.json();
-
                     const total = data.reduce((sum, night) => sum + parseFloat(night.price), 0);
                     displayMessage('total-price', `Total amount: ${total.toFixed(2)} € (${data.length} nights)`, '#2a4261');
                     document.getElementById('total_price_input').value = total.toFixed(2);
