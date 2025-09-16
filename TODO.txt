@@ -80,3 +80,7 @@ comprobar la seguridad algo no funciona se puede acceder a alguno de los end poi
 - gates no se
 
 - historial facturas
+
+# Arreglar
+
+- mirar whats

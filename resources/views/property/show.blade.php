@@ -16,10 +16,10 @@
     @include('components.header')
     <a href="{{ route('index') }}"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
     @if (session('success'))
-        <x-toast :message="session('success')" type="success" />
+    <x-toast :message="session('success')" type="success" />
     @endif
     @if (session('error'))
-        <x-toast :message="session('error')" type="error" />
+    <x-toast :message="session('error')" type="error" />
     @endif
 
     <!-- Loading Overlay -->
@@ -32,15 +32,17 @@
                 <div class="property-details">
                     <h1 class="title">{{ $property->title }}</h1>
                     <div class="location">
+                        <a href="https://www.google.com/maps?q={{ $property->lat }},{{ $property->lng }}" target="_blank" data-color="orange">
                         <i class="fas fa-map-marker-alt icon"></i>
                         <span>{{ $property->location }}</span>
+                        </a>
                     </div>
                     <div class="features">
                         <div class="feature">
                             <div class="bedrooms">
                                 @php $bedrooms = json_decode($property->bedrooms, true); @endphp
                                 @foreach ($bedrooms as $bed)
-                                    <span><i class="fas fa-bed icon"></i> {{ $bed }}</span>
+                                <span><i class="fas fa-bed icon"></i> {{ $bed }}</span>
                                 @endforeach
                             </div>
                         </div>
@@ -121,9 +123,9 @@
                 </div>
                 <div class="thumbnail-gallery">
                     @foreach ($imagesWithoutFirst as $index => $image)
-                        <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
-                            alt="Property Thumbnail" loading="lazy"
-                            onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
+                    <img class="thumbnail" src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
+                        alt="Property Thumbnail" loading="lazy"
+                        onclick="openPopup('{{ $image }}', {{ $index + 1 }})">
                     @endforeach
                 </div>
             </div>
@@ -151,9 +153,11 @@
             document.getElementById("popupImage").src = `/images/${property.images_div}/${imageUrl}`;
             document.getElementById("imagePopup").style.display = "flex";
         }
+
         function closePopup() {
             document.getElementById("imagePopup").style.display = "none";
         }
+
         function changeImage(direction) {
             currentIndex = (currentIndex + direction + images.length) % images.length;
             document.getElementById("popupImage").src = `/images/${property.images_div}/${images[currentIndex]}`;
@@ -177,14 +181,20 @@
             errorElement.textContent = message;
             input.parentNode.appendChild(errorElement);
         }
+
         function clearJSErrors() {
             document.querySelectorAll('.js-error-message').forEach(el => el.remove());
             document.querySelectorAll('.js-error').forEach(el => el.classList.remove('js-error'));
         }
+
         function validateCapacity() {
             const adults = parseInt(document.getElementById('adults').value) || 0;
             const children = parseInt(document.getElementById('children').value) || 0;
-            const maxCapacity = {{ $property->capacity }};
+            const maxCapacity = {
+                {
+                    $property - > capacity
+                }
+            };
             const adultsInput = document.getElementById('adults');
             const childrenInput = document.getElementById('children');
             adultsInput.classList.remove('js-error');
@@ -196,11 +206,12 @@
                 showJSError(adultsInput, `The max quests possible are ${maxCapacity}`);
             }
         }
+
         function validateForm() {
             let isValid = true;
             clearJSErrors();
 
-            
+
             const requiredFields = ['adults', 'children', 'name', 'number', 'email', 'verification_email'];
             requiredFields.forEach(field => {
                 const input = document.getElementById(field);
@@ -234,7 +245,11 @@
             // Capacity
             const adults = parseInt(document.getElementById('adults').value) || 0;
             const children = parseInt(document.getElementById('children').value) || 0;
-            const maxCapacity = {{ $property->capacity }};
+            const maxCapacity = {
+                {
+                    $property - > capacity
+                }
+            };
             if (adults + children > maxCapacity) {
                 const adultsInput = document.getElementById('adults');
                 const childrenInput = document.getElementById('children');
@@ -277,4 +292,5 @@
 
     @include('components.footer')
 </body>
+
 </html>
