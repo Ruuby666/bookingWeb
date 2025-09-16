@@ -26,6 +26,8 @@ Route::post('/admin/login', [AdminController::class, 'loginFunction'])->name('ad
 
 Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email');
 
+Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
+
 Route::middleware([IsAdmin::class])->group(function () {
     Route::get('/admin/logout', [AdminController::class, 'logoutFunction'])->name('admin.logout');
 
@@ -74,6 +76,8 @@ Route::get('/api/reservations', function () {
     return Reservation::all();
 });
 
+//TODO : revisar estos endpoints
+
 Route::get('/api/properties', function () {
     return Property::all();
 });
@@ -92,4 +96,4 @@ Route::get('/api/images', function () {
 // Resource routes
 Route::resource('users', UserController::class);
 Route::resource('properties', PropertyController::class)->only(['index', 'show']);
-Route::resource('reservations', ReservationController::class);
+

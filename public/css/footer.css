@@ -1,5 +1,5 @@
-
-html, body{
+html,
+body {
     height: 100%;
 }
 
@@ -14,10 +14,17 @@ html, body{
     padding: 10px;
     background-color: rgb(35, 35, 35);
     color: #f4f1de;
-    z-index: 10;
-} 
+    z-index: 9000;
+}
 
-#footer p{
+#footer-content {
+    width: auto;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+#footer p {
     margin: 0;
 }
 
@@ -25,12 +32,34 @@ html, body{
     height: 50px;
 }
 
-#a-footer{
+#a-footer {
     color: #f8f8f8;
     cursor: progress;
 }
-#a-footer:hover{
+
+#a-footer:hover {
     color: #f8f8f8;
 }
 
+@media (max-width: 720px) {
+    #footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+        padding: 15px;
+    }
 
+    #logo {
+        height: 30px;
+    }
+
+    #carousel-container {
+        gap: 0px;
+    }
+
+    #footer p,
+    #a-footer {
+        font-size: 14px;
+        word-wrap: break-word;
+    }
+}

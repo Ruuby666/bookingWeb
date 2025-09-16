@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Date Range Picker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- Estilos del DateRangePicker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -14,8 +15,12 @@
 <body>
 
     <div class="daterange-container">
-        <h2>Select Range</h2>
+        <div class="daterange-header">
+            <h2>Select Range</h2>
+            <i class="fa-solid fa-repeat" id="reset-btn"></i>
+        </div>
         <input type="text" id="daterange" placeholder="Select a date range" />
+        <i class="fa-solid fa-repeat" id="reset-btn-second"></i>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -117,6 +122,22 @@
                     container.append(card);
                 });
             }
+
+            async function showAllProperties() {
+                try {
+                    const propertiesRes = await fetch('/api/properties');
+                    const properties = await propertiesRes.json();
+                    renderProperties(properties, propertyWithImages);
+                } catch (error) {
+                    console.error("Error fetching all properties:", error);
+                }
+            }
+
+            $('#reset-btn').on('click', function() {
+                $('#daterange').data('daterangepicker').setStartDate(moment().add(1, 'days'));
+                $('#daterange').data('daterangepicker').setEndDate(moment().add(1, 'days'));
+                showAllProperties();
+            });
         });
     </script>
 

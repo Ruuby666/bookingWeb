@@ -21,22 +21,6 @@ class ReservationController extends Controller
             $data['checkOut'] = $checkOut;
         }
 
-        // Comprobación de solapamiento con reservas confirmadas
-        $overlappingReservation = Reservation::where('property_id', $property->id)
-            ->where('status', 'confirmed')
-            ->where(function ($query) use ($checkIn, $checkOut) {
-                $query->where(function ($q) use ($checkIn, $checkOut) {
-                    $q->where('check_in', '<', $checkOut)
-                        ->where('check_out', '>', $checkIn);
-                });
-            })
-            ->exists();
-
-        if ($overlappingReservation) {
-            return redirect()->back()->with('error', 'Select other date range, there is a reservation already from ' . $overlappingReservation->check_in->format('d/m/Y H:i') . ' to ' . $overlappingReservation->check_out->format('d/m/Y H:i'));
-        }
-
-
         $reservation = Reservation::create([
             'property_id' => $property->id,
             'user_id' => $user->id,
@@ -46,21 +30,18 @@ class ReservationController extends Controller
             'notes' => $data['message'],
             'guests' => $data['guests'],
             'invoice' => false,
-            'total_price' => $this->calculateTotalPrice($property->id, $checkIn, $checkOut),
+            'total_price' => $data['total_price']
         ]);
 
-        Reservation::updateReservationJson();
         return $reservation;
     }
 
-    private function calculateTotalPrice($propertyId, $checkIn, $checkOut)
-    {
-        $property = Property::find($propertyId);
-        $checkIn = $checkIn->copy()->startOfDay();
-        $checkOut = $checkOut->copy()->startOfDay();
-        $nights = $checkIn->diffInDays($checkOut);
+    public function data($propertyId){
+        $reservations = Reservation::where('property_id' , $propertyId)
+            ->where('status', 'confirmed')
+            ->get(['property_id','check_in', 'check_out']);
 
-        return $nights * $property->price_per_night;
+        return response()->json($reservations);
     }
 
 }

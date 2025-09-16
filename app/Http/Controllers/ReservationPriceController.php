@@ -11,8 +11,9 @@ class ReservationPriceController extends Controller
 {
     public function index()
     {
+        $properties = Property::all();
         $reservationPrices = ReservationPrice::with('property')->orderBy('property_id')->get();
-        return view('admin.reservation_price', compact('reservationPrices'));
+        return view('admin.reservation_price', compact('reservationPrices', 'properties' ));
     }
     public function getPriceRange(Request $request)
     {
