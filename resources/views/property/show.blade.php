@@ -78,7 +78,7 @@
                         </div>
                         <div class="form-group">
                             <label for="adults">Adults <b>*</b></label>
-                            <input id="adults" name="adults" type="number" placeholder="1 - {{ $property->capacity }}" value="{{ old('adults') }}" class="{{ $errors->has('adults') ? 'error' : '' }}" required>
+                            <input id="adults" name="adults" type="number" min="1" placeholder="1 - {{ $property->capacity }}" value="{{ old('adults') }}" class="{{ $errors->has('adults') ? 'error' : '' }}" required>
                             <label for="children">Children <b>*</b></label>
                             <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}" value="{{ old('children') ?? 0 }}" class="{{ $errors->has('children') ? 'error' : '' }}" required>
                             @error('guests') <error class="error-message">{{ $message }}</error> @enderror
