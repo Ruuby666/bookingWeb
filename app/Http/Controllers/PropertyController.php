@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
 {
+    use AuthorizesRequests;
     public function show($id)
     {
         $property = Property::findOrFail($id);
@@ -59,6 +61,8 @@ class PropertyController extends Controller
         // Convert bedrooms input to JSON format
         $bedroomsArray = array_map('trim', explode(',', $data['bedrooms']));
         $data['bedrooms'] = json_encode(array_combine(range(1, count($bedroomsArray)), $bedroomsArray));
+
+        $this->authorize('create', Property::class);
         $data['owner_id'] = Auth::id();
 
         // Crear la propiedad con los datos
@@ -69,9 +73,8 @@ class PropertyController extends Controller
 
     public function destroy($id)
     {
-        $property = Property::where('id', $id)
-            ->where('owner_id', Auth::id())
-            ->firstOrFail();
+        $property = Property::findOrFail($id);
+        $this->authorize('update', $property);
 
         $property->delete();
 
@@ -80,17 +83,15 @@ class PropertyController extends Controller
 
     public function edit($id)
     {
-        $property = Property::where('id', $id)
-            ->where('owner_id', Auth::id())
-            ->firstOrFail();
+        $property = Property::findOrFail($id);
+        $this->authorize('view', $property);
         return view('property.add_or_edit_property', compact('property'));
     }
 
     public function update(Request $request, $id)
     {
-        $property = Property::where('id', $id)
-            ->where('owner_id', Auth::id())
-            ->firstOrFail();
+        $property = Property::findOrFail($id);
+        $this->authorize('update', $property);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
