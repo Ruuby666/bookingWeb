@@ -19,7 +19,7 @@
             <h2>Select Range</h2>
             <i class="fa-solid fa-repeat" id="reset-btn"></i>
         </div>
-        <input type="text" id="daterange" placeholder="Select a date range" />
+        <input type="text" id="daterange" placeholder="Select a date range" readonly/>
         <i class="fa-solid fa-repeat" id="reset-btn-second"></i>
     </div>
 
