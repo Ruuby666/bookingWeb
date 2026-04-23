@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ReservationPrice;
 use App\Models\Property;
 use Carbon\Carbon;
@@ -11,9 +12,15 @@ class ReservationPriceController extends Controller
 {
     public function index()
     {
-        $properties = Property::all();
-        $reservationPrices = ReservationPrice::with('property')->orderBy('property_id')->get();
-        return view('admin.reservation_price', compact('reservationPrices', 'properties' ));
+        $properties = Property::where('owner_id', Auth::id())->get();
+
+        $reservationPrices = ReservationPrice::with('property')
+            ->whereHas('property', function ($query) {
+                $query->where('owner_id', Auth::id());
+            })
+            ->orderBy('property_id')
+            ->get();
+        return view('admin.reservation_price', compact('reservationPrices', 'properties'));
     }
     public function getPriceRange(Request $request)
     {
@@ -53,7 +60,11 @@ class ReservationPriceController extends Controller
 
     public function destroy($id)
     {
-        $price = ReservationPrice::find($id);
+        $price = ReservationPrice::where('id', $id)
+            ->whereHas('property', function ($query) {
+                $query->where('owner_id', Auth::id());
+            })
+            ->first();
 
         if (!$price) {
             return redirect()->back()->with('error', 'Rango de precio no encontrado.')->withInput();
@@ -74,6 +85,14 @@ class ReservationPriceController extends Controller
         ], [
             'end_date.after' => 'La fecha de fin debe ser posterior a la fecha de inicio.',
         ]);
+
+        $property = Property::where('id', $request->property_id)
+            ->where('owner_id', Auth::id())
+            ->first();
+
+        if (!$property) {
+            return redirect()->back()->with('error', 'No autorizado.');
+        }
 
         $startDate = Carbon::parse($request->start_date)->startOfDay();
         $endDate = Carbon::parse($request->end_date)->endOfDay();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
@@ -58,6 +59,7 @@ class PropertyController extends Controller
         // Convert bedrooms input to JSON format
         $bedroomsArray = array_map('trim', explode(',', $data['bedrooms']));
         $data['bedrooms'] = json_encode(array_combine(range(1, count($bedroomsArray)), $bedroomsArray));
+        $data['owner_id'] = Auth::id();
 
         // Crear la propiedad con los datos
         Property::create($data);
@@ -67,7 +69,10 @@ class PropertyController extends Controller
 
     public function destroy($id)
     {
-        $property = Property::findOrFail($id);
+        $property = Property::where('id', $id)
+            ->where('owner_id', Auth::id())
+            ->firstOrFail();
+
         $property->delete();
 
         return redirect()->route('admin.properties')->with('success', 'Property deleted successfully.');
@@ -75,13 +80,17 @@ class PropertyController extends Controller
 
     public function edit($id)
     {
-        $property = Property::findOrFail($id);
+        $property = Property::where('id', $id)
+            ->where('owner_id', Auth::id())
+            ->firstOrFail();
         return view('property.add_or_edit_property', compact('property'));
     }
 
     public function update(Request $request, $id)
     {
-        $property = Property::findOrFail($id);
+        $property = Property::where('id', $id)
+            ->where('owner_id', Auth::id())
+            ->firstOrFail();
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',

@@ -57,7 +57,7 @@ class AdminController extends Controller
     public function properties()
     {
         if (session('is_admin')) {
-            $properties = Property::all();
+            $properties = Property::where('owner_id', Auth::id())->get();
             return view('admin.admin', compact('properties'));
         }
 
@@ -66,15 +66,31 @@ class AdminController extends Controller
 
     public function pending()
     {
-        $reservations = Reservation::where('status', 'confirmed')->with('property', 'user')->get();
-        $pending = Reservation::where('status', 'pending')->with('property', 'user')->get();
+        $reservations = Reservation::where('status', 'confirmed')
+            ->whereHas('property', function ($query) {
+                $query->where('owner_id', Auth::id());
+            })
+            ->with('property', 'user')
+            ->get();
+
+        $pending = Reservation::where('status', 'pending')
+            ->whereHas('property', function ($query) {
+                $query->where('owner_id', Auth::id());
+            })
+            ->with('property', 'user')
+            ->get();
 
         return view('admin.pending', compact('reservations', 'pending'));
     }
 
     public function updateStatus($id)
     {
-        $reservation = Reservation::with(['user', 'property'])->where('id', $id)->firstOrFail();
+        $reservation = Reservation::with(['user', 'property'])
+            ->where('id', $id)
+            ->whereHas('property', function ($query) {
+                $query->where('owner_id', Auth::id());
+            })
+            ->firstOrFail();
 
         // Verificar solapamiento de fechas con otras reservas confirmadas en la misma propiedad
         $conflictingReservation = Reservation::where('property_id', $reservation->property_id)
@@ -104,6 +120,9 @@ class AdminController extends Controller
 
     public function suggestionEmail(Reservation $reservation)
     {
+        if ($reservation->property->owner_id !== Auth::id()) {
+            abort(403);
+        }
         return view('admin.suggestion', compact('reservation'));
     }
 
@@ -116,7 +135,11 @@ class AdminController extends Controller
     {
         $propiedad = $request->query('propiedad');
 
-        $query = Reservation::with(['user', 'property'])->where('status', 'confirmed');
+        $query = Reservation::with(['user', 'property'])
+            ->where('status', 'confirmed')
+            ->whereHas('property', function ($q) {
+                $q->where('owner_id', Auth::id());
+            });
 
         if ($propiedad && $propiedad !== 'todos') {
             $query->whereHas('property', function ($q) use ($propiedad) {
@@ -149,13 +172,17 @@ class AdminController extends Controller
             'end_time' => 'required|date_format:H:i',
         ]);
 
-        $reservation = Reservation::findOrFail($request->event_id);
+        $reservation = Reservation::where('id', $request->event_id)
+            ->whereHas('property', function ($query) {
+                $query->where('owner_id', Auth::id());
+            })
+            ->firstOrFail();
 
         $datestart = $reservation->check_in->format('Y-m-d');
         $dateend = $reservation->check_out->format('Y-m-d');
 
         if ($request->start_time >= $request->end_time && $datestart === $dateend) {
-            return back()->with('error','La hora de salida debe ser posterior a la de entrada.');
+            return back()->with('error', 'La hora de salida debe ser posterior a la de entrada.');
         }
 
         $reservation->check_in = Carbon::createFromFormat('Y-m-d H:i', "$datestart $request->start_time");
