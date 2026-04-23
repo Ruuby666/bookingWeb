@@ -21,6 +21,15 @@ class AdminUserSeeder extends Seeder
             'password' => 'Oscar1234Q',
             'is_admin' => true,
         ]);
+
+        User::create([
+            'name' => 'Ruben',
+            'email' => 'ruben@gmail.com',
+            'phone_number' => '1234567890',
+            'password' => 'Ruben1234Q',
+            'is_admin' => true,
+        ]);
+
     }
 
 
