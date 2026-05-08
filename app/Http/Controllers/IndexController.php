@@ -2,32 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Property;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
-use Illuminate\Http\Request;
+use App\Services\PropertyService;
 
 class IndexController extends Controller
 {
+    public function __construct(
+        private readonly PropertyService $propertyService,
+    ) {}
+
     public function index()
     {
-        $properties = Property::all();
-        $propertyWithImages = [];
+        ['properties' => $properties, 'propertyWithImages' => $propertyWithImages] =
+            $this->propertyService->getAllWithFirstImage();
 
-        foreach ($properties as $property) {
-            $imageFolder = public_path('images/' . $property->images_div);
-            $nameImage = 'default.jpg';
-
-            if (File::exists($imageFolder)) {
-                $images = File::files($imageFolder);
-
-                if (!empty($images)) {
-                    $nameImage = basename($images[0]);
-                }
-            }
-
-            $propertyWithImages[$property->id] = $nameImage;
-        }
         return view('index', compact('propertyWithImages', 'properties'));
     }
 }
