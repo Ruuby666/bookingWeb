@@ -1,0 +1,65 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bookingweb-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - bookingweb
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: bookingweb-web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - bookingweb
+
+  db:
+    image: mysql:8.0
+    container_name: bookingweb-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: bookingweb
+      MYSQL_USER: bookingweb
+      MYSQL_PASSWORD: bookingweb
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "33060:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - bookingweb
+
+  vite:
+    image: node:20-alpine
+    container_name: bookingweb-vite
+    working_dir: /var/www/html
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "5173:5173"
+    networks:
+      - bookingweb
+    profiles:
+      - frontend
+
+networks:
+  bookingweb:
+    driver: bridge
+
+volumes:
+  dbdata:
