@@ -38,7 +38,7 @@ class ReservationService
             'check_out'   => $checkOut,
             'status'      => 'pending',
             'notes'       => $data['message'] ?? null,
-            'guests'      => $data['guests'],
+            'guests'      => $data['adults'] + $data['children'],
             'invoice'     => false,
             'total_price' => $data['total_price'],
         ]);

@@ -24,7 +24,7 @@
     </div>
     <div class="description">
         <h2>Property Description</h2>
-        <p>{{ nl2br(e($property->description)) }}</p>
+        <p style="white-space: pre-line;">{{ $property->description }}</p>
     </div>
     <div class="extra-features">
         <h5>Additional Features</h5>
