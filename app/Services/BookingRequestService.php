@@ -41,7 +41,17 @@ class BookingRequestService
             return ['success' => false, 'error' => 'Formato de fecha inválido.'];
         }
 
-        // --- 2. Overlap check ---
+        // --- 2. Validate minimum nights ---
+        $nights = (int) round($checkIn->diffInDays($checkOut));
+
+        if ($nights < $property->min_nights) {
+            return [
+                'success' => false,
+                'error'   => "This property requires a minimum of {$property->min_nights} nights. You selected {$nights} nights.",
+            ];
+        }
+
+        // --- 3. Overlap check ---
         $conflict = $this->reservationService->findOverlappingReservation(
             $property->id,
             $checkIn,
@@ -58,22 +68,23 @@ class BookingRequestService
             ];
         }
 
-        // --- 3. Find or create user ---
+        // --- 4. Find or create user ---
         $user = $this->userService->findOrCreate(
             $data['name'],
             $data['email'],
             $data['number']
         );
 
-        // --- 4. Create reservation ---
+        // --- 5. Create reservation ---
         $bookingData = array_merge($data, [
             'checkIn'  => $checkIn,
             'checkOut' => $checkOut,
         ]);
 
+
         $this->reservationService->createReservation($property, $bookingData, $user);
 
-        // --- 5. Notify owner ---
+        // --- 6. Notify owner ---
         $this->mailService->sendBookingNotification(
             array_merge($bookingData, ['property' => $property])
         );
