@@ -28,7 +28,6 @@ class AuthService
         }
 
         Auth::login($user);
-        session(['is_admin' => true]);
 
         return ['success' => true];
     }
@@ -38,6 +37,7 @@ class AuthService
      */
     public function logoutAdmin(): void
     {
-        session()->forget('is_admin');
+        Auth::logout();
+
     }
 }
