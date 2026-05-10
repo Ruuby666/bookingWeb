@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AdminLoginRequest;
 use App\Http\Requests\UpdateReservationTimeRequest;
 use App\Models\Reservation;
+use App\Models\Property;
 use App\Services\AuthService;
 use App\Services\ExportService;
 use App\Services\ReservationService;
@@ -41,9 +42,6 @@ class AdminController extends Controller
 
     public function properties()
     {
-        if (! session('is_admin')) {
-            return redirect()->route('login');
-        }
 
         $properties = \App\Models\Property::where('owner_id', Auth::id())->get();
 
@@ -62,7 +60,7 @@ class AdminController extends Controller
     {
         $reservation = Reservation::with(['user', 'property'])
             ->where('id', $id)
-            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
+            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
             ->firstOrFail();
 
         $result = $this->reservationService->confirmReservation($reservation);
@@ -83,7 +81,9 @@ class AdminController extends Controller
 
     public function calendar()
     {
-        return view('admin.calendar');
+        $properties = Property::where('owner_id', Auth::id())->get();
+
+        return view('admin.calendar', compact('properties'));
     }
 
     public function getConfirmedReservations(\Illuminate\Http\Request $request)
@@ -91,7 +91,7 @@ class AdminController extends Controller
         $propiedad    = $request->query('propiedad');
         $reservations = $this->reservationService->getConfirmedReservationsForOwner($propiedad);
 
-        $events = $reservations->map(fn ($r) => [
+        $events = $reservations->map(fn($r) => [
             'id'       => $r->id,
             'title'    => $r->user->name . ' en ' . $r->property->title,
             'note'     => $r->notes,
@@ -107,7 +107,7 @@ class AdminController extends Controller
     public function updateTime(UpdateReservationTimeRequest $request)
     {
         $reservation = Reservation::where('id', $request->validated('event_id'))
-            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
+            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
             ->firstOrFail();
 
         $result = $this->reservationService->updateReservationTime(

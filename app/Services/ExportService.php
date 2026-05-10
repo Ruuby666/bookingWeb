@@ -8,7 +8,6 @@ use App\Exports\FacturasExport;
 use App\Models\Reservation;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportService
 {
@@ -42,9 +41,9 @@ class ExportService
      *
      * @param  array       $ids            Reservation IDs to invoice
      * @param  float|null  $invoiceAmount
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function downloadInvoicesExcel(array $ids, ?float $invoiceAmount): StreamedResponse
+    public function downloadInvoicesExcel(array $ids, ?float $invoiceAmount): BinaryFileResponse
     {
         foreach ($ids as $id) {
             Reservation::markAsInvoiced($id);
