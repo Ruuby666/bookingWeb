@@ -30,9 +30,11 @@ class User extends Authenticatable
         'is_admin' => 'boolean',
     ];
 
-    public function setPasswordAttribute($value)
+    // --- Relations ---
+
+    public function properties()
     {
-        $this->attributes['password'] = Hash::make($value);
+        return $this->hasMany(Property::class, 'owner_id');
     }
 
     public function reservations()
@@ -40,6 +42,11 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 
+    // --- Methods ---
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
     public function isAdmin()
     {
         return $this->is_admin;

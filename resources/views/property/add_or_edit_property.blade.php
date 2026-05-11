@@ -41,9 +41,15 @@
                 </div>
 
                 <div class="form-item">
-                    <label for="price_per_night">Price per Night</label>
+                    <label for="price_per_night">Price per Night Approximately</label>
                     <input type="number" step="0.01" id="price_per_night" name="price_per_night"
                         value="{{ old('price_per_night', $property->price_per_night ?? '') }}" required>
+                </div>
+
+                <div class="form-item">
+                    <label for="min_nights">Minimum Nights</label>
+                    <input type="number" id="min_nights" name="min_nights"
+                        value="{{ old('min_nights', $property->min_nights ?? '') }}" required>
                 </div>
 
                 <div class="form-item">

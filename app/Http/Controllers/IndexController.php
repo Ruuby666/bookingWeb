@@ -2,32 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Property;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
-use Illuminate\Http\Request;
+use App\Services\PropertyService;
 
+/**
+ * Controller responsible for the homepage.
+ */
 class IndexController extends Controller
 {
+    /**
+     * Inject required services.
+     */
+    public function __construct(
+        private readonly PropertyService $propertyService,
+    ) {}
+
+    /**
+     * Display the homepage with available properties.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
-        $properties = Property::all();
-        $propertyWithImages = [];
+        ['properties' => $properties, 'propertyWithImages' => $propertyWithImages] =
+            $this->propertyService->getAllWithFirstImage();
 
-        foreach ($properties as $property) {
-            $imageFolder = public_path('images/' . $property->images_div);
-            $nameImage = 'default.jpg';
-
-            if (File::exists($imageFolder)) {
-                $images = File::files($imageFolder);
-
-                if (!empty($images)) {
-                    $nameImage = basename($images[0]);
-                }
-            }
-
-            $propertyWithImages[$property->id] = $nameImage;
-        }
         return view('index', compact('propertyWithImages', 'properties'));
     }
 }

@@ -16,26 +16,27 @@
     @include('components.header')
 
     @if (session('success'))
-    <x-toast :message="session('success')" type="success" />
+        <x-toast :message="session('success')" type="success" />
     @endif
 
     @if (session('error'))
-    <x-toast :message="session('error')" type="error" />
+        <x-toast :message="session('error')" type="error" />
     @endif
 
     <div class="container">
         <h3>Calendario de Reservas Confirmadas</h3>
         <div class="calendar-toolbar">
-            
+
             <div>
                 <form id="propiedadForm" onsubmit="return false;">
                     <label for="propiedad">¿Cuál?</label>
                     <select name="propiedad" id="propiedad" class="form-control">
                         <option selected value="todos">Todos</option>
-                        <option value="Marlin I Puerto del Carmen">Marlin C1</option>
-                        <option value="Marlin II Puerto del Carmen">Marlin C2</option>
-                        <option value="Casa Delfin Playa Blanca">Villa Delfín</option>
-                        <option value="El Galeon">El Galeon</option>
+                        @foreach ($properties as $property)
+                            <option value="{{ $property->title }}">
+                                {{ $property->title }}
+                            </option>
+                        @endforeach
                     </select>
                 </form>
             </div>
@@ -61,7 +62,8 @@
             <button id="editButton">Editar hora</button>
 
             <!-- Inputs ocultos inicialmente -->
-            <form id="editForm" style="display: none; margin-top: 10px;" method="POST" action="{{ route('admin.calendar.reservations.update-time') }}">
+            <form id="editForm" style="display: none; margin-top: 10px;" method="POST"
+                action="{{ route('admin.calendar.reservations.update-time') }}">
                 @csrf
                 <input type="hidden" name="event_id" id="modalEventId">
 
@@ -97,13 +99,20 @@
                 },
                 eventClick: function(info) {
                     document.getElementById('modalTitle').textContent = info.event.title;
-                    document.getElementById('modalStart').textContent = info.event.start.toLocaleString();
-                    document.getElementById('modalEnd').textContent = info.event.end ? info.event.end.toLocaleString() : 'No especificado';
-                    document.getElementById('modalNote').textContent = info.event.extendedProps.note || 'Sin descripción';
-                    document.getElementById('modalUser').textContent = info.event.extendedProps.user.name ? info.event.extendedProps.user.name : 'No especificado';
-                    document.getElementById('modalEmail').textContent = info.event.extendedProps.user.email ? info.event.extendedProps.user.email : 'No especificado';
-                    document.getElementById('modalPhone').textContent = info.event.extendedProps.user.phone_number ? info.event.extendedProps.user.name : 'No especificado';
-                    document.getElementById('modalProperty').textContent = info.event.extendedProps.property ? info.event.extendedProps.property : 'No especificado';
+                    document.getElementById('modalStart').textContent = info.event.start
+                    .toLocaleString();
+                    document.getElementById('modalEnd').textContent = info.event.end ? info.event.end
+                        .toLocaleString() : 'No especificado';
+                    document.getElementById('modalNote').textContent = info.event.extendedProps.note ||
+                        'Sin descripción';
+                    document.getElementById('modalUser').textContent = info.event.extendedProps.user
+                        .name ? info.event.extendedProps.user.name : 'No especificado';
+                    document.getElementById('modalEmail').textContent = info.event.extendedProps.user
+                        .email ? info.event.extendedProps.user.email : 'No especificado';
+                    document.getElementById('modalPhone').textContent = info.event.extendedProps.user
+                        .phone_number ? info.event.extendedProps.user.name : 'No especificado';
+                    document.getElementById('modalProperty').textContent = info.event.extendedProps
+                        .property ? info.event.extendedProps.property : 'No especificado';
 
                     const modal = document.getElementById('eventModal');
                     modal.style.display = 'block';
@@ -116,8 +125,10 @@
                         document.getElementById('modalEventId').value = info.event.id;
                         const start = info.event.start;
                         const end = info.event.end;
-                        document.getElementById('modalStartInput').value = start ? start.toISOString().slice(11, 16) : '';
-                        document.getElementById('modalEndInput').value = end ? end.toISOString().slice(11, 16) : '';
+                        document.getElementById('modalStartInput').value = start ? start
+                            .toISOString().slice(11, 16) : '';
+                        document.getElementById('modalEndInput').value = end ? end.toISOString()
+                            .slice(11, 16) : '';
                     };
 
                     modal.querySelector('.close').onclick = function() {
@@ -139,7 +150,8 @@
                 const propiedad = this.value;
                 calendar.removeAllEvents();
                 calendar.refetchEvents();
-                calendar.setOption('events', `/admin/calendar/reservations?propiedad=${encodeURIComponent(propiedad)}`);
+                calendar.setOption('events',
+                    `/admin/calendar/reservations?propiedad=${encodeURIComponent(propiedad)}`);
                 calendar.refetchEvents();
             });
         });

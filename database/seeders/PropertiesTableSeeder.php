@@ -16,6 +16,7 @@ class PropertiesTableSeeder extends Seeder
         $propertiesJson = '[
             {
                 "id": 1,
+                "owner_id": 1,
                 "title": "Casa Delfin Playa Blanca",
                 "description": "Casa Delfín Playa Blanca está en Playa Blanca, a 17 min a pie de Playa Dorada y a 1,6 km de Playa Blanca, y ofrece aire acondicionado. Esta villa tiene piscina privada, jardín, zona de barbacoa, wifi gratis y parking privado gratis. Esta villa dispone de una terraza con vistas a la piscina y también incluye TV de pantalla plana vía satélite, una cocina bien equipada con nevera, lavavajillas y horno, y 2 baños con ducha y secador de pelo. En la villa, la clientela puede disfrutar de bañera de hidromasaje. La clientela de este alojamiento puede practicar senderismo en los alrededores o disfrutar de la piscina al aire libre abierta todo el año. Parque Nacional de Timanfaya está a 20 km del alojamiento, y Montañas de Fuego está a 21 km. El aeropuerto (Aeropuerto de Lanzarote) está a 28 km.",
                 "location": "23 Calle Bonilla, 35580 Playa Blanca, Spain",
@@ -39,6 +40,7 @@ class PropertiesTableSeeder extends Seeder
             },
             {
                 "id": 2,
+                "owner_id": 1,
                 "title": "El Galeon",
                 "description": "El Galeón está en Playa Blanca, a 6 min a pie de Playa Blanca y a 900 metros de Playa Flamingo, y ofrece alojamiento con aire acondicionado, balcón y wifi gratis. El alojamiento ofrece vistas al mar y a la montaña y está a 13 min a pie de Playa Dorada. El apartamento tiene 1 dormitorio, 1 baño, ropa de cama, toallas, TV de pantalla plana con canales vía satélite, zona de comedor, cocina totalmente equipada y terraza con vistas a la ciudad. El apartamento ofrece barbacoa. Hay servicio de alquiler de bicicletas y servicio de alquiler de coches en El Galeón. Parque Nacional de Timanfaya está a 20 km del alojamiento, y Montañas de Fuego está a 22 km. El aeropuerto más cercano (Aeropuerto de Lanzarote) está a 30 km.",
                 "location": "Calle Chalana, 14., 35580 Playa Blanca, Spain",
@@ -62,6 +64,7 @@ class PropertiesTableSeeder extends Seeder
             },
             {
                 "id": 3,
+                "owner_id": 2,
                 "title": "Marlin I Puerto del Carmen",
                 "description": "El Marlin I Puerto del Carmen ofrece alojamiento con WiFi gratuita, aire acondicionado y piscina con vistas en Puerto del Carmen, a menos de 1 km de Playa Chica y a 13 minutos a pie de la playa de Puerto del Carmen.El establecimiento tiene vistas a la piscina y está a 3,4 km del complejo de golf Lanzarote Golf Resort y a 4,4 km del Rancho Texas Park. El apartamento también dispone de zona de estar al aire libre. El apartamento cuenta con 1 dormitorio, 1 baño, ropa de cama, toallas, TV de pantalla plana con canales vía satélite, cocina totalmente equipada y terraza con vistas al mar. Una entrada privada conduce a los huéspedes al apartamento, donde pueden disfrutar de vino o champán y frutas. Este apartamento es para no fumadores y está insonorizado. Se pueden realizar visitas turísticas cerca del establecimiento. El Marlin I Puerto del Carmen está a 14 km del monumento al Campesino y a 18 km de las Montañas de Fuego. El aeropuerto de Lanzarote está a 7 km.",
                 "location": "Calle Teide 43 - Aptos Rincon C1, 35518 Puerto del Carmen, España",
@@ -85,6 +88,7 @@ class PropertiesTableSeeder extends Seeder
             },
             {
                 "id": 4,
+                "owner_id": 2,
                 "title": "Marlin II Puerto del Carmen",
                 "description": "El Marlin II Puerto del Carmen ofrece alojamiento con aire acondicionado, piscina con vistas al mar y terraza en Puerto del Carmen. El establecimiento tiene vistas a la piscina y está a menos de 1 km de Playa Chica y a 14 minutos a pie de la playa de Puerto del Carmen. Este apartamento para no fumadores ofrece WiFi gratuita en todas las instalaciones y solárium. El apartamento está situado en la planta baja y dispone de 1 dormitorio, TV de pantalla plana con canales vía satélite y cocina totalmente equipada con microondas, tostadora, lavadora, nevera y utensilios de cocina. Se proporcionan toallas y ropa de cama en el apartamento. El establecimiento tiene zona de comedor al aire libre. El apartamento ofrece servicio de alquiler de bicicletas y coches. El complejo de golf Lanzarote se encuentra a 3,4 km del Marlin II Puerto del Carmen, mientras que el Rancho Texas Park está a 4,4 km. El aeropuerto de Lanzarote está a 7 km.",
                 "location": "Calle Teide 43 - Aptos Rincon C2, 35518 Puerto del Carmen, España",
@@ -115,6 +119,7 @@ class PropertiesTableSeeder extends Seeder
             foreach ($properties as $property) {
                 Property::create([
                     'id' => $property['id'],
+                    'owner_id' => $property['owner_id'],
                     'title' => $property['title'],
                     'description' => $property['description'],
                     'location' => $property['location'],
@@ -137,7 +142,7 @@ class PropertiesTableSeeder extends Seeder
                     'lng' => $property['lng'],
                 ]);
             }
-        }else{
+        } else {
             echo "Error al decodificar el JSON de propiedades.";
         }
     }

@@ -29,7 +29,7 @@ Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.ema
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
 
 Route::middleware([IsAdmin::class])->group(function () {
-    Route::get('/admin/logout', [AdminController::class, 'logoutFunction'])->name('admin.logout');
+    Route::post('/admin/logout', [AdminController::class, 'logoutFunction'])->name('admin.logout');
 
     Route::get('/admin/properties', [AdminController::class, 'properties'])->name('admin.properties');
 
@@ -75,8 +75,6 @@ Route::get('/api/property-price-range', [ReservationPriceController::class, 'get
 Route::get('/api/reservations', function () {
     return Reservation::all();
 });
-
-//TODO : revisar estos endpoints
 
 Route::get('/api/properties', function () {
     return Property::all();

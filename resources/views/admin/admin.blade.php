@@ -33,7 +33,7 @@
                                 <button onclick="openModal('{{ $property->id }}')"><b>ⓘ</b></button>
                             </td>
                             <td>{{ $property->location }}</td>
-                            <td>{{ $property->price_per_night }}€</td>
+                            <td>Around{{ $property->price_per_night }}€</td>
                             <td>{{ $property->capacity }}</td>
                             <td>
                                 <div class="property-icons">
@@ -69,7 +69,7 @@
                                 <ul>
                                     <li><strong>Descripción:</strong> {{ $property->description }}</li>
                                     <li><strong>Ubicación:</strong> {{ $property->location }}</li>
-                                    <li><strong>Precio por noche:</strong> €{{ $property->price_per_night }}</li>
+                                    <li><strong>Precio estimado por noche:</strong> €{{ $property->price_per_night }}</li>
                                     <li><strong>Capacidad:</strong> {{ $property->capacity }}</li>
                                     <li><strong>Metros cuadrados:</strong> {{ $property->size }} m²</li>
                                     <li><strong>Dormitorios:</strong> {{ $property->bedrooms }}</li>

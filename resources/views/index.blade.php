@@ -26,6 +26,9 @@
     @include('components.date-range', ['propertyWithImages' => $propertyWithImages])
     <h1 id="aveilable-title">Available Properties</h1>
 
+    {{-- Loader component --}}
+    <x-loader />
+
     <div id="carousel-container">
         <button class="prev">&#10094;</button>
         <div id="available-properties">
@@ -57,11 +60,11 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-    <!-- Google Maps JavaScript API -->
     <script>
         let markers = @json($properties);
         let propertyWithImages = @json($propertyWithImages);
 
+        // Initialize Google Maps
         async function initMap() {
             let map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 10,
@@ -136,7 +139,7 @@
                     <h3>${property.title}</h3>
                     <p>${property.description}</p>
                     <p><strong>Location:</strong> ${property.location}</p>
-                    <p><strong>Price per Night:</strong> ${property.price_per_night}</p>
+                    <p><strong>Price per Night:</strong> Around ${property.price_per_night}€</p>                    
                     <p><strong>Capacity:</strong> ${property.capacity} people</p>
                     <a href="/property/${property.id}">
                         View Property Details
@@ -149,18 +152,28 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             const carousel = document.getElementById("available-properties");
+            const container = document.getElementById("carousel-container");
             const prevButton = document.querySelector(".prev");
             const nextButton = document.querySelector(".next");
 
             // Validar si hay tarjetas en el carrusel
-            if (!carousel || !prevButton || !nextButton) {
+            if (!carousel || !prevButton || !nextButton || !container) {
                 console.error("Error: Not elements found in carrusel.");
                 return;
             }
 
-            let cardWidth = document.querySelector(".cardcontainer").offsetWidth + 20;
+            let cardWidth = document.querySelector(".cardcontainer").offsetWidth + 15;
 
-            // Función para mover el carrusel a la izquierda
+            function updateCarouselState() {
+                const canScroll = carousel.scrollWidth > carousel.clientWidth + 5;
+
+                if (!canScroll) {
+                    container.classList.add("no-scroll");
+                } else {
+                    container.classList.remove("no-scroll");
+                }
+            }
+
             prevButton.addEventListener("click", function() {
                 carousel.scrollBy({
                     left: -cardWidth,
@@ -168,7 +181,6 @@
                 });
             });
 
-            // Función para mover el carrusel a la derecha
             nextButton.addEventListener("click", function() {
                 carousel.scrollBy({
                     left: cardWidth,
@@ -176,10 +188,12 @@
                 });
             });
 
-            // Ajustar el ancho de desplazamiento si la pantalla cambia de tamaño
             window.addEventListener("resize", function() {
-                cardWidth = document.querySelector(".cardcontainer").offsetWidth + 20;
+                cardWidth = document.querySelector(".cardcontainer").offsetWidth + 15;
+                updateCarouselState();
             });
+
+            updateCarouselState();
         });
     </script>
     <script

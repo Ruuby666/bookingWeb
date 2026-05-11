@@ -2,197 +2,203 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Property;
+use App\Http\Requests\AdminLoginRequest;
+use App\Http\Requests\UpdateReservationTimeRequest;
 use App\Models\Reservation;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Property;
+use App\Services\AuthService;
+use App\Services\ExportService;
+use App\Services\ReservationService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ReservationConfirmedMail;
-use Carbon\Carbon;
-use App\Exports\ConfirmedReservationsExport;
-use App\Exports\ConfirmedReservationsStuffExport;
-use App\Exports\FacturasExport;
 
+/**
+ * Controller responsible for admin operations.
+ */
 class AdminController extends Controller
 {
-    public function loginFunction(Request $request)
+    /**
+     * Inject required services.
+     */
+    public function __construct(
+        private readonly AuthService $authService,
+        private readonly ReservationService $reservationService,
+        private readonly ExportService $exportService,
+    ) {}
+
+    /**
+     * Handle admin login.
+     *
+     * @param AdminLoginRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function loginFunction(AdminLoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-            ]
-        ]);
+        $result = $this->authService->attemptAdminLogin(
+            $request->validated('email'),
+            $request->validated('password')
+        );
 
-        $user = User::where('email', $credentials['email'])->first();
-
-        if ($user && Hash::check($credentials['password'], $user->password)) {
-
-            if ($user->isAdmin()) {
-                Auth::login($user);
-                session(['is_admin' => true]);
-                return redirect()->route('admin.properties')->with('success', 'Logged in as admin.');
-            } else {
-                return back()->with('error', 'You are not authorized to access this page.');
-            }
+        if (! $result['success']) {
+            return back()->with('error', $result['error']);
         }
-        return back()->with('error', 'Email or password is incorrect.');
+
+        return redirect()->route('admin.properties')->with('success', 'Logged in as admin.');
     }
 
+    /**
+     * Log out the authenticated admin.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logoutFunction()
     {
-        // Elimina la sesión del admin
-        session()->forget('is_admin');
+        $this->authService->logoutAdmin();
 
         return redirect()->route('index')->with('success', 'Logged out successfully.');
     }
 
+    /**
+     * Display properties owned by the authenticated user.
+     *
+     * @return \Illuminate\View\View
+     */
     public function properties()
     {
-        if (session('is_admin')) {
-            $properties = Property::all();
-            return view('admin.admin', compact('properties'));
-        }
+        $properties = Property::where('owner_id', Auth::id())->get();
 
-        return redirect()->route('login');
+        return view('admin.admin', compact('properties'));
     }
 
+    /**
+     * Display confirmed and pending reservations.
+     *
+     * @return \Illuminate\View\View
+     */
     public function pending()
     {
-        $reservations = Reservation::where('status', 'confirmed')->with('property', 'user')->get();
-        $pending = Reservation::where('status', 'pending')->with('property', 'user')->get();
+        ['confirmed' => $reservations, 'pending' => $pending] =
+            $this->reservationService->getPendingAndConfirmedForOwner();
 
         return view('admin.pending', compact('reservations', 'pending'));
     }
 
+    /**
+     * Confirm a reservation.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateStatus($id)
     {
-        $reservation = Reservation::with(['user', 'property'])->where('id', $id)->firstOrFail();
+        $reservation = Reservation::with(['user', 'property'])
+            ->where('id', $id)
+            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
+            ->firstOrFail();
 
-        // Verificar solapamiento de fechas con otras reservas confirmadas en la misma propiedad
-        $conflictingReservation = Reservation::where('property_id', $reservation->property_id)
-            ->where('status', 'confirmed')
-            ->where('id', '!=', $reservation->id)
-            ->where(function ($query) use ($reservation) {
-                $query->whereBetween('check_in', [$reservation->check_in, $reservation->check_out])
-                    ->orWhereBetween('check_out', [$reservation->check_in, $reservation->check_out])
-                    ->orWhere(function ($query) use ($reservation) {
-                        $query->where('check_in', '<=', $reservation->check_in)
-                            ->where('check_out', '>=', $reservation->check_out);
-                    });
-            })
-            ->exists();
+        $result = $this->reservationService->confirmReservation($reservation);
 
-        if ($conflictingReservation) {
-            return redirect()->back()->with('error', 'No se puede confirmar: fechas ya reservadas.');
-        }
-
-        $reservation->status = 'confirmed';
-        $reservation->save();
-
-        Mail::to($reservation->user->email)->send(new ReservationConfirmedMail($reservation));
-
-        return redirect()->back()->with('success', 'Confirmación enviada al cliente.');
+        return $result['success']
+            ? redirect()->back()->with('success', 'Confirmation sent to the client.')
+            : redirect()->back()->with('error', $result['error']);
     }
 
+    /**
+     * Show the suggestion email page.
+     *
+     * @param Reservation $reservation
+     * @return \Illuminate\View\View
+     */
     public function suggestionEmail(Reservation $reservation)
     {
+        if ($reservation->property->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
         return view('admin.suggestion', compact('reservation'));
     }
 
+    /**
+     * Display the reservation calendar.
+     *
+     * @return \Illuminate\View\View
+     */
     public function calendar()
     {
-        return view('admin.calendar');
+        $properties = Property::where('owner_id', Auth::id())->get();
+
+        return view('admin.calendar', compact('properties'));
     }
 
-    public function getConfirmedReservations(Request $request)
+    /**
+     * Return confirmed reservations as JSON.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getConfirmedReservations(\Illuminate\Http\Request $request)
     {
         $propiedad = $request->query('propiedad');
 
-        $query = Reservation::with(['user', 'property'])->where('status', 'confirmed');
+        $reservations = $this->reservationService
+            ->getConfirmedReservationsForOwner($propiedad);
 
-        if ($propiedad && $propiedad !== 'todos') {
-            $query->whereHas('property', function ($q) use ($propiedad) {
-                $q->where('title', $propiedad);
-            });
-        }
-
-        $reservations = $query->get();
-
-        $events = $reservations->map(function ($reservation) {
-            return [
-                'id' => $reservation->id,
-                'title' => $reservation->user->name . ' en ' . $reservation->property->title,
-                'note' => $reservation->notes,
-                'user' => $reservation->user,
-                'property' => $reservation->property->title,
-                'start' => $reservation->check_in,
-                'end' => $reservation->check_out,
-            ];
-        });
+        $events = $reservations->map(fn($r) => [
+            'id'       => $r->id,
+            'title'    => $r->user->name . ' in ' . $r->property->title,
+            'note'     => $r->notes,
+            'user'     => $r->user,
+            'property' => $r->property->title,
+            'start'    => $r->check_in,
+            'end'      => $r->check_out,
+        ]);
 
         return response()->json($events);
     }
 
-    public function updateTime(Request $request)
+    /**
+     * Update reservation times.
+     *
+     * @param UpdateReservationTimeRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateTime(UpdateReservationTimeRequest $request)
     {
-        $request->validate([
-            'event_id' => 'required|integer|exists:reservations,id',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i',
-        ]);
+        $reservation = Reservation::where('id', $request->validated('event_id'))
+            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
+            ->firstOrFail();
 
-        $reservation = Reservation::findOrFail($request->event_id);
+        $result = $this->reservationService->updateReservationTime(
+            $reservation,
+            $request->validated('start_time'),
+            $request->validated('end_time')
+        );
 
-        $datestart = $reservation->check_in->format('Y-m-d');
-        $dateend = $reservation->check_out->format('Y-m-d');
-
-        if ($request->start_time >= $request->end_time && $datestart === $dateend) {
-            return back()->with('error','La hora de salida debe ser posterior a la de entrada.');
-        }
-
-        $reservation->check_in = Carbon::createFromFormat('Y-m-d H:i', "$datestart $request->start_time");
-        $reservation->check_out = Carbon::createFromFormat('Y-m-d H:i', "$dateend $request->end_time");
-        $reservation->save();
-
-        return redirect()->back()->with('success', 'Hora actualizada correctamente.');
+        return $result['success']
+            ? redirect()->back()->with('success', 'Reservation time updated successfully.')
+            : redirect()->back()->with('error', $result['error']);
     }
 
+    /**
+     * Download reservations Excel file.
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function exportExcel()
     {
-        $file1 = ConfirmedReservationsExport::download()->getFile()->getPathname();
-        $file2 = ConfirmedReservationsStuffExport::download()->getFile()->getPathname();
-
-        $date = Carbon::now()->format('d_m_Y');
-
-        // Crear archivo ZIP temporal
-        $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_') . '.zip';
-        $zip = new \ZipArchive();
-        $zip->open($zipFile, \ZipArchive::CREATE);
-        $zip->addFile($file1, 'Reservas_' . $date . '.xlsx');
-        $zip->addFile($file2, 'Reservas_stuff_' . $date . '.xlsx');
-        $zip->close();
-
-        // Descargar el ZIP y eliminarlo después
-        return response()->download($zipFile, 'Reservas_completas.zip')->deleteFileAfterSend(true);
+        return $this->exportService->downloadReservationsZip();
     }
 
-    public function exportfacturaExcel(Request $request)
+    /**
+     * Download invoices Excel file.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportfacturaExcel(\Illuminate\Http\Request $request)
     {
-        $ids = $request->input('ids');
-        $invoiceAmount = $request->input('invoice_amount');
-
-        foreach ($ids as $id) {
-            Reservation::markAsInvoiced($id);
-        }
-
-        return FacturasExport::download($ids, $invoiceAmount);
+        return $this->exportService->downloadInvoicesExcel(
+            $request->input('ids'),
+            $request->input('invoice_amount')
+        );
     }
 }

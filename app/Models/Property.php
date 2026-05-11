@@ -10,6 +10,7 @@ class Property extends Model
     use HasFactory;
 
     protected $fillable = [
+        'owner_id',
         'title',
         'description',
         'location',
@@ -46,6 +47,12 @@ class Property extends Model
         'wifi' => 'boolean',
     ];
 
+    // --- Relations ---
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
 
     public function reservations()
     {
@@ -57,6 +64,7 @@ class Property extends Model
         return $this->hasMany(ReservationPrice::class);
     }
 
+    // --- Methods ---
     public function priceForDate($date)
     {
         return $this->reservationPrices()

@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+/**
+ * Service responsible for authentication logic.
+ */
+class AuthService
+{
+    /**
+     * Attempt to log in a user and verify admin privileges.
+     *
+     * @param string $email User email
+     * @param string $password User password
+     * @return array{success: bool, error?: string}
+     */
+    public function attemptAdminLogin(string $email, string $password): array
+    {
+        $user = User::where('email', $email)->first();
+
+        if (! $user || ! Hash::check($password, $user->password)) {
+            return [
+                'success' => false,
+                'error' => 'Email or password is incorrect.'
+            ];
+        }
+
+        if (! $user->isAdmin()) {
+            return [
+                'success' => false,
+                'error' => 'You are not authorized to access this page.'
+            ];
+        }
+
+        Auth::login($user);
+
+        return ['success' => true];
+    }
+
+    /**
+     * Log out the authenticated admin user.
+     *
+     * @return void
+     */
+    public function logoutAdmin(): void
+    {
+        Auth::logout();
+    }
+}

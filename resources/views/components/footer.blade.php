@@ -4,11 +4,17 @@
         <img id="logo" src="/images/logoEML.png" alt="Not found">
         <p>enjoyhomelanzarote@gmail.com</p>
     </div>
-    
-    @if(session('is_admin'))
-    <a id="a-footer" href="{{ route('admin.logout') }}">Log out</a>
-    @else
+
+    @auth
+        @if (Auth::check() && Auth::user()->is_admin)
+            <form method="POST" action="{{ route('admin.logout') }}">
+                @csrf
+                <button type="submit">Log out</button>
+            </form>
+        @else
+
+        @endif
+    @endauth
     <p>&copy; 2025 Enjoy Home Lanzarote. All Rights Reserved.</p>
-    @endif
 </div>
 </div>

@@ -35,18 +35,36 @@ h2 {
   overflow: hidden;
 }
 
+/* Estado cuando NO hay scroll */
+#carousel-container.no-scroll button.prev,
+#carousel-container.no-scroll button.next {
+  display: none !important;
+}
+
+/* Evita scroll visual cuando no es necesario */
+#carousel-container.no-scroll #available-properties {
+  overflow-x: hidden !important;
+}
+
 /* ----- Contenedor del carrusel (propiedades) ----- */
 #available-properties {
   display: flex;
   height: 500px;
   gap: 15px;
   overflow-x: auto;
+  scroll-padding-left: 60px;
   scroll-snap-type: x mandatory;
   max-width: 100%;
   align-items: center;
   padding: 0 15px;
   white-space: nowrap;
   scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#available-properties::-webkit-scrollbar {
+  display: none;
 }
 
 /* ----- Tarjetas del carrusel ----- */
@@ -71,7 +89,7 @@ h2 {
 
 /* ----- Imagen de la tarjeta ----- */
 .photo img {
-  width: 100%;
+  width: stretch !important;
   height: 200px;
   object-fit: cover;
 }
@@ -170,8 +188,14 @@ button.next {
 /* Agrega sombra al hacer clic en los botones */
 button.prev:active, 
 button.next:active {
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.103);
   transform: scale(0.95);
+}
+
+button.prev:focus, 
+button.next:focus{
+      outline: none;
+    background-color: transparent
 }
 
 /* Posicionamiento de los botones de navegación */
@@ -190,20 +214,16 @@ button.next:active {
 
 @media (max-width: 768px) {
   .cardcontainer {
-    width: 80%;
+    width: 90%;
+  }
+
+  #available-properties {
+    gap: 0px;
   }
 }
 
 
 @media (max-width: 480px) {
-  .cardcontainer {
-    width: 90%;
-    overflow-x: hidden;
-  }
-
-  #carrousel-container {
-    gap: 0px;
-  }
 
   .prev,
   .next {
