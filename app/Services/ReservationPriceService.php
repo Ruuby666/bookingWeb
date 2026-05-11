@@ -10,21 +10,24 @@ use Illuminate\Support\Facades\Auth;
 class ReservationPriceService
 {
     /**
-     * Calculate the nightly price breakdown for a date range on a given property.
+     * Get the nightly price breakdown for a property within a date range.
      *
-     * @param  int    $propertyId
-     * @param  Carbon $startDate  Inclusive start (check-in night)
-     * @param  Carbon $endDate    Exclusive end   (check-out day)
+     * Each night is evaluated against custom price ranges, falling back to
+     * the property's default price if no override exists.
+     *
+     * @param int $propertyId
+     * @param Carbon $startDate Check-in date (inclusive)
+     * @param Carbon $endDate Check-out date (exclusive)
      * @return array<int, array{date: string, price: float}>
      */
     public function getPriceBreakdown(int $propertyId, Carbon $startDate, Carbon $endDate): array
     {
-        $property     = Property::findOrFail($propertyId);
+        $property = Property::findOrFail($propertyId);
         $defaultPrice = $property->price_per_night;
 
-        $nights  = [];
+        $nights = [];
         $current = $startDate->copy()->startOfDay();
-        $end     = $endDate->copy()->startOfDay();
+        $end = $endDate->copy()->startOfDay();
 
         while ($current->lt($end)) {
             $price = ReservationPrice::where('property_id', $propertyId)
@@ -44,12 +47,14 @@ class ReservationPriceService
     }
 
     /**
-     * Create a custom price range for a property, checking for overlaps first.
+     * Create a custom price range for a property.
      *
-     * @param  int    $propertyId
-     * @param  Carbon $startDate
-     * @param  Carbon $endDate
-     * @param  float  $pricePerNight
+     * Validates ownership and prevents overlapping date ranges.
+     *
+     * @param int $propertyId
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @param float $pricePerNight
      * @return array{success: bool, error?: string, model?: ReservationPrice}
      */
     public function createPriceRange(
@@ -63,7 +68,7 @@ class ReservationPriceService
             ->first();
 
         if (! $property) {
-            return ['success' => false, 'error' => 'No autorizado.'];
+            return ['success' => false, 'error' => 'Unauthorized access.'];
         }
 
         $overlap = ReservationPrice::where('property_id', $propertyId)
@@ -81,14 +86,14 @@ class ReservationPriceService
         if ($overlap) {
             return [
                 'success' => false,
-                'error'   => 'Ya existe un rango de fechas que se solapa con el que intentas crear.',
+                'error' => 'A price range already exists that overlaps with the selected dates.',
             ];
         }
 
         $model = ReservationPrice::create([
-            'property_id'    => $propertyId,
-            'start_date'     => $startDate->startOfDay(),
-            'end_date'       => $endDate->endOfDay(),
+            'property_id'     => $propertyId,
+            'start_date'      => $startDate->startOfDay(),
+            'end_date'        => $endDate->endOfDay(),
             'price_per_night' => $pricePerNight,
         ]);
 
@@ -96,9 +101,9 @@ class ReservationPriceService
     }
 
     /**
-     * Delete a price range owned by the authenticated user.
+     * Delete a price range if it belongs to the authenticated owner.
      *
-     * @param  int $id
+     * @param int $id
      * @return array{success: bool, error?: string}
      */
     public function deletePriceRange(int $id): array
@@ -108,7 +113,7 @@ class ReservationPriceService
             ->first();
 
         if (! $price) {
-            return ['success' => false, 'error' => 'Rango de precio no encontrado.'];
+            return ['success' => false, 'error' => 'Price range not found.'];
         }
 
         $price->delete();

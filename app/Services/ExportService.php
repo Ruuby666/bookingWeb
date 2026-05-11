@@ -9,18 +9,27 @@ use App\Models\Reservation;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+/**
+ * Service responsible for exporting reservation and invoice data.
+ */
 class ExportService
 {
     /**
-     * Build a ZIP containing two Excel files (reservations + staff view)
-     * and return it as a downloadable response.
+     * Generate a ZIP file containing two Excel exports:
+     * - Confirmed reservations
+     * - Staff view reservations
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
     public function downloadReservationsZip(): BinaryFileResponse
     {
-        $file1 = ConfirmedReservationsExport::download()->getFile()->getPathname();
-        $file2 = ConfirmedReservationsStuffExport::download()->getFile()->getPathname();
+        $file1 = ConfirmedReservationsExport::download()
+            ->getFile()
+            ->getPathname();
+
+        $file2 = ConfirmedReservationsStuffExport::download()
+            ->getFile()
+            ->getPathname();
 
         $date    = Carbon::now()->format('d_m_Y');
         $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_') . '.zip';
@@ -37,11 +46,11 @@ class ExportService
     }
 
     /**
-     * Mark the given reservation IDs as invoiced and return the invoices Excel download.
+     * Mark reservations as invoiced and generate an Excel invoice file.
      *
-     * @param  array       $ids            Reservation IDs to invoice
-     * @param  float|null  $invoiceAmount
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @param array $ids List of reservation IDs
+     * @param float|null $invoiceAmount Optional invoice amount
+     * @return BinaryFileResponse
      */
     public function downloadInvoicesExcel(array $ids, ?float $invoiceAmount): BinaryFileResponse
     {

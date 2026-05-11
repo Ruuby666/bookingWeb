@@ -15,16 +15,17 @@ class ReservationService
     /**
      * Create a new pending reservation.
      *
-     * @param  Property  $property
-     * @param  array     $data
-     * @param  User      $user
+     * Ensures check-in and check-out dates are in correct order
+     * and stores the reservation in "pending" state.
+     *
+     * @param Property $property
+     * @param array $data Reservation data
+     * @param User $user Authenticated user
      * @return Reservation
      */
     public function createReservation(Property $property, array $data, User $user): Reservation
     {
-        /** @var Carbon $checkIn */
         $checkIn = $data['checkIn'];
-        /** @var Carbon $checkOut */
         $checkOut = $data['checkOut'];
 
         if ($checkIn->gt($checkOut)) {
@@ -45,10 +46,12 @@ class ReservationService
     }
 
     /**
-     * Confirm a pending reservation after checking for date conflicts.
-     * Sends a confirmation email to the guest on success.
+     * Confirm a reservation after checking for date conflicts.
      *
-     * @param  Reservation $reservation
+     * If no conflicts exist, the reservation is marked as confirmed
+     * and a confirmation email is sent to the user.
+     *
+     * @param Reservation $reservation
      * @return array{success: bool, error?: string}
      */
     public function confirmReservation(Reservation $reservation): array
@@ -68,23 +71,30 @@ class ReservationService
             ->exists();
 
         if ($conflict) {
-            return ['success' => false, 'error' => 'No se puede confirmar: fechas ya reservadas.'];
+            return [
+                'success' => false,
+                'error' => 'Cannot confirm: date range is already booked.'
+            ];
         }
 
         $reservation->status = 'confirmed';
         $reservation->save();
 
-        Mail::to($reservation->user->email)->send(new ReservationConfirmedMail($reservation));
+        Mail::to($reservation->user->email)
+            ->send(new ReservationConfirmedMail($reservation));
 
         return ['success' => true];
     }
 
     /**
-     * Update the check-in / check-out times for a confirmed reservation.
+     * Update check-in and check-out times of a reservation.
      *
-     * @param  Reservation $reservation
-     * @param  string      $startTime  Format H:i
-     * @param  string      $endTime    Format H:i
+     * Ensures that time validation is correct when both dates
+     * belong to the same day.
+     *
+     * @param Reservation $reservation
+     * @param string $startTime Format H:i
+     * @param string $endTime Format H:i
      * @return array{success: bool, error?: string}
      */
     public function updateReservationTime(
@@ -96,42 +106,48 @@ class ReservationService
         $dateEnd   = $reservation->check_out->format('Y-m-d');
 
         if ($startTime >= $endTime && $dateStart === $dateEnd) {
-            return ['success' => false, 'error' => 'La hora de salida debe ser posterior a la de entrada.'];
+            return [
+                'success' => false,
+                'error' => 'Check-out time must be after check-in time.'
+            ];
         }
 
-        $reservation->check_in  = Carbon::createFromFormat('Y-m-d H:i', "$dateStart $startTime");
+        $reservation->check_in = Carbon::createFromFormat('Y-m-d H:i', "$dateStart $startTime");
         $reservation->check_out = Carbon::createFromFormat('Y-m-d H:i', "$dateEnd $endTime");
+
         $reservation->save();
 
         return ['success' => true];
     }
 
     /**
-     * Check if the requested date range overlaps with any confirmed reservation.
+     * Find an overlapping confirmed reservation for a property.
      *
-     * @param  int    $propertyId
-     * @param  Carbon $checkIn
-     * @param  Carbon $checkOut
-     * @return Reservation|null  The conflicting reservation, or null if none.
+     * @param int $propertyId
+     * @param Carbon $checkIn
+     * @param Carbon $checkOut
+     * @return Reservation|null
      */
-    public function findOverlappingReservation(int $propertyId, Carbon $checkIn, Carbon $checkOut): ?Reservation
-    {
+    public function findOverlappingReservation(
+        int $propertyId,
+        Carbon $checkIn,
+        Carbon $checkOut
+    ): ?Reservation {
         return Reservation::where('property_id', $propertyId)
             ->where('status', 'confirmed')
             ->where(function ($query) use ($checkIn, $checkOut) {
-                $query->where(function ($q) use ($checkIn, $checkOut) {
-                    $q->where('check_in', '<', $checkOut)
+                $query->where('check_in', '<', $checkOut)
                       ->where('check_out', '>', $checkIn);
-                });
             })
             ->first();
     }
 
     /**
-     * Return all confirmed reservations for the authenticated owner,
-     * optionally filtered by property title.
+     * Get all confirmed reservations for the authenticated owner.
      *
-     * @param  string|null $propertyTitle
+     * Optionally filters by property title.
+     *
+     * @param string|null $propertyTitle
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getConfirmedReservationsForOwner(?string $propertyTitle = null)
@@ -148,7 +164,7 @@ class ReservationService
     }
 
     /**
-     * Return confirmed + pending reservations for the authenticated owner.
+     * Get both confirmed and pending reservations for the owner.
      *
      * @return array{confirmed: \Illuminate\Database\Eloquent\Collection, pending: \Illuminate\Database\Eloquent\Collection}
      */

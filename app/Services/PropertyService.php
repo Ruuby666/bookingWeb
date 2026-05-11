@@ -9,22 +9,22 @@ use Illuminate\Support\Facades\File;
 class PropertyService
 {
     /**
-     * Return all properties with their first/representative image filename.
+     * Get all properties with a representative image for each one.
      *
      * @return array{properties: \Illuminate\Database\Eloquent\Collection, propertyWithImages: array<int, string>}
      */
     public function getAllWithFirstImage(): array
     {
-        $properties       = Property::all();
+        $properties = Property::all();
         $propertyWithImages = [];
 
         foreach ($properties as $property) {
             $imageFolder = public_path('images/' . $property->images_div);
-            $nameImage   = 'default.jpg';
+            $nameImage = 'default.jpg';
 
             if (File::exists($imageFolder)) {
                 $files = File::files($imageFolder);
-                if (! empty($files)) {
+                if (!empty($files)) {
                     $nameImage = basename($files[0]);
                 }
             }
@@ -36,31 +36,35 @@ class PropertyService
     }
 
     /**
-     * Return the image list for a single property split into main + rest.
+     * Get images for a specific property.
+     * Returns the main image and the rest of the gallery images.
      *
-     * @param  Property $property
+     * @param Property $property
      * @return array{mainImage: string|null, imagesWithoutFirst: array<int, string>}
      */
     public function getImagesForProperty(Property $property): array
     {
         $imageFolder = public_path('images/' . $property->images_div);
 
-        if (! File::exists($imageFolder)) {
-            return ['mainImage' => null, 'imagesWithoutFirst' => []];
+        if (!File::exists($imageFolder)) {
+            return [
+                'mainImage' => null,
+                'imagesWithoutFirst' => []
+            ];
         }
 
         $images = array_map('basename', File::files($imageFolder));
 
         return [
-            'mainImage'         => $images[0] ?? null,
+            'mainImage' => $images[0] ?? null,
             'imagesWithoutFirst' => array_slice($images, 1),
         ];
     }
 
     /**
-     * Create a new property owned by the authenticated user.
+     * Create a new property for the authenticated user.
      *
-     * @param  array $data  Validated request data (bedrooms as comma-separated string)
+     * @param array $data Validated property data
      * @return Property
      */
     public function createProperty(array $data): Property
@@ -74,8 +78,8 @@ class PropertyService
     /**
      * Update an existing property.
      *
-     * @param  Property $property
-     * @param  array    $data  Validated request data
+     * @param Property $property
+     * @param array $data Validated property data
      * @return Property
      */
     public function updateProperty(Property $property, array $data): Property
@@ -86,11 +90,13 @@ class PropertyService
     }
 
     /**
-     * Convert a comma-separated bedroom string into a JSON object.
-     * e.g. "King, Twin, Double" => {"1":"King","2":"Twin","3":"Double"}
+     * Convert a comma-separated string of bedrooms into a JSON structure.
      *
-     * @param  string $bedrooms
-     * @return string  JSON-encoded
+     * Example:
+     * "King, Twin, Double" => {"1":"King","2":"Twin","3":"Double"}
+     *
+     * @param string $bedrooms
+     * @return string JSON encoded string
      */
     private function parseBedroomsToJson(string $bedrooms): string
     {
