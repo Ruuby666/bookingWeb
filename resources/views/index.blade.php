@@ -25,9 +25,9 @@
 
     @include('components.date-range', ['propertyWithImages' => $propertyWithImages])
     <h1 id="aveilable-title">Available Properties</h1>
-    
+
     {{-- Loader component --}}
-        <x-loader />
+    <x-loader />
 
     <div id="carousel-container">
         <button class="prev">&#10094;</button>
@@ -152,18 +152,28 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             const carousel = document.getElementById("available-properties");
+            const container = document.getElementById("carousel-container");
             const prevButton = document.querySelector(".prev");
             const nextButton = document.querySelector(".next");
 
             // Validar si hay tarjetas en el carrusel
-            if (!carousel || !prevButton || !nextButton) {
+            if (!carousel || !prevButton || !nextButton || !container) {
                 console.error("Error: Not elements found in carrusel.");
                 return;
             }
 
-            let cardWidth = document.querySelector(".cardcontainer").offsetWidth + 20;
+            let cardWidth = document.querySelector(".cardcontainer").offsetWidth + 15;
 
-            // Función para mover el carrusel a la izquierda
+            function updateCarouselState() {
+                const canScroll = carousel.scrollWidth > carousel.clientWidth + 5;
+
+                if (!canScroll) {
+                    container.classList.add("no-scroll");
+                } else {
+                    container.classList.remove("no-scroll");
+                }
+            }
+
             prevButton.addEventListener("click", function() {
                 carousel.scrollBy({
                     left: -cardWidth,
@@ -171,7 +181,6 @@
                 });
             });
 
-            // Función para mover el carrusel a la derecha
             nextButton.addEventListener("click", function() {
                 carousel.scrollBy({
                     left: cardWidth,
@@ -179,10 +188,12 @@
                 });
             });
 
-            // Ajustar el ancho de desplazamiento si la pantalla cambia de tamaño
             window.addEventListener("resize", function() {
-                cardWidth = document.querySelector(".cardcontainer").offsetWidth + 20;
+                cardWidth = document.querySelector(".cardcontainer").offsetWidth + 15;
+                updateCarouselState();
             });
+
+            updateCarouselState();
         });
     </script>
     <script
