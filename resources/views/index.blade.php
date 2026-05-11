@@ -25,6 +25,9 @@
 
     @include('components.date-range', ['propertyWithImages' => $propertyWithImages])
     <h1 id="aveilable-title">Available Properties</h1>
+    
+    {{-- Loader component --}}
+        <x-loader />
 
     <div id="carousel-container">
         <button class="prev">&#10094;</button>
@@ -57,11 +60,11 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-    <!-- Google Maps JavaScript API -->
     <script>
         let markers = @json($properties);
         let propertyWithImages = @json($propertyWithImages);
 
+        // Initialize Google Maps
         async function initMap() {
             let map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 10,
