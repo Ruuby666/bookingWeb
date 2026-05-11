@@ -19,8 +19,7 @@
         <div class="feature"><i class="fas fa-bath icon"></i><span>{{ $property->bathrooms }} Bathrooms</span></div>
         <div class="feature"><i class="fas fa-ruler icon"></i><span>{{ $property->size }} m²</span></div>
         <div class="feature"><i class="fas fa-user icon"></i><span>{{ $property->capacity }} Guests</span></div>
-        <div class="feature"><i class="fas fa-dollar-sign icon"></i><span>€{{ $property->price_per_night }} per
-                night</span></div> <!-- TODO -->
+        <div class="feature"><i class="fas fa-dollar-sign icon"></i><span>Around {{ $property->price_per_night }}€ per night</span></div> 
     </div>
     <div class="description">
         <h2>Property Description</h2>

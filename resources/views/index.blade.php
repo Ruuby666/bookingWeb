@@ -139,7 +139,7 @@
                     <h3>${property.title}</h3>
                     <p>${property.description}</p>
                     <p><strong>Location:</strong> ${property.location}</p>
-                    <p><strong>Price per Night:</strong> ${property.price_per_night}</p>
+                    <p><strong>Price per Night:</strong> Around ${property.price_per_night}€</p>                    
                     <p><strong>Capacity:</strong> ${property.capacity} people</p>
                     <a href="/property/${property.id}">
                         View Property Details

@@ -76,8 +76,6 @@ Route::get('/api/reservations', function () {
     return Reservation::all();
 });
 
-//TODO : revisar estos endpoints
-
 Route::get('/api/properties', function () {
     return Property::all();
 });

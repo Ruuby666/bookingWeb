@@ -39,7 +39,7 @@
                     <td>{{ $price->property->title ?? 'N/A' }}</td>
                     <td>{{ $price->start_date }}</td>
                     <td>{{ $price->end_date }}</td>
-                    <td>${{ number_format($price->price_per_night, 2) }}</td>
+                    <td>Around {{ number_format($price->price_per_night, 2) }}€</td>
                     <td>
                         <form action="{{ route('reservation-prices.destroy', $price->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este rango?')">
                             @csrf
@@ -88,7 +88,7 @@
                 <label for="end_date">Fecha de Fin</label>
                 <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" required>
 
-                <label for="price_per_night">Precio por Noche</label>
+                <label for="price_per_night">Precio estimado por Noche</label>
                 <input type="number" step="0.01" name="price_per_night" id="price_per_night" value="{{ old('price_per_night') }}" required>
 
             </div>
