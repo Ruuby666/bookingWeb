@@ -189,9 +189,10 @@
             ids.forEach(id => params.append('ids[]', id));
             params.append('invoice_amount', invoiceAmount);
 
-            window.location.href = `${url}?${params.toString()}`;
-            
-            document.getElementById('modal-factura').classList.add('hidden');
+            const finalUrl = `${url}?${params.toString()}`;
+            window.open(finalUrl, '_blank');
+            closeFacturaModal();
+            setTimeout(() => location.reload(), 1000);
 
         }
 

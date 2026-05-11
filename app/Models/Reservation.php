@@ -38,11 +38,4 @@ class Reservation extends Model
         return $this->belongsTo(Property::class);
     }
 
-    public static function markAsInvoiced($reservationId)
-    {
-        $reservation = self::findOrFail($reservationId);
-        $reservation->invoice = true;
-        $reservation->save();
-        return $reservation;
-    }
 }

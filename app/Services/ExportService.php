@@ -54,10 +54,12 @@ class ExportService
      */
     public function downloadInvoicesExcel(array $ids, ?float $invoiceAmount): BinaryFileResponse
     {
-        foreach ($ids as $id) {
-            Reservation::markAsInvoiced($id);
-        }
+        $response = FacturasExport::download($ids, $invoiceAmount);
 
-        return FacturasExport::download($ids, $invoiceAmount);
+        Reservation::whereIn('id', $ids)->update([
+            'invoice' => true
+        ]);
+
+        return $response;
     }
 }
