@@ -10,8 +10,7 @@ class UpdatePropertyRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $property = Property::find($this->route('id'));
-
+        $property = Property::find($this->route('property'));
         // Only the owner can update their property
         return $property && $property->owner_id === Auth::id();
     }
@@ -23,6 +22,7 @@ class UpdatePropertyRequest extends FormRequest
             'description'     => ['required', 'string'],
             'location'        => ['required', 'string', 'max:255'],
             'price_per_night' => ['required', 'numeric', 'min:0'],
+            'min_nights'      => ['required', 'numeric', 'min:1'],
             'capacity'        => ['required', 'integer', 'min:1'],
             'size'            => ['required', 'numeric', 'min:0'],
             'bedrooms'        => ['required', 'string', 'max:100'],

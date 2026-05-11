@@ -6,6 +6,7 @@ use App\Models\Property;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
+
 class PropertyPolicy
 {
     /**
@@ -21,7 +22,7 @@ class PropertyPolicy
      */
     public function view(User $user, Property $property): bool
     {
-        return $property->owner_id === $user->id;
+        return $user->id === $property->owner_id;
     }
 
     /**
@@ -37,7 +38,7 @@ class PropertyPolicy
      */
     public function update(User $user, Property $property): bool
     {
-        return $property->owner_id === $user->id;
+        return $user->id === $property->owner_id;
     }
 
     /**
@@ -45,7 +46,7 @@ class PropertyPolicy
      */
     public function delete(User $user, Property $property): bool
     {
-        return $property->owner_id === $user->id;
+        return $user->id === $property->owner_id;
     }
 
     /**
@@ -53,7 +54,7 @@ class PropertyPolicy
      */
     public function restore(User $user, Property $property): bool
     {
-        return $property->owner_id === $user->id;
+        return $user->id === $property->owner_id;
     }
 
     /**
@@ -61,6 +62,6 @@ class PropertyPolicy
      */
     public function forceDelete(User $user, Property $property): bool
     {
-        return $property->owner_id === $user->id;
+        return $user->id === $property->owner_id;
     }
 }

@@ -30,7 +30,7 @@ class PropertyFactory extends Factory
             'location' => $this->faker->address,
             'price_per_night' => $this->faker->randomFloat(2, 50, 1000),
             'capacity' => $this->faker->numberBetween(1, 20),
-            'min_nights' => $this->faker->numberBetween(1, 100),
+            'min_nights' => $this->faker->numberBetween(1, 10),
             'image_url' => $this->faker->imageUrl(640, 480, 'real estate', true, 'Faker'),
             'lat' => $this->faker->randomFloat(6, 28.85, 29.25),
             'lng' => $this->faker->randomFloat(6, -13.85, -13.35),

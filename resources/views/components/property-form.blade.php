@@ -14,7 +14,7 @@
                 value="{{ old('adults') }}" class="{{ $errors->has('adults') ? 'error' : '' }}" required>
             <label for="children">Children <b>*</b></label>
             <input id="children" name="children" type="number" placeholder="0 - {{ $property->capacity - 1 }}"
-                value="{{ old('children') ?? 0 }}" class="{{ $errors->has('children') ? 'error' : '' }}" required>
+                value="{{ old('children') }}" class="{{ $errors->has('children') ? 'error' : '' }}" required>
             @error('guests')
                 <error class="error-message">{{ $message }}</error>
             @enderror

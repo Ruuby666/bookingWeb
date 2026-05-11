@@ -7,6 +7,8 @@ use App\Http\Requests\UpdatePropertyRequest;
 use App\Models\Property;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
+
 
 /**
  * Controller responsible for property management.
@@ -76,6 +78,7 @@ class PropertyController extends Controller
      */
     public function edit($id)
     {
+
         $property = Property::findOrFail($id);
 
         $this->authorize('view', $property);

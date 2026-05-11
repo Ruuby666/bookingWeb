@@ -47,6 +47,12 @@
                 </div>
 
                 <div class="form-item">
+                    <label for="min_nights">Minimum Nights</label>
+                    <input type="number" id="min_nights" name="min_nights"
+                        value="{{ old('min_nights', $property->min_nights ?? '') }}" required>
+                </div>
+
+                <div class="form-item">
                     <label for="capacity">Capacity</label>
                     <input type="number" id="capacity" name="capacity"
                         value="{{ old('capacity', $property->capacity ?? '') }}" required>

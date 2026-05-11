@@ -114,7 +114,7 @@
             childrenInput.classList.add("js-error");
             showJSError(
                 adultsInput,
-                `There must be no more than ${_maxCapacity} guests`,
+                `The max guests possible are ${_maxCapacity}`,
             );
             isValid = false;
         }

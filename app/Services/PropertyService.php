@@ -69,9 +69,9 @@ class PropertyService
      */
     public function createProperty(array $data): Property
     {
+        //dd($data);
         $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
         $data['owner_id'] = Auth::id();
-
         return Property::create($data);
     }
 
