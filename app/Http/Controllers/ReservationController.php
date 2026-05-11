@@ -4,8 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 
+/**
+ * Controller responsible for reservation data.
+ */
 class ReservationController extends Controller
 {
+    /**
+     * Return confirmed reservations for a property as JSON.
+     *
+     * @param int $propertyId Property ID
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function data($propertyId)
     {
         $reservations = Reservation::where('property_id', $propertyId)
