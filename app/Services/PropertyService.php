@@ -69,7 +69,6 @@ class PropertyService
      */
     public function createProperty(array $data): Property
     {
-        //dd($data);
         $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
         $data['owner_id'] = Auth::id();
         return Property::create($data);
@@ -84,8 +83,8 @@ class PropertyService
      */
     public function updateProperty(Property $property, array $data): Property
     {
+        $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
         $property->update($data);
-
         return $property->fresh();
     }
 

@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'phone_number' => $this->faker->optional()->phoneNumber,
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
-            'is_admin' => false,
+            'is_admin' => true,
             'remember_token' => Str::random(10),
         ];
     }

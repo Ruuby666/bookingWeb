@@ -1,0 +1,220 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Models\Property;
+use App\Models\Reservation;
+use App\Models\ReservationPrice;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class ModelsTest extends TestCase
+{
+    use RefreshDatabase;
+
+    // -----------------------------------------------------------------------
+    // User model
+    // -----------------------------------------------------------------------
+
+    /** @test */
+    public function user_is_admin_returns_true_for_admin(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $this->assertTrue($admin->isAdmin());
+    }
+
+    /** @test */
+    public function user_is_admin_returns_false_for_regular_user(): void
+    {
+        $user = User::factory()->create(['is_admin' => false]);
+        $this->assertFalse($user->isAdmin());
+    }
+
+    /** @test */
+    public function user_password_is_hashed_via_mutator(): void
+    {
+        $user = User::factory()->create(['password' => 'plain-password']);
+
+        // The mutator should have hashed it; plain text should not match stored value
+        $this->assertNotEquals('plain-password', $user->password);
+    }
+
+    /** @test */
+    public function user_has_many_properties(): void
+    {
+        $owner = User::factory()->create(['is_admin' => true]);
+        Property::factory()->count(2)->create(['owner_id' => $owner->id]);
+
+        $this->assertCount(2, $owner->properties);
+    }
+
+    /** @test */
+    public function user_has_many_reservations(): void
+    {
+        $owner    = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+        $user     = User::factory()->create();
+
+        Reservation::factory()->count(3)->create([
+            'user_id'     => $user->id,
+            'property_id' => $property->id,
+        ]);
+
+        $this->assertCount(3, $user->reservations);
+    }
+
+    // -----------------------------------------------------------------------
+    // Property model
+    // -----------------------------------------------------------------------
+
+    /** @test */
+    public function property_belongs_to_owner(): void
+    {
+        $owner    = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+
+        $this->assertEquals($owner->id, $property->owner->id);
+    }
+
+    /** @test */
+    public function property_has_many_reservations(): void
+    {
+        $owner    = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+        $user     = User::factory()->create();
+
+        Reservation::factory()->count(2)->create([
+            'property_id' => $property->id,
+            'user_id'     => $user->id,
+        ]);
+
+        $this->assertCount(2, $property->reservations);
+    }
+
+    /** @test */
+    public function property_has_many_reservation_prices(): void
+    {
+        $owner    = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+
+        ReservationPrice::create([
+            'property_id'     => $property->id,
+            'start_date'      => Carbon::parse('2026-06-01'),
+            'end_date'        => Carbon::parse('2026-06-15')->endOfDay(),
+            'price_per_night' => 120.00,
+        ]);
+
+        $this->assertCount(1, $property->reservationPrices);
+    }
+
+    /** @test */
+    public function property_price_for_date_returns_custom_price_when_in_range(): void
+    {
+        $owner    = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create([
+            'owner_id'        => $owner->id,
+            'price_per_night' => 100.00,
+        ]);
+
+        ReservationPrice::create([
+            'property_id'     => $property->id,
+            'start_date'      => Carbon::parse('2026-07-01'),
+            'end_date'        => Carbon::parse('2026-07-31')->endOfDay(),
+            'price_per_night' => 200.00,
+        ]);
+
+        $price = $property->priceForDate('2026-07-15');
+
+        $this->assertEquals(200.00, $price);
+    }
+
+    /** @test */
+    public function property_price_for_date_returns_null_outside_range(): void
+    {
+        $owner    = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+
+        ReservationPrice::create([
+            'property_id'     => $property->id,
+            'start_date'      => Carbon::parse('2026-07-01'),
+            'end_date'        => Carbon::parse('2026-07-15')->endOfDay(),
+            'price_per_night' => 200.00,
+        ]);
+
+        $price = $property->priceForDate('2026-08-01');
+
+        $this->assertNull($price);
+    }
+
+    // -----------------------------------------------------------------------
+    // Reservation model
+    // -----------------------------------------------------------------------
+
+    /** @test */
+    public function reservation_belongs_to_user(): void
+    {
+        $owner       = User::factory()->create(['is_admin' => true]);
+        $property    = Property::factory()->create(['owner_id' => $owner->id]);
+        $user        = User::factory()->create();
+        $reservation = Reservation::factory()->create([
+            'user_id'     => $user->id,
+            'property_id' => $property->id,
+        ]);
+
+        $this->assertEquals($user->id, $reservation->user->id);
+    }
+
+    /** @test */
+    public function reservation_belongs_to_property(): void
+    {
+        $owner       = User::factory()->create(['is_admin' => true]);
+        $property    = Property::factory()->create(['owner_id' => $owner->id]);
+        $user        = User::factory()->create();
+        $reservation = Reservation::factory()->create([
+            'user_id'     => $user->id,
+            'property_id' => $property->id,
+        ]);
+
+        $this->assertEquals($property->id, $reservation->property->id);
+    }
+
+    /** @test */
+    public function reservation_casts_check_in_and_check_out_as_datetime(): void
+    {
+        $owner    = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+        $user     = User::factory()->create();
+
+        $reservation = Reservation::factory()->create([
+            'user_id'     => $user->id,
+            'property_id' => $property->id,
+            'check_in'    => '2026-09-01 15:00:00',
+            'check_out'   => '2026-09-07 11:00:00',
+        ]);
+
+        $this->assertInstanceOf(Carbon::class, $reservation->check_in);
+        $this->assertInstanceOf(Carbon::class, $reservation->check_out);
+    }
+
+    // -----------------------------------------------------------------------
+    // ReservationPrice model
+    // -----------------------------------------------------------------------
+
+    /** @test */
+    public function reservation_price_belongs_to_property(): void
+    {
+        $owner    = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+
+        $price = ReservationPrice::create([
+            'property_id'     => $property->id,
+            'start_date'      => Carbon::parse('2026-06-01'),
+            'end_date'        => Carbon::parse('2026-06-15')->endOfDay(),
+            'price_per_night' => 150.00,
+        ]);
+
+        $this->assertEquals($property->id, $price->property->id);
+    }
+}
