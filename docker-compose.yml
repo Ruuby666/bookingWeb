@@ -6,10 +6,13 @@ services:
     container_name: bookingweb-app
     restart: unless-stopped
     working_dir: /var/www/html
+    env_file:
+      - .env
     volumes:
       - ./:/var/www/html
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - bookingweb
 
@@ -32,14 +35,18 @@ services:
     container_name: bookingweb-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: bookingweb
-      MYSQL_USER: bookingweb
-      MYSQL_PASSWORD: bookingweb
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "33060:3306"
     volumes:
       - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
     networks:
       - bookingweb
 
