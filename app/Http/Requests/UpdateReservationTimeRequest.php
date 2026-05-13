@@ -8,7 +8,7 @@ class UpdateReservationTimeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Controller handles owner check via whereHas
+        return true; 
     }
 
     public function rules(): array
