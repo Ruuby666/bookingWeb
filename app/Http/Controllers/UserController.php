@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Services\UserService;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Controller responsible for user management.
@@ -20,9 +21,9 @@ class UserController extends Controller
     /**
      * Update a user.
      *
-     * @param UpdateUserRequest $request Updated user data
-     * @param int $id User ID
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  UpdateUserRequest  $request  Updated user data
+     * @param  int  $id  User ID
+     * @return RedirectResponse
      */
     public function update(UpdateUserRequest $request, $id)
     {

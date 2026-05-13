@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Property;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -11,7 +12,7 @@ class PropertyService
     /**
      * Get all properties with a representative image for each one.
      *
-     * @return array{properties: \Illuminate\Database\Eloquent\Collection, propertyWithImages: array<int, string>}
+     * @return array{properties: Collection, propertyWithImages: array<int, string>}
      */
     public function getAllWithFirstImage(): array
     {
@@ -19,12 +20,12 @@ class PropertyService
         $propertyWithImages = [];
 
         foreach ($properties as $property) {
-            $imageFolder = public_path('images/' . $property->images_div);
+            $imageFolder = public_path('images/'.$property->images_div);
             $nameImage = 'default.jpg';
 
             if (File::exists($imageFolder)) {
                 $files = File::files($imageFolder);
-                if (!empty($files)) {
+                if (! empty($files)) {
                     $nameImage = basename($files[0]);
                 }
             }
@@ -39,17 +40,16 @@ class PropertyService
      * Get images for a specific property.
      * Returns the main image and the rest of the gallery images.
      *
-     * @param Property $property
      * @return array{mainImage: string|null, imagesWithoutFirst: array<int, string>}
      */
     public function getImagesForProperty(Property $property): array
     {
-        $imageFolder = public_path('images/' . $property->images_div);
+        $imageFolder = public_path('images/'.$property->images_div);
 
-        if (!File::exists($imageFolder)) {
+        if (! File::exists($imageFolder)) {
             return [
                 'mainImage' => null,
-                'imagesWithoutFirst' => []
+                'imagesWithoutFirst' => [],
             ];
         }
 
@@ -64,27 +64,26 @@ class PropertyService
     /**
      * Create a new property for the authenticated user.
      *
-     * @param array $data Validated property data
-     * @return Property
+     * @param  array  $data  Validated property data
      */
     public function createProperty(array $data): Property
     {
         $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
         $data['owner_id'] = Auth::id();
+
         return Property::create($data);
     }
 
     /**
      * Update an existing property.
      *
-     * @param Property $property
-     * @param array $data Validated property data
-     * @return Property
+     * @param  array  $data  Validated property data
      */
     public function updateProperty(Property $property, array $data): Property
     {
         $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
         $property->update($data);
+
         return $property->fresh();
     }
 
@@ -94,7 +93,6 @@ class PropertyService
      * Example:
      * "King, Twin, Double" => {"1":"King","2":"Twin","3":"Double"}
      *
-     * @param string $bedrooms
      * @return string JSON encoded string
      */
     private function parseBedroomsToJson(string $bedrooms): string

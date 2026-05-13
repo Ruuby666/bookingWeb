@@ -8,7 +8,7 @@ class SendSuggestionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; 
+        return true;
     }
 
     public function rules(): array
@@ -22,7 +22,7 @@ class SendSuggestionRequest extends FormRequest
     {
         return [
             'note.required' => 'El mensaje de sugerencia es obligatorio.',
-            'note.max'      => 'La sugerencia no puede superar los 1000 caracteres.',
+            'note.max' => 'La sugerencia no puede superar los 1000 caracteres.',
         ];
     }
 }

@@ -6,7 +6,6 @@ use App\Models\Property;
 use App\Models\User;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 class PropertyServiceTest extends TestCase
@@ -18,7 +17,7 @@ class PropertyServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new PropertyService();
+        $this->service = new PropertyService;
     }
 
     // -----------------------------------------------------------------------
@@ -32,32 +31,32 @@ class PropertyServiceTest extends TestCase
         $this->actingAs($owner);
 
         $property = $this->service->createProperty([
-            'title'           => 'Test Villa',
-            'description'     => 'Nice place',
-            'location'        => 'Lanzarote',
+            'title' => 'Test Villa',
+            'description' => 'Nice place',
+            'location' => 'Lanzarote',
             'price_per_night' => 150.00,
-            'capacity'        => 6,
-            'size'            => 120,
-            'bedrooms'        => 'King, Twin, Double',
-            'bathrooms'       => 2,
-            'min_nights'      => 3,
-            'images_div'      => 'test_folder',
-            'lat'             => 28.9635,
-            'lng'             => -13.5477,
-            'tv'              => false,
-            'entertainment'   => false,
-            'parking'         => false,
-            'pool'            => false,
-            'garden'          => false,
-            'safeBox'         => false,
-            'terrace'         => false,
-            'wifi'            => true,
+            'capacity' => 6,
+            'size' => 120,
+            'bedrooms' => 'King, Twin, Double',
+            'bathrooms' => 2,
+            'min_nights' => 3,
+            'images_div' => 'test_folder',
+            'lat' => 28.9635,
+            'lng' => -13.5477,
+            'tv' => false,
+            'entertainment' => false,
+            'parking' => false,
+            'pool' => false,
+            'garden' => false,
+            'safeBox' => false,
+            'terrace' => false,
+            'wifi' => true,
         ]);
 
         $decoded = json_decode($property->bedrooms, true);
 
-        $this->assertEquals('King',   $decoded['1']);
-        $this->assertEquals('Twin',   $decoded['2']);
+        $this->assertEquals('King', $decoded['1']);
+        $this->assertEquals('Twin', $decoded['2']);
         $this->assertEquals('Double', $decoded['3']);
     }
 
@@ -68,26 +67,26 @@ class PropertyServiceTest extends TestCase
         $this->actingAs($owner);
 
         $property = $this->service->createProperty([
-            'title'           => 'Casa del Sol',
-            'description'     => 'Sunny house',
-            'location'        => 'Costa Teguise',
+            'title' => 'Casa del Sol',
+            'description' => 'Sunny house',
+            'location' => 'Costa Teguise',
             'price_per_night' => 200.00,
-            'capacity'        => 4,
-            'size'            => 90,
-            'bedrooms'        => 'King',
-            'bathrooms'       => 1,
-            'min_nights'      => 2,
-            'images_div'      => 'casa_sol',
-            'lat'             => 28.9,
-            'lng'             => -13.5,
-            'tv'              => false,
-            'entertainment'   => false,
-            'parking'         => true,
-            'pool'            => false,
-            'garden'          => false,
-            'safeBox'         => false,
-            'terrace'         => true,
-            'wifi'            => true,
+            'capacity' => 4,
+            'size' => 90,
+            'bedrooms' => 'King',
+            'bathrooms' => 1,
+            'min_nights' => 2,
+            'images_div' => 'casa_sol',
+            'lat' => 28.9,
+            'lng' => -13.5,
+            'tv' => false,
+            'entertainment' => false,
+            'parking' => true,
+            'pool' => false,
+            'garden' => false,
+            'safeBox' => false,
+            'terrace' => true,
+            'wifi' => true,
         ]);
 
         $this->assertEquals($owner->id, $property->owner_id);
@@ -100,14 +99,14 @@ class PropertyServiceTest extends TestCase
     /** @test */
     public function it_updates_property_fields(): void
     {
-        $owner    = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create([
             'owner_id' => $owner->id,
-            'title'    => 'Old Title',
+            'title' => 'Old Title',
         ]);
 
         $updated = $this->service->updateProperty($property, [
-            'title'    => 'New Title',
+            'title' => 'New Title',
             'bedrooms' => 'King, Twin',
         ]);
 
@@ -122,9 +121,9 @@ class PropertyServiceTest extends TestCase
     /** @test */
     public function it_returns_null_main_image_when_folder_does_not_exist(): void
     {
-        $owner    = User::factory()->create();
+        $owner = User::factory()->create();
         $property = Property::factory()->create([
-            'owner_id'   => $owner->id,
+            'owner_id' => $owner->id,
             'images_div' => 'nonexistent_folder_xyz',
         ]);
 
@@ -143,7 +142,7 @@ class PropertyServiceTest extends TestCase
     {
         $owner = User::factory()->create();
         Property::factory()->create([
-            'owner_id'   => $owner->id,
+            'owner_id' => $owner->id,
             'images_div' => 'missing_folder_abc',
         ]);
 

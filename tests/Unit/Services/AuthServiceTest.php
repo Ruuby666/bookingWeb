@@ -18,7 +18,7 @@ class AuthServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->authService = new AuthService();
+        $this->authService = new AuthService;
     }
 
     /**
@@ -30,10 +30,10 @@ class AuthServiceTest extends TestCase
     private function insertUser(string $email, string $plainPassword, bool $isAdmin): void
     {
         DB::table('users')->insert([
-            'name'       => 'Test User',
-            'email'      => $email,
-            'password'   => bcrypt($plainPassword),
-            'is_admin'   => $isAdmin,
+            'name' => 'Test User',
+            'email' => $email,
+            'password' => bcrypt($plainPassword),
+            'is_admin' => $isAdmin,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

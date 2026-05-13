@@ -7,8 +7,8 @@ use App\Http\Requests\UpdatePropertyRequest;
 use App\Models\Property;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * Controller responsible for property management.
@@ -27,8 +27,8 @@ class PropertyController extends Controller
     /**
      * Display a specific property.
      *
-     * @param int $id Property ID
-     * @return \Illuminate\View\View
+     * @param  int  $id  Property ID
+     * @return View
      */
     public function show($id)
     {
@@ -46,7 +46,7 @@ class PropertyController extends Controller
     /**
      * Show the property creation form.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create()
     {
@@ -56,8 +56,8 @@ class PropertyController extends Controller
     /**
      * Store a new property.
      *
-     * @param StorePropertyRequest $request Property data
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  StorePropertyRequest  $request  Property data
+     * @return RedirectResponse
      */
     public function store(StorePropertyRequest $request)
     {
@@ -73,8 +73,8 @@ class PropertyController extends Controller
     /**
      * Show the property edit form.
      *
-     * @param int $id Property ID
-     * @return \Illuminate\View\View
+     * @param  int  $id  Property ID
+     * @return View
      */
     public function edit($id)
     {
@@ -89,9 +89,9 @@ class PropertyController extends Controller
     /**
      * Update an existing property.
      *
-     * @param UpdatePropertyRequest $request Updated property data
-     * @param int $id Property ID
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  UpdatePropertyRequest  $request  Updated property data
+     * @param  int  $id  Property ID
+     * @return RedirectResponse
      */
     public function update(UpdatePropertyRequest $request, $id)
     {
@@ -112,8 +112,8 @@ class PropertyController extends Controller
     /**
      * Delete a property.
      *
-     * @param int $id Property ID
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  int  $id  Property ID
+     * @return RedirectResponse
      */
     public function destroy($id)
     {

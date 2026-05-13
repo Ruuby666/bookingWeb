@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminLoginRequest;
 use App\Http\Requests\UpdateReservationTimeRequest;
-use App\Models\Reservation;
 use App\Models\Property;
+use App\Models\Reservation;
 use App\Services\AuthService;
 use App\Services\ExportService;
 use App\Services\ReservationService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Controller responsible for admin operations.
@@ -28,8 +33,7 @@ class AdminController extends Controller
     /**
      * Handle admin login.
      *
-     * @param AdminLoginRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function loginFunction(AdminLoginRequest $request)
     {
@@ -48,7 +52,7 @@ class AdminController extends Controller
     /**
      * Log out the authenticated admin.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function logoutFunction()
     {
@@ -60,7 +64,7 @@ class AdminController extends Controller
     /**
      * Display properties owned by the authenticated user.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function properties()
     {
@@ -72,7 +76,7 @@ class AdminController extends Controller
     /**
      * Display confirmed and pending reservations.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function pending()
     {
@@ -85,14 +89,14 @@ class AdminController extends Controller
     /**
      * Confirm a reservation.
      *
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  int  $id
+     * @return RedirectResponse
      */
     public function updateStatus($id)
     {
         $reservation = Reservation::with(['user', 'property'])
             ->where('id', $id)
-            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
+            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
             ->firstOrFail();
 
         $result = $this->reservationService->confirmReservation($reservation);
@@ -105,8 +109,7 @@ class AdminController extends Controller
     /**
      * Show the suggestion email page.
      *
-     * @param Reservation $reservation
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function suggestionEmail(Reservation $reservation)
     {
@@ -120,7 +123,7 @@ class AdminController extends Controller
     /**
      * Display the reservation calendar.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function calendar()
     {
@@ -132,24 +135,23 @@ class AdminController extends Controller
     /**
      * Return confirmed reservations as JSON.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getConfirmedReservations(\Illuminate\Http\Request $request)
+    public function getConfirmedReservations(Request $request)
     {
         $propiedad = $request->query('propiedad');
 
         $reservations = $this->reservationService
             ->getConfirmedReservationsForOwner($propiedad);
 
-        $events = $reservations->map(fn($r) => [
-            'id'       => $r->id,
-            'title'    => $r->user->name . ' in ' . $r->property->title,
-            'note'     => $r->notes,
-            'user'     => $r->user,
+        $events = $reservations->map(fn ($r) => [
+            'id' => $r->id,
+            'title' => $r->user->name.' in '.$r->property->title,
+            'note' => $r->notes,
+            'user' => $r->user,
             'property' => $r->property->title,
-            'start'    => $r->check_in,
-            'end'      => $r->check_out,
+            'start' => $r->check_in,
+            'end' => $r->check_out,
         ]);
 
         return response()->json($events);
@@ -158,13 +160,12 @@ class AdminController extends Controller
     /**
      * Update reservation times.
      *
-     * @param UpdateReservationTimeRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function updateTime(UpdateReservationTimeRequest $request)
     {
         $reservation = Reservation::where('id', $request->validated('event_id'))
-            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
+            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
             ->firstOrFail();
 
         $result = $this->reservationService->updateReservationTime(
@@ -181,7 +182,7 @@ class AdminController extends Controller
     /**
      * Download reservations Excel file.
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
     public function exportExcel()
     {
@@ -191,10 +192,9 @@ class AdminController extends Controller
     /**
      * Download invoices Excel file.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
-    public function exportfacturaExcel(\Illuminate\Http\Request $request)
+    public function exportfacturaExcel(Request $request)
     {
         return $this->exportService->downloadInvoicesExcel(
             $request->input('ids'),

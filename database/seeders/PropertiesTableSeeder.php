@@ -143,7 +143,7 @@ class PropertiesTableSeeder extends Seeder
                 ]);
             }
         } else {
-            echo "Error al decodificar el JSON de propiedades.";
+            echo 'Error al decodificar el JSON de propiedades.';
         }
     }
 }

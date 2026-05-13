@@ -15,8 +15,8 @@ class IndexControllerTest extends TestCase
     public function homepage_is_accessible_to_guests(): void
     {
         $this->get(route('index'))
-             ->assertOk()
-             ->assertViewIs('index');
+            ->assertOk()
+            ->assertViewIs('index');
     }
 
     /** @test */
@@ -26,21 +26,20 @@ class IndexControllerTest extends TestCase
         Property::factory()->count(3)->create(['owner_id' => $owner->id]);
 
         $this->get(route('index'))
-             ->assertOk()
-             ->assertViewHas('properties', function ($properties) {
-                 return $properties->count() === 3;
-             });
+            ->assertOk()
+            ->assertViewHas('properties', function ($properties) {
+                return $properties->count() === 3;
+            });
     }
 
     /** @test */
     public function homepage_works_with_no_properties(): void
     {
         $this->get(route('index'))
-             ->assertOk()
-             ->assertViewHas('properties');
+            ->assertOk()
+            ->assertViewHas('properties');
     }
 }
-
 
 class IsAdminMiddlewareTest extends TestCase
 {
@@ -51,7 +50,7 @@ class IsAdminMiddlewareTest extends TestCase
     {
         // IsAdmin middleware redirects to '/' not '/login'
         $this->get(route('admin.properties'))
-             ->assertRedirect('/');
+            ->assertRedirect('/');
     }
 
     /** @test */
@@ -61,8 +60,8 @@ class IsAdminMiddlewareTest extends TestCase
         $user = User::factory()->create(['is_admin' => false]);
 
         $this->actingAs($user)
-             ->get(route('admin.properties'))
-             ->assertRedirect('/');
+            ->get(route('admin.properties'))
+            ->assertRedirect('/');
     }
 
     /** @test */
@@ -71,14 +70,14 @@ class IsAdminMiddlewareTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
 
         $this->actingAs($admin)
-             ->get(route('admin.properties'))
-             ->assertOk();
+            ->get(route('admin.properties'))
+            ->assertOk();
     }
 
     /** @test */
     public function login_page_is_accessible_to_guests(): void
     {
         $this->get(route('login'))
-             ->assertOk();
+            ->assertOk();
     }
 }

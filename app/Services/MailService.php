@@ -12,8 +12,7 @@ class MailService
     /**
      * Send a new-booking notification to the site owner.
      *
-     * @param  array $data  Booking data (name, email, checkIn, checkOut, property, …)
-     * @return void
+     * @param  array  $data  Booking data (name, email, checkIn, checkOut, property, …)
      */
     public function sendBookingNotification(array $data): void
     {
@@ -23,10 +22,6 @@ class MailService
 
     /**
      * Send a custom suggestion/note to the guest linked to a reservation.
-     *
-     * @param  Reservation $reservation
-     * @param  string      $note
-     * @return void
      */
     public function sendSuggestionToGuest(Reservation $reservation, string $note): void
     {

@@ -17,7 +17,7 @@ class UserServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->userService = new UserService();
+        $this->userService = new UserService;
     }
 
     /** @test */
@@ -46,7 +46,7 @@ class UserServiceTest extends TestCase
         $user = User::factory()->create(['name' => 'Old Name', 'email' => 'old@example.com']);
 
         $updated = $this->userService->updateUser($user->id, [
-            'name'  => 'New Name',
+            'name' => 'New Name',
             'email' => 'new@example.com',
         ]);
 
@@ -65,8 +65,8 @@ class UserServiceTest extends TestCase
         $user = User::factory()->create();
 
         $this->userService->updateUser($user->id, [
-            'name'     => $user->name,
-            'email'    => $user->email,
+            'name' => $user->name,
+            'email' => $user->email,
             'password' => 'NewPassword1',
         ]);
 
@@ -81,12 +81,12 @@ class UserServiceTest extends TestCase
     /** @test */
     public function it_does_not_change_password_when_empty_string_provided(): void
     {
-        $user    = User::factory()->create();
+        $user = User::factory()->create();
         $oldHash = $user->password;
 
         $this->userService->updateUser($user->id, [
-            'name'     => $user->name,
-            'email'    => $user->email,
+            'name' => $user->name,
+            'email' => $user->email,
             'password' => '',
         ]);
 

@@ -8,6 +8,7 @@ use App\Models\Property;
 use App\Models\Reservation;
 use App\Services\BookingRequestService;
 use App\Services\MailService;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Controller responsible for email and booking request operations.
@@ -25,8 +26,8 @@ class MailController extends Controller
     /**
      * Process a booking request and send confirmation email.
      *
-     * @param BookingRequest $request Booking request data
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  BookingRequest  $request  Booking request data
+     * @return RedirectResponse
      */
     public function sendEmail(BookingRequest $request)
     {
@@ -52,9 +53,9 @@ class MailController extends Controller
     /**
      * Send a reservation suggestion to the guest.
      *
-     * @param SendSuggestionRequest $request Suggestion data
-     * @param int $id Reservation ID
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  SendSuggestionRequest  $request  Suggestion data
+     * @param  int  $id  Reservation ID
+     * @return RedirectResponse
      */
     public function sendSuggestion(SendSuggestionRequest $request, $id)
     {

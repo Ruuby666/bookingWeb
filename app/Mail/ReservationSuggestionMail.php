@@ -13,6 +13,7 @@ class ReservationSuggestionMail extends Mailable
     use SerializesModels;
 
     public $reservation;
+
     public $note;
 
     public function __construct(Reservation $reservation, string $note)
@@ -23,7 +24,7 @@ class ReservationSuggestionMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Sugerencia sobre tu reserva en ' . $this->reservation->property->title)
-                    ->view('emails.reservation-suggestion');
+        return $this->subject('Sugerencia sobre tu reserva en '.$this->reservation->property->title)
+            ->view('emails.reservation-suggestion');
     }
 }

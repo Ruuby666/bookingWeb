@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('bathrooms');
             $table->integer('min_nights');
             $table->string('images_div');
-            $table->string('tv') -> nullable();
-            $table->boolean('entertainment') -> nullable();
+            $table->string('tv')->nullable();
+            $table->boolean('entertainment')->nullable();
             $table->boolean('parking');
             $table->boolean('pool');
             $table->boolean('garden');
@@ -33,6 +33,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('properties');

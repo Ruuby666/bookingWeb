@@ -21,9 +21,8 @@ class BookingRequestService
      *  4. Create the pending reservation
      *  5. Send booking notification email
      *
-     * @param  Property $property
-     * @param  array    $data  Keys: adults, children, guests, name, number, email,
-     *                         message, daterange, total_price
+     * @param  array  $data  Keys: adults, children, guests, name, number, email,
+     *                       message, daterange, total_price
      * @return array{success: bool, error?: string, checkIn?: Carbon, checkOut?: Carbon}
      */
     public function process(Property $property, array $data): array
@@ -32,11 +31,11 @@ class BookingRequestService
         $dates = explode(' - ', $data['daterange']);
 
         try {
-            $checkIn  = Carbon::createFromFormat(
+            $checkIn = Carbon::createFromFormat(
                 'd/m/Y H:i',
-                trim($dates[0]) . ' ' . $this->resolveCheckInHour($property)
+                trim($dates[0]).' '.$this->resolveCheckInHour($property)
             );
-            $checkOut = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
+            $checkOut = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]).' 11:00');
         } catch (\Exception) {
             return ['success' => false, 'error' => 'Formato de fecha inválido.'];
         }
@@ -47,7 +46,7 @@ class BookingRequestService
         if ($nights < $property->min_nights) {
             return [
                 'success' => false,
-                'error'   => "This property requires a minimum of {$property->min_nights} nights. You selected {$nights} nights.",
+                'error' => "This property requires a minimum of {$property->min_nights} nights. You selected {$nights} nights.",
             ];
         }
 
@@ -61,10 +60,10 @@ class BookingRequestService
         if ($conflict) {
             return [
                 'success' => false,
-                'error'   => 'Select other date range, there is a reservation already from '
-                    . $conflict->check_in->format('d/m/Y H:i')
-                    . ' to '
-                    . $conflict->check_out->format('d/m/Y H:i'),
+                'error' => 'Select other date range, there is a reservation already from '
+                    .$conflict->check_in->format('d/m/Y H:i')
+                    .' to '
+                    .$conflict->check_out->format('d/m/Y H:i'),
             ];
         }
 
@@ -77,10 +76,9 @@ class BookingRequestService
 
         // --- 5. Create reservation ---
         $bookingData = array_merge($data, [
-            'checkIn'  => $checkIn,
+            'checkIn' => $checkIn,
             'checkOut' => $checkOut,
         ]);
-
 
         $this->reservationService->createReservation($property, $bookingData, $user);
 

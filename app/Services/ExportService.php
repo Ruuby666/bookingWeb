@@ -18,8 +18,6 @@ class ExportService
      * Generate a ZIP file containing two Excel exports:
      * - Confirmed reservations
      * - Staff view reservations
-     *
-     * @return BinaryFileResponse
      */
     public function downloadReservationsZip(): BinaryFileResponse
     {
@@ -31,10 +29,10 @@ class ExportService
             ->getFile()
             ->getPathname();
 
-        $date    = Carbon::now()->format('d_m_Y');
-        $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_') . '.zip';
+        $date = Carbon::now()->format('d_m_Y');
+        $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_').'.zip';
 
-        $zip = new \ZipArchive();
+        $zip = new \ZipArchive;
         $zip->open($zipFile, \ZipArchive::CREATE);
         $zip->addFile($file1, "Reservas_{$date}.xlsx");
         $zip->addFile($file2, "Reservas_stuff_{$date}.xlsx");
@@ -48,16 +46,15 @@ class ExportService
     /**
      * Mark reservations as invoiced and generate an Excel invoice file.
      *
-     * @param array $ids List of reservation IDs
-     * @param float|null $invoiceAmount Optional invoice amount
-     * @return BinaryFileResponse
+     * @param  array  $ids  List of reservation IDs
+     * @param  float|null  $invoiceAmount  Optional invoice amount
      */
     public function downloadInvoicesExcel(array $ids, ?float $invoiceAmount): BinaryFileResponse
     {
         $response = FacturasExport::download($ids, $invoiceAmount);
 
         Reservation::whereIn('id', $ids)->update([
-            'invoice' => true
+            'invoice' => true,
         ]);
 
         return $response;

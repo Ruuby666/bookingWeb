@@ -7,8 +7,11 @@ use App\Models\Property;
 use App\Models\ReservationPrice;
 use App\Services\ReservationPriceService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Controller responsible for reservation price management.
@@ -25,7 +28,7 @@ class ReservationPriceController extends Controller
     /**
      * Display reservation price ranges for the authenticated owner.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function index()
     {
@@ -42,8 +45,7 @@ class ReservationPriceController extends Controller
     /**
      * Return the price breakdown for a reservation date range.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getPriceRange(Request $request)
     {
@@ -67,8 +69,7 @@ class ReservationPriceController extends Controller
     /**
      * Create a new reservation price range.
      *
-     * @param StoreReservationPriceRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function create(StoreReservationPriceRequest $request)
     {
@@ -87,8 +88,8 @@ class ReservationPriceController extends Controller
     /**
      * Delete a reservation price range.
      *
-     * @param int $id Price range ID
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  int  $id  Price range ID
+     * @return RedirectResponse
      */
     public function destroy($id)
     {

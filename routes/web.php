@@ -1,18 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PropertyController;
-use App\Http\Controllers\MailController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReservationPriceController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
-use App\Http\Controllers\ReservationPriceController;
-use App\Models\Reservation;
 use App\Models\Property;
-
-
+use App\Models\Reservation;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
 
@@ -28,7 +26,7 @@ Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.ema
 
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
 
-Route::middleware([IsAdmin::class])->group(function () {
+Route::middleware([IsAdmin::class])->group(function (): void {
     Route::post('/admin/logout', [AdminController::class, 'logoutFunction'])->name('admin.logout');
 
     Route::get('/admin/properties', [AdminController::class, 'properties'])->name('admin.properties');
@@ -53,7 +51,7 @@ Route::middleware([IsAdmin::class])->group(function () {
 
     Route::post('/reservations/{id}/send-suggestion', [MailController::class, 'sendSuggestion'])->name('reservations.sendSuggestion');
 
-    Route::get('/admin/calendar',  [AdminController::class, 'calendar'])->name('admin.calendar');
+    Route::get('/admin/calendar', [AdminController::class, 'calendar'])->name('admin.calendar');
 
     Route::get('/admin/calendar/reservations', [AdminController::class, 'getConfirmedReservations'])->name('admin.calendar.reservations');
 
@@ -94,4 +92,3 @@ Route::get('/api/images', function () {
 // Resource routes
 Route::resource('users', UserController::class);
 Route::resource('properties', PropertyController::class)->only(['index', 'show']);
-

@@ -19,16 +19,17 @@ class ReservationPriceServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ReservationPriceService();
+        $this->service = new ReservationPriceService;
     }
 
     private function makeOwnerAndProperty(array $propertyOverrides = []): array
     {
-        $owner    = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(array_merge(
             ['owner_id' => $owner->id, 'price_per_night' => 100.00],
             $propertyOverrides
         ));
+
         return [$owner, $property];
     }
 
@@ -59,9 +60,9 @@ class ReservationPriceServiceTest extends TestCase
         [, $property] = $this->makeOwnerAndProperty(['price_per_night' => 100.00]);
 
         ReservationPrice::create([
-            'property_id'     => $property->id,
-            'start_date'      => Carbon::parse('2026-06-02'),
-            'end_date'        => Carbon::parse('2026-06-03')->endOfDay(),
+            'property_id' => $property->id,
+            'start_date' => Carbon::parse('2026-06-02'),
+            'end_date' => Carbon::parse('2026-06-03')->endOfDay(),
             'price_per_night' => 200.00,
         ]);
 
@@ -95,7 +96,7 @@ class ReservationPriceServiceTest extends TestCase
 
         $this->assertTrue($result['success']);
         $this->assertDatabaseHas('reservation_prices', [
-            'property_id'     => $property->id,
+            'property_id' => $property->id,
             'price_per_night' => 150.00,
         ]);
     }
@@ -107,9 +108,9 @@ class ReservationPriceServiceTest extends TestCase
         $this->actingAs($owner);
 
         ReservationPrice::create([
-            'property_id'     => $property->id,
-            'start_date'      => Carbon::parse('2026-07-05'),
-            'end_date'        => Carbon::parse('2026-07-15')->endOfDay(),
+            'property_id' => $property->id,
+            'start_date' => Carbon::parse('2026-07-05'),
+            'end_date' => Carbon::parse('2026-07-15')->endOfDay(),
             'price_per_night' => 120.00,
         ]);
 
@@ -128,7 +129,7 @@ class ReservationPriceServiceTest extends TestCase
     public function it_returns_unauthorized_error_when_property_does_not_belong_to_user(): void
     {
         [, $property] = $this->makeOwnerAndProperty();
-        $otherUser    = User::factory()->create(['is_admin' => true]);
+        $otherUser = User::factory()->create(['is_admin' => true]);
         $this->actingAs($otherUser);
 
         $result = $this->service->createPriceRange(
@@ -153,9 +154,9 @@ class ReservationPriceServiceTest extends TestCase
         $this->actingAs($owner);
 
         $price = ReservationPrice::create([
-            'property_id'     => $property->id,
-            'start_date'      => Carbon::parse('2026-08-01'),
-            'end_date'        => Carbon::parse('2026-08-10')->endOfDay(),
+            'property_id' => $property->id,
+            'start_date' => Carbon::parse('2026-08-01'),
+            'end_date' => Carbon::parse('2026-08-10')->endOfDay(),
             'price_per_night' => 130.00,
         ]);
 
@@ -169,13 +170,13 @@ class ReservationPriceServiceTest extends TestCase
     public function it_returns_error_when_deleting_a_price_range_not_owned_by_user(): void
     {
         [, $property] = $this->makeOwnerAndProperty();
-        $otherUser    = User::factory()->create(['is_admin' => true]);
+        $otherUser = User::factory()->create(['is_admin' => true]);
         $this->actingAs($otherUser);
 
         $price = ReservationPrice::create([
-            'property_id'     => $property->id,
-            'start_date'      => Carbon::parse('2026-08-01'),
-            'end_date'        => Carbon::parse('2026-08-10')->endOfDay(),
+            'property_id' => $property->id,
+            'start_date' => Carbon::parse('2026-08-01'),
+            'end_date' => Carbon::parse('2026-08-10')->endOfDay(),
             'price_per_night' => 130.00,
         ]);
 

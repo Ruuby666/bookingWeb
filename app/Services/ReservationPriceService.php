@@ -15,9 +15,8 @@ class ReservationPriceService
      * Each night is evaluated against custom price ranges, falling back to
      * the property's default price if no override exists.
      *
-     * @param int $propertyId
-     * @param Carbon $startDate Check-in date (inclusive)
-     * @param Carbon $endDate Check-out date (exclusive)
+     * @param  Carbon  $startDate  Check-in date (inclusive)
+     * @param  Carbon  $endDate  Check-out date (exclusive)
      * @return array<int, array{date: string, price: float}>
      */
     public function getPriceBreakdown(int $propertyId, Carbon $startDate, Carbon $endDate): array
@@ -36,7 +35,7 @@ class ReservationPriceService
                 ->value('price_per_night');
 
             $nights[] = [
-                'date'  => $current->toDateString(),
+                'date' => $current->toDateString(),
                 'price' => $price ?? $defaultPrice,
             ];
 
@@ -51,10 +50,6 @@ class ReservationPriceService
      *
      * Validates ownership and prevents overlapping date ranges.
      *
-     * @param int $propertyId
-     * @param Carbon $startDate
-     * @param Carbon $endDate
-     * @param float $pricePerNight
      * @return array{success: bool, error?: string, model?: ReservationPrice}
      */
     public function createPriceRange(
@@ -72,13 +67,13 @@ class ReservationPriceService
         }
 
         $overlap = ReservationPrice::where('property_id', $propertyId)
-            ->where(function ($query) use ($startDate, $endDate) {
+            ->where(function ($query) use ($startDate, $endDate): void {
                 $query
                     ->whereBetween('start_date', [$startDate, $endDate])
                     ->orWhereBetween('end_date', [$startDate, $endDate])
-                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                    ->orWhere(function ($q) use ($startDate, $endDate): void {
                         $q->where('start_date', '<=', $startDate)
-                          ->where('end_date', '>=', $endDate);
+                            ->where('end_date', '>=', $endDate);
                     });
             })
             ->exists();
@@ -91,9 +86,9 @@ class ReservationPriceService
         }
 
         $model = ReservationPrice::create([
-            'property_id'     => $propertyId,
-            'start_date'      => $startDate->startOfDay(),
-            'end_date'        => $endDate->endOfDay(),
+            'property_id' => $propertyId,
+            'start_date' => $startDate->startOfDay(),
+            'end_date' => $endDate->endOfDay(),
             'price_per_night' => $pricePerNight,
         ]);
 
@@ -103,7 +98,6 @@ class ReservationPriceService
     /**
      * Delete a price range if it belongs to the authenticated owner.
      *
-     * @param int $id
      * @return array{success: bool, error?: string}
      */
     public function deletePriceRange(int $id): array
