@@ -8,7 +8,7 @@ class SendSuggestionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Controller verifies property ownership
+        return true; 
     }
 
     public function rules(): array

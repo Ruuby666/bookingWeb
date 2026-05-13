@@ -9,7 +9,6 @@ class StorePropertyRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Delegates fine-grained authorization to PropertyPolicy via controller
         return Auth::check();
     }
 

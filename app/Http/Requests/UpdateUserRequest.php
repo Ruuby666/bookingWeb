@@ -9,7 +9,6 @@ class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Users can only update their own profile
         return (int) $this->route('id') === Auth::id();
     }
 

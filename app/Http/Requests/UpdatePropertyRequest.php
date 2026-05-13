@@ -11,7 +11,6 @@ class UpdatePropertyRequest extends FormRequest
     public function authorize(): bool
     {
         $property = Property::find($this->route('property'));
-        // Only the owner can update their property
         return $property && $property->owner_id === Auth::id();
     }
 
