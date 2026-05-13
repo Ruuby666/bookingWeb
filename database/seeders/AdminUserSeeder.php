@@ -15,12 +15,11 @@ class AdminUserSeeder extends Seeder
      */
     public function run()
     {
-        $env = parse_ini_file('.env');
         User::create([
             'name' => 'Admin',
-            'email' => $env["ADMIN_EMAIL"],
+            'email' => env('ADMIN_EMAIL'),
             'phone_number' => '1234567890',
-            'password' => $env["ADMIN_PASSWORD"],
+            'password' => env('ADMIN_PASSWORD'),
             'is_admin' => true,
         ]);
 
