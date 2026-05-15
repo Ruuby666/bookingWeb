@@ -3,15 +3,17 @@
 namespace App\Services;
 
 use App\Models\Property;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyService
 {
     /**
      * Get all properties with a representative image for each one.
      *
-     * @return array{properties: \Illuminate\Database\Eloquent\Collection, propertyWithImages: array<int, string>}
+     * @return array{properties: Collection, propertyWithImages: array<int, string>}
      */
     public function getAllWithFirstImage(): array
     {
@@ -19,17 +21,10 @@ class PropertyService
         $propertyWithImages = [];
 
         foreach ($properties as $property) {
-            $imageFolder = public_path('images/' . $property->images_div);
-            $nameImage = 'default.jpg';
-
-            if (File::exists($imageFolder)) {
-                $files = File::files($imageFolder);
-                if (!empty($files)) {
-                    $nameImage = basename($files[0]);
-                }
-            }
-
-            $propertyWithImages[$property->id] = $nameImage;
+            $files = Storage::disk('public')->files('images/' . $property->images_div);
+            $propertyWithImages[$property->id] = ! empty($files)
+                ? basename($files[0])
+                : 'default.jpg';
         }
 
         return compact('properties', 'propertyWithImages');
@@ -39,53 +34,93 @@ class PropertyService
      * Get images for a specific property.
      * Returns the main image and the rest of the gallery images.
      *
-     * @param Property $property
      * @return array{mainImage: string|null, imagesWithoutFirst: array<int, string>}
      */
     public function getImagesForProperty(Property $property): array
     {
-        $imageFolder = public_path('images/' . $property->images_div);
+        $files = Storage::disk('public')->files('images/' . $property->images_div);
 
-        if (!File::exists($imageFolder)) {
+        if (empty($files)) {
             return [
-                'mainImage' => null,
-                'imagesWithoutFirst' => []
+                'mainImage'          => null,
+                'imagesWithoutFirst' => [],
             ];
         }
 
-        $images = array_map('basename', File::files($imageFolder));
+        $images = array_map('basename', $files);
 
         return [
-            'mainImage' => $images[0] ?? null,
+            'mainImage'          => $images[0],
             'imagesWithoutFirst' => array_slice($images, 1),
         ];
     }
 
     /**
      * Create a new property for the authenticated user.
+     * The image folder is generated automatically from the property title.
      *
-     * @param array $data Validated property data
-     * @return Property
+     * @param  array  $data  Validated property data
      */
     public function createProperty(array $data): Property
     {
-        $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
-        $data['owner_id'] = Auth::id();
+        // La carpeta se genera a partir del título de la propiedad
+        $folder = $this->generateFolderName($data['title']);
+
+        // Sube las imágenes si se han proporcionado
+        if (! empty($data['images'])) {
+            $this->uploadImages($data['images'], $folder);
+        }
+
+        $data['bedrooms']   = $this->parseBedroomsToJson($data['bedrooms']);
+        $data['owner_id']   = Auth::id();
+        $data['images_div'] = $folder;
+
+        unset($data['images']);
+
         return Property::create($data);
     }
 
     /**
      * Update an existing property.
+     * If new images are provided, they are added to the existing folder.
      *
-     * @param Property $property
-     * @param array $data Validated property data
-     * @return Property
+     * @param  array  $data  Validated property data
      */
     public function updateProperty(Property $property, array $data): Property
     {
+        // Solo sube nuevas imágenes si se han proporcionado
+        if (! empty($data['images'])) {
+            $this->uploadImages($data['images'], $property->images_div);
+        }
+
         $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
+
+        unset($data['images']);
+
         $property->update($data);
+
         return $property->fresh();
+    }
+
+    /**
+     * Sube un array de archivos a la carpeta de la propiedad en Storage.
+     *
+     * @param  \Illuminate\Http\UploadedFile[]  $images
+     */
+    private function uploadImages(array $images, string $folder): void
+    {
+        foreach ($images as $image) {
+            $image->store('images/' . $folder, 'public');
+        }
+    }
+
+    /**
+     * Genera un nombre de carpeta válido a partir del título de la propiedad.
+     * Ejemplo: "Casa del Sol" => "casa_del_sol"
+     */
+    private function generateFolderName(string $title): string
+    {
+        return strtolower(str_replace(' ', '_', trim($title)));
     }
 
     /**
@@ -94,7 +129,6 @@ class PropertyService
      * Example:
      * "King, Twin, Double" => {"1":"King","2":"Twin","3":"Double"}
      *
-     * @param string $bedrooms
      * @return string JSON encoded string
      */
     private function parseBedroomsToJson(string $bedrooms): string

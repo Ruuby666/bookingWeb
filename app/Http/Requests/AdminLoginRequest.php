@@ -14,7 +14,7 @@ class AdminLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'    => ['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => [
                 'required',
                 'string',
@@ -29,11 +29,11 @@ class AdminLoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required'    => 'El correo electrónico es obligatorio.',
-            'email.email'       => 'Debe ser un correo electrónico válido.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Debe ser un correo electrónico válido.',
             'password.required' => 'La contraseña es obligatoria.',
-            'password.min'      => 'La contraseña debe tener al menos 8 caracteres.',
-            'password.regex'    => 'La contraseña debe contener mayúsculas, minúsculas y números.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.regex' => 'La contraseña debe contener mayúsculas, minúsculas y números.',
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Controller responsible for reservation data.
@@ -12,8 +13,8 @@ class ReservationController extends Controller
     /**
      * Return confirmed reservations for a property as JSON.
      *
-     * @param int $propertyId Property ID
-     * @return \Illuminate\Http\JsonResponse
+     * @param  int  $propertyId  Property ID
+     * @return JsonResponse
      */
     public function data($propertyId)
     {

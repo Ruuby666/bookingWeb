@@ -21,40 +21,40 @@ class ReservationControllerTest extends TestCase
     /** @test */
     public function it_returns_confirmed_reservations_as_json_for_a_property(): void
     {
-        $owner    = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $guest    = User::factory()->create();
+        $guest = User::factory()->create();
 
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id'     => $guest->id,
-            'status'      => 'confirmed',
-            'check_in'    => Carbon::parse('2026-06-01'),
-            'check_out'   => Carbon::parse('2026-06-07'),
+            'user_id' => $guest->id,
+            'status' => 'confirmed',
+            'check_in' => Carbon::parse('2026-06-01'),
+            'check_out' => Carbon::parse('2026-06-07'),
         ]);
 
         // Pending reservation – should NOT appear
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id'     => $guest->id,
-            'status'      => 'pending',
+            'user_id' => $guest->id,
+            'status' => 'pending',
         ]);
 
         $this->getJson(route('property.reservations.data', $property->id))
-             ->assertOk()
-             ->assertJsonCount(1)
-             ->assertJsonFragment(['property_id' => $property->id]);
+            ->assertOk()
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['property_id' => $property->id]);
     }
 
     /** @test */
     public function it_returns_empty_array_when_no_confirmed_reservations_exist(): void
     {
-        $owner    = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
 
         $this->getJson(route('property.reservations.data', $property->id))
-             ->assertOk()
-             ->assertExactJson([]);
+            ->assertOk()
+            ->assertExactJson([]);
     }
 }
 
@@ -79,16 +79,16 @@ class ReservationPriceControllerTest extends TestCase
         $admin = $this->admin();
 
         $this->actingAs($admin)
-             ->get(route('admin.reservation_prices'))
-             ->assertOk()
-             ->assertViewIs('admin.reservation_price');
+            ->get(route('admin.reservation_prices'))
+            ->assertOk()
+            ->assertViewIs('admin.reservation_price');
     }
 
     /** @test */
     public function guest_is_redirected_from_reservation_prices_index(): void
     {
         $this->get(route('admin.reservation_prices'))
-             ->assertRedirect(route('login'));
+            ->assertRedirect(route('login'));
     }
 
     // -----------------------------------------------------------------------
@@ -98,21 +98,21 @@ class ReservationPriceControllerTest extends TestCase
     /** @test */
     public function admin_can_create_a_price_range(): void
     {
-        $admin    = $this->admin();
+        $admin = $this->admin();
         $property = Property::factory()->create(['owner_id' => $admin->id]);
 
         $this->actingAs($admin)
-             ->post(route('reservation-prices.create'), [
-                 'property_id'     => $property->id,
-                 'start_date'      => '2026-07-01',
-                 'end_date'        => '2026-07-15',
-                 'price_per_night' => 180.00,
-             ])
-             ->assertRedirect()
-             ->assertSessionHas('success');
+            ->post(route('reservation-prices.create'), [
+                'property_id' => $property->id,
+                'start_date' => '2026-07-01',
+                'end_date' => '2026-07-15',
+                'price_per_night' => 180.00,
+            ])
+            ->assertRedirect()
+            ->assertSessionHas('success');
 
         $this->assertDatabaseHas('reservation_prices', [
-            'property_id'     => $property->id,
+            'property_id' => $property->id,
             'price_per_night' => 180.00,
         ]);
     }
@@ -123,8 +123,8 @@ class ReservationPriceControllerTest extends TestCase
         $admin = $this->admin();
 
         $this->actingAs($admin)
-             ->post(route('reservation-prices.create'), [])
-             ->assertSessionHasErrors();
+            ->post(route('reservation-prices.create'), [])
+            ->assertSessionHasErrors();
     }
 
     // -----------------------------------------------------------------------
@@ -134,19 +134,19 @@ class ReservationPriceControllerTest extends TestCase
     /** @test */
     public function owner_can_delete_their_price_range(): void
     {
-        $admin    = $this->admin();
+        $admin = $this->admin();
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $price    = ReservationPrice::create([
-            'property_id'     => $property->id,
-            'start_date'      => Carbon::parse('2026-08-01'),
-            'end_date'        => Carbon::parse('2026-08-10')->endOfDay(),
+        $price = ReservationPrice::create([
+            'property_id' => $property->id,
+            'start_date' => Carbon::parse('2026-08-01'),
+            'end_date' => Carbon::parse('2026-08-10')->endOfDay(),
             'price_per_night' => 200.00,
         ]);
 
         $this->actingAs($admin)
-             ->delete(route('reservation-prices.destroy', $price->id))
-             ->assertRedirect()
-             ->assertSessionHas('success');
+            ->delete(route('reservation-prices.destroy', $price->id))
+            ->assertRedirect()
+            ->assertSessionHas('success');
 
         $this->assertDatabaseMissing('reservation_prices', ['id' => $price->id]);
     }
@@ -154,20 +154,20 @@ class ReservationPriceControllerTest extends TestCase
     /** @test */
     public function non_owner_cannot_delete_a_price_range(): void
     {
-        $owner     = $this->admin();
+        $owner = $this->admin();
         $otherUser = $this->admin();
-        $property  = Property::factory()->create(['owner_id' => $owner->id]);
-        $price     = ReservationPrice::create([
-            'property_id'     => $property->id,
-            'start_date'      => Carbon::parse('2026-08-01'),
-            'end_date'        => Carbon::parse('2026-08-10')->endOfDay(),
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+        $price = ReservationPrice::create([
+            'property_id' => $property->id,
+            'start_date' => Carbon::parse('2026-08-01'),
+            'end_date' => Carbon::parse('2026-08-10')->endOfDay(),
             'price_per_night' => 200.00,
         ]);
 
         $this->actingAs($otherUser)
-             ->delete(route('reservation-prices.destroy', $price->id))
-             ->assertRedirect()
-             ->assertSessionHas('error');
+            ->delete(route('reservation-prices.destroy', $price->id))
+            ->assertRedirect()
+            ->assertSessionHas('error');
 
         $this->assertDatabaseHas('reservation_prices', ['id' => $price->id]);
     }
@@ -179,19 +179,19 @@ class ReservationPriceControllerTest extends TestCase
     /** @test */
     public function it_returns_price_breakdown_for_a_date_range(): void
     {
-        $owner    = $this->admin();
+        $owner = $this->admin();
         $property = Property::factory()->create([
-            'owner_id'        => $owner->id,
+            'owner_id' => $owner->id,
             'price_per_night' => 100.00,
         ]);
 
-        $response = $this->getJson('/api/property-price-range?' . http_build_query([
+        $response = $this->getJson('/api/property-price-range?'.http_build_query([
             'property_id' => $property->id,
-            'start_date'  => '2026-06-01 00:00:00 GMT+0000',
-            'end_date'    => '2026-06-04 00:00:00 GMT+0000',
+            'start_date' => '2026-06-01 00:00:00 GMT+0000',
+            'end_date' => '2026-06-04 00:00:00 GMT+0000',
         ]));
 
         $response->assertOk()
-                 ->assertJsonCount(3); // 3 nights: June 1, 2, 3
+            ->assertJsonCount(3); // 3 nights: June 1, 2, 3
     }
 }

@@ -26,25 +26,25 @@ class MailControllerTest extends TestCase
     /** @test */
     public function guest_can_submit_a_valid_booking_request(): void
     {
-        $owner    = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create([
-            'owner_id'   => $owner->id,
+            'owner_id' => $owner->id,
             'min_nights' => 2,
-            'capacity'   => 6,
+            'capacity' => 6,
         ]);
 
         $response = $this->post(route('send.email'), [
-            'property_id'        => $property->id,
-            'name'               => 'Alice Smith',
-            'email'              => 'alice@example.com',
+            'property_id' => $property->id,
+            'name' => 'Alice Smith',
+            'email' => 'alice@example.com',
             'verification_email' => 'alice@example.com', // Required: must match email
-            'number'             => '600111222',
-            'adults'             => 2,
-            'children'           => 0,
-            'guests'             => 2,
-            'daterange'          => '01/07/2026 - 05/07/2026',
-            'total_price'        => 400.00,
-            'message'            => 'Looking forward to the stay!',
+            'number' => '600111222',
+            'adults' => 2,
+            'children' => 0,
+            'guests' => 2,
+            'daterange' => '01/07/2026 - 05/07/2026',
+            'total_price' => 400.00,
+            'message' => 'Looking forward to the stay!',
         ]);
 
         $response->assertRedirect();
@@ -55,26 +55,26 @@ class MailControllerTest extends TestCase
     /** @test */
     public function booking_fails_when_verification_email_does_not_match(): void
     {
-        $owner    = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id, 'capacity' => 4]);
 
         $this->post(route('send.email'), [
-            'property_id'        => $property->id,
-            'name'               => 'Bob',
-            'email'              => 'bob@example.com',
+            'property_id' => $property->id,
+            'name' => 'Bob',
+            'email' => 'bob@example.com',
             'verification_email' => 'different@example.com',
-            'number'             => '600111222',
-            'adults'             => 1,
-            'children'           => 0,
-            'daterange'          => '01/07/2026 - 05/07/2026',
-            'total_price'        => 200.00,
+            'number' => '600111222',
+            'adults' => 1,
+            'children' => 0,
+            'daterange' => '01/07/2026 - 05/07/2026',
+            'total_price' => 200.00,
         ])->assertSessionHasErrors('verification_email');
     }
 
     /** @test */
     public function booking_fails_when_required_fields_are_missing(): void
     {
-        $owner    = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
 
         $this->post(route('send.email'), [
@@ -86,34 +86,34 @@ class MailControllerTest extends TestCase
     /** @test */
     public function booking_fails_when_dates_overlap_confirmed_reservation(): void
     {
-        $owner    = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create([
-            'owner_id'   => $owner->id,
+            'owner_id' => $owner->id,
             'min_nights' => 1,
-            'capacity'   => 4,
+            'capacity' => 4,
         ]);
         $guest = User::factory()->create();
 
         // Existing confirmed reservation blocks the period
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id'     => $guest->id,
-            'status'      => 'confirmed',
-            'check_in'    => '2026-07-03 15:00:00',
-            'check_out'   => '2026-07-09 11:00:00',
+            'user_id' => $guest->id,
+            'status' => 'confirmed',
+            'check_in' => '2026-07-03 15:00:00',
+            'check_out' => '2026-07-09 11:00:00',
         ]);
 
         $response = $this->post(route('send.email'), [
-            'property_id'        => $property->id,
-            'name'               => 'Bob',
-            'email'              => 'bob@example.com',
+            'property_id' => $property->id,
+            'name' => 'Bob',
+            'email' => 'bob@example.com',
             'verification_email' => 'bob@example.com',
-            'number'             => '600999888',
-            'adults'             => 2,
-            'children'           => 0,
-            'guests'             => 2,
-            'daterange'          => '04/07/2026 - 07/07/2026',
-            'total_price'        => 300.00,
+            'number' => '600999888',
+            'adults' => 2,
+            'children' => 0,
+            'guests' => 2,
+            'daterange' => '04/07/2026 - 07/07/2026',
+            'total_price' => 300.00,
         ]);
 
         $response->assertRedirect();
@@ -127,38 +127,37 @@ class MailControllerTest extends TestCase
     /** @test */
     public function admin_can_send_a_suggestion_for_a_reservation(): void
     {
-        $admin    = User::factory()->create(['is_admin' => true]);
+        $admin = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest    = User::factory()->create();
+        $guest = User::factory()->create();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id'     => $guest->id,
-            'status'      => 'pending',
+            'user_id' => $guest->id,
+            'status' => 'pending',
         ]);
 
         $this->actingAs($admin)
-             ->post(route('reservations.sendSuggestion', $reservation->id), [
-                 'note' => 'We suggest moving to August instead.',
-             ])
-             ->assertRedirect(route('admin.reservations.pending'));
+            ->post(route('reservations.sendSuggestion', $reservation->id), [
+                'note' => 'We suggest moving to August instead.',
+            ])
+            ->assertRedirect(route('admin.reservations.pending'));
     }
 
     /** @test */
     public function suggestion_fails_when_note_is_missing(): void
     {
-        $admin    = User::factory()->create(['is_admin' => true]);
+        $admin = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest    = User::factory()->create();
+        $guest = User::factory()->create();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id'     => $guest->id,
+            'user_id' => $guest->id,
         ]);
 
         $this->actingAs($admin)
-             ->post(route('reservations.sendSuggestion', $reservation->id), [])
-             ->assertSessionHasErrors('note');
+            ->post(route('reservations.sendSuggestion', $reservation->id), [])
+            ->assertSessionHasErrors('note');
     }
 }
-

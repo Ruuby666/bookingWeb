@@ -33,7 +33,6 @@ class Property extends Model
         'lng',
     ];
 
-
     protected $casts = [
         'price_per_night' => 'decimal:2',
         'lat' => 'decimal:7',

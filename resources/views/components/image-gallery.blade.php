@@ -2,7 +2,7 @@
 <div class="image-gallery">
     <div class="main-image">
         <img
-            src="{{ asset('images/' . $property->images_div . '/' . $mainImage) }}"
+            src="{{ Storage::url('images/' . $property->images_div . '/' . $mainImage) }}"
             alt="Main Property Image"
             loading="lazy"
             onclick="galleryOpenPopup('{{ $mainImage }}', 0)"
@@ -12,7 +12,7 @@
         @foreach ($imagesWithoutFirst as $index => $image)
             <img
                 class="thumbnail"
-                src="{{ asset('images/' . $property->images_div . '/' . $image) }}"
+                src="{{ Storage::url('images/' . $property->images_div . '/' . $image) }}"
                 alt="Property Thumbnail"
                 loading="lazy"
                 onclick="galleryOpenPopup('{{ $image }}', {{ $index + 1 }})"
@@ -40,7 +40,7 @@
     let _currentIndex = 0;
 
     function _src(filename) {
-        return `/images/${_imagesDiv}/${filename}`;
+        return `/storage/images/${_imagesDiv}/${filename}`;
     }
 
     window.galleryOpenPopup = function (imageFilename, index) {

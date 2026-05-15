@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\PropertyService;
+use Illuminate\View\View;
 
 /**
  * Controller responsible for the homepage.
@@ -19,7 +20,7 @@ class IndexController extends Controller
     /**
      * Display the homepage with available properties.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function index()
     {

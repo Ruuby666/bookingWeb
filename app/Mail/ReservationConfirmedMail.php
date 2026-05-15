@@ -28,10 +28,10 @@ class ReservationConfirmedMail extends Mailable
     public function build()
     {
         return $this->subject('Confirmación de Reserva')
-                    ->view('emails.reservation-confirmed')
-                    ->attach(public_path('images/nameEMLBlack.png'), [
-                    'as' => 'nameEMLBlack.png',
-                    'mime' => 'image/png',
-                ]);
+            ->view('emails.reservation-confirmed')
+            ->attach(public_path('images/nameEMLBlack.png'), [
+                'as' => 'nameEMLBlack.png',
+                'mime' => 'image/png',
+            ]);
     }
 }

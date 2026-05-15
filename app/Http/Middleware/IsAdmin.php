@@ -14,8 +14,8 @@ class IsAdmin
     /**
      * Allow access only to authenticated admin users.
      *
-     * @param Request $request Current request instance
-     * @param Closure $next Next middleware action
+     * @param  Request  $request  Current request instance
+     * @param  Closure  $next  Next middleware action
      * @return mixed
      */
     public function handle(Request $request, Closure $next)

@@ -15,9 +15,9 @@ class StoreReservationPriceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'property_id'    => ['required', 'exists:properties,id'],
-            'start_date'     => ['required', 'date'],
-            'end_date'       => ['required', 'date', 'after:start_date'],
+            'property_id' => ['required', 'exists:properties,id'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after:start_date'],
             'price_per_night' => ['required', 'numeric', 'min:0'],
         ];
     }

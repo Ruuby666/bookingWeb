@@ -14,8 +14,8 @@ class AuthService
     /**
      * Attempt to log in a user and verify admin privileges.
      *
-     * @param string $email User email
-     * @param string $password User password
+     * @param  string  $email  User email
+     * @param  string  $password  User password
      * @return array{success: bool, error?: string}
      */
     public function attemptAdminLogin(string $email, string $password): array
@@ -25,14 +25,14 @@ class AuthService
         if (! $user || ! Hash::check($password, $user->password)) {
             return [
                 'success' => false,
-                'error' => 'Email or password is incorrect.'
+                'error' => 'Email or password is incorrect.',
             ];
         }
 
         if (! $user->isAdmin()) {
             return [
                 'success' => false,
-                'error' => 'You are not authorized to access this page.'
+                'error' => 'You are not authorized to access this page.',
             ];
         }
 
@@ -43,8 +43,6 @@ class AuthService
 
     /**
      * Log out the authenticated admin user.
-     *
-     * @return void
      */
     public function logoutAdmin(): void
     {

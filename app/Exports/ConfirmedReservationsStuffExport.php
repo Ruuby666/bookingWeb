@@ -2,12 +2,11 @@
 
 namespace App\Exports;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Font;
-use Illuminate\Support\Facades\Response;
 use App\Models\Reservation;
+use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ConfirmedReservationsStuffExport
 {
@@ -19,7 +18,7 @@ class ConfirmedReservationsStuffExport
             ->get()
             ->groupBy(fn ($r) => $r->property->title);
 
-        $spreadsheet = new Spreadsheet();
+        $spreadsheet = new Spreadsheet;
         $sheetIndex = 0;
 
         foreach ($reservations as $propertyTitle => $propertyReservations) {
@@ -45,8 +44,8 @@ class ConfirmedReservationsStuffExport
             foreach ($propertyReservations as $reservation) {
                 $userName = $reservation->user->name ?? '';
 
-                $checkInDate = \Carbon\Carbon::parse($reservation->check_in);
-                $checkOutDate = \Carbon\Carbon::parse($reservation->check_out);
+                $checkInDate = Carbon::parse($reservation->check_in);
+                $checkOutDate = Carbon::parse($reservation->check_out);
 
                 $checkIn = $checkInDate->format('d.m.Y');
                 $checkOut = $checkOutDate->format('d.m.Y');
@@ -70,7 +69,7 @@ class ConfirmedReservationsStuffExport
 
                     // Solo si hay una reserva anterior
                     if ($prevReservation) {
-                        $prevCheckOut = \Carbon\Carbon::parse($prevReservation->check_out);
+                        $prevCheckOut = Carbon::parse($prevReservation->check_out);
                         if ($prevCheckOut->month === $checkInMonth) {
                             $prevName = $prevReservation->user->name ?? '';
                             $prevCheckOutFormatted = $prevCheckOut->format('d.m.Y');
@@ -113,7 +112,7 @@ class ConfirmedReservationsStuffExport
         }
 
         // Guardar archivo temporalmente
-        $filename = 'Reservas_actualizado_stuff' . date('d.m.Y') . '.xlsx';
+        $filename = 'Reservas_actualizado_stuff'.date('d.m.Y').'.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $filename);
         (new Xlsx($spreadsheet))->save($temp_file);
 

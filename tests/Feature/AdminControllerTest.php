@@ -34,10 +34,10 @@ class AdminControllerTest extends TestCase
     private function insertUser(string $email, string $plainPassword, bool $isAdmin): void
     {
         DB::table('users')->insert([
-            'name'       => 'Test User',
-            'email'      => $email,
-            'password'   => bcrypt($plainPassword),
-            'is_admin'   => $isAdmin,
+            'name' => 'Test User',
+            'email' => $email,
+            'password' => bcrypt($plainPassword),
+            'is_admin' => $isAdmin,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -54,7 +54,7 @@ class AdminControllerTest extends TestCase
         $this->insertUser('admin@test.com', 'Secret1A', true);
 
         $response = $this->post(route('admin.login.submit'), [
-            'email'    => 'admin@test.com',
+            'email' => 'admin@test.com',
             'password' => 'Secret1A',
         ]);
 
@@ -68,7 +68,7 @@ class AdminControllerTest extends TestCase
         $this->insertUser('admin@test.com', 'Secret1A', true);
 
         $this->post(route('admin.login.submit'), [
-            'email'    => 'admin@test.com',
+            'email' => 'admin@test.com',
             'password' => 'WrongPass1',
         ])->assertRedirect();
 
@@ -82,7 +82,7 @@ class AdminControllerTest extends TestCase
         $this->insertUser('admin@test.com', 'Secret1A', true);
 
         $this->post(route('admin.login.submit'), [
-            'email'    => 'admin@test.com',
+            'email' => 'admin@test.com',
             'password' => 'secret',
         ])->assertSessionHasErrors('password');
 
@@ -95,7 +95,7 @@ class AdminControllerTest extends TestCase
         $this->insertUser('user@test.com', 'Password1A', false);
 
         $this->post(route('admin.login.submit'), [
-            'email'    => 'user@test.com',
+            'email' => 'user@test.com',
             'password' => 'Password1A',
         ])->assertRedirect();
 
@@ -112,8 +112,8 @@ class AdminControllerTest extends TestCase
         $admin = $this->adminUser();
 
         $this->actingAs($admin)
-             ->post(route('admin.logout'))
-             ->assertRedirect(route('index'));
+            ->post(route('admin.logout'))
+            ->assertRedirect(route('index'));
 
         $this->assertGuest();
     }
@@ -129,10 +129,10 @@ class AdminControllerTest extends TestCase
         Property::factory()->count(2)->create(['owner_id' => $admin->id]);
 
         $this->actingAs($admin)
-             ->get(route('admin.properties'))
-             ->assertOk()
-             ->assertViewIs('admin.admin')
-             ->assertViewHas('properties');
+            ->get(route('admin.properties'))
+            ->assertOk()
+            ->assertViewIs('admin.admin')
+            ->assertViewHas('properties');
     }
 
     /** @test */
@@ -140,7 +140,7 @@ class AdminControllerTest extends TestCase
     {
         // IsAdmin middleware redirects to '/' (root), not '/login'
         $this->get(route('admin.properties'))
-             ->assertRedirect('/');
+            ->assertRedirect('/');
     }
 
     /** @test */
@@ -148,8 +148,8 @@ class AdminControllerTest extends TestCase
     {
         // IsAdmin middleware redirects to '/' (root), not '/login'
         $this->actingAs($this->regularUser())
-             ->get(route('admin.properties'))
-             ->assertRedirect('/');
+            ->get(route('admin.properties'))
+            ->assertRedirect('/');
     }
 
     // -----------------------------------------------------------------------
@@ -162,9 +162,9 @@ class AdminControllerTest extends TestCase
         $admin = $this->adminUser();
 
         $this->actingAs($admin)
-             ->get(route('admin.reservations.pending'))
-             ->assertOk()
-             ->assertViewIs('admin.pending');
+            ->get(route('admin.reservations.pending'))
+            ->assertOk()
+            ->assertViewIs('admin.pending');
     }
 
     // -----------------------------------------------------------------------
@@ -174,21 +174,21 @@ class AdminControllerTest extends TestCase
     /** @test */
     public function admin_can_confirm_a_pending_reservation(): void
     {
-        $admin    = $this->adminUser();
+        $admin = $this->adminUser();
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest    = $this->regularUser();
+        $guest = $this->regularUser();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id'     => $guest->id,
-            'status'      => 'pending',
-            'check_in'    => now()->addDays(5),
-            'check_out'   => now()->addDays(10),
+            'user_id' => $guest->id,
+            'status' => 'pending',
+            'check_in' => now()->addDays(5),
+            'check_out' => now()->addDays(10),
         ]);
 
         $this->actingAs($admin)
-             ->post(route('admin.reservations.pending.update', $reservation->id))
-             ->assertRedirect();
+            ->post(route('admin.reservations.pending.update', $reservation->id))
+            ->assertRedirect();
 
         $this->assertEquals('confirmed', $reservation->fresh()->status);
     }
@@ -196,20 +196,20 @@ class AdminControllerTest extends TestCase
     /** @test */
     public function admin_cannot_confirm_reservation_of_another_owner(): void
     {
-        $admin    = $this->adminUser();
-        $other    = $this->adminUser();
+        $admin = $this->adminUser();
+        $other = $this->adminUser();
         $property = Property::factory()->create(['owner_id' => $other->id]);
-        $guest    = $this->regularUser();
+        $guest = $this->regularUser();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id'     => $guest->id,
-            'status'      => 'pending',
+            'user_id' => $guest->id,
+            'status' => 'pending',
         ]);
 
         $this->actingAs($admin)
-             ->post(route('admin.reservations.pending.update', $reservation->id))
-             ->assertNotFound();
+            ->post(route('admin.reservations.pending.update', $reservation->id))
+            ->assertNotFound();
     }
 
     // -----------------------------------------------------------------------
@@ -222,30 +222,29 @@ class AdminControllerTest extends TestCase
         $admin = $this->adminUser();
 
         $this->actingAs($admin)
-             ->get(route('admin.calendar'))
-             ->assertOk()
-             ->assertViewIs('admin.calendar');
+            ->get(route('admin.calendar'))
+            ->assertOk()
+            ->assertViewIs('admin.calendar');
     }
 
     /** @test */
     public function admin_gets_confirmed_reservations_as_json(): void
     {
-        $admin    = $this->adminUser();
+        $admin = $this->adminUser();
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest    = $this->regularUser();
+        $guest = $this->regularUser();
 
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id'     => $guest->id,
-            'status'      => 'confirmed',
-            'check_in'    => now()->addDays(1),
-            'check_out'   => now()->addDays(5),
+            'user_id' => $guest->id,
+            'status' => 'confirmed',
+            'check_in' => now()->addDays(1),
+            'check_out' => now()->addDays(5),
         ]);
 
         $this->actingAs($admin)
-             ->getJson(route('admin.calendar.reservations'))
-             ->assertOk()
-             ->assertJsonCount(1);
+            ->getJson(route('admin.calendar.reservations'))
+            ->assertOk()
+            ->assertJsonCount(1);
     }
 }
-

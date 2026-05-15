@@ -33,7 +33,7 @@
                                 <button onclick="openModal('{{ $property->id }}')"><b>ⓘ</b></button>
                             </td>
                             <td>{{ $property->location }}</td>
-                            <td>Around{{ $property->price_per_night }}€</td>
+                            <td>Around {{ $property->price_per_night }}€</td>
                             <td>{{ $property->capacity }}</td>
                             <td>
                                 <div class="property-icons">

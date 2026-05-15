@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Mail\ReservationInfoMail;
 use App\Models\Reservation;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ReservationInfoMail;
 
 class SendReservationInfo extends Command
 {
@@ -36,7 +36,7 @@ class SendReservationInfo extends Command
             ->get();
 
         foreach ($reservations as $reservation) {
-            if ($reservation->user && !empty($reservation->user->email)) {
+            if ($reservation->user && ! empty($reservation->user->email)) {
                 Mail::to($reservation->user->email)->send(new ReservationInfoMail($reservation));
             }
         }

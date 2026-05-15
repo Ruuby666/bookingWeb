@@ -11,6 +11,7 @@ class UpdatePropertyRequest extends FormRequest
     public function authorize(): bool
     {
         $property = Property::find($this->route('property'));
+
         return $property && $property->owner_id === Auth::id();
     }
 
@@ -26,7 +27,8 @@ class UpdatePropertyRequest extends FormRequest
             'size'            => ['required', 'numeric', 'min:0'],
             'bedrooms'        => ['required', 'string', 'max:100'],
             'bathrooms'       => ['required', 'integer', 'min:0'],
-            'images_div'      => ['required', 'string', 'max:255'],
+            'images'          => ['nullable', 'array'],
+            'images.*'        => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'tv'              => ['nullable', 'string', 'max:100'],
             'entertainment'   => ['required', 'boolean'],
             'parking'         => ['required', 'boolean'],
