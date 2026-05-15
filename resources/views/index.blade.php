@@ -36,7 +36,7 @@
             <a href="/property/{{ $property['id'] }}">
                 <div class="cardcontainer">
                     <div class="photo">
-                        <img src="/images/{{ $property['images_div'] }}/{{$propertyWithImages[$property['id']]}}"
+                        <img src="{{ Storage::url('images/' . $property['images_div'] . '/' . $propertyWithImages[$property['id']]) }}"
                             alt="Not found" style="height: 200px; width: 300px;">
                     </div>
                     <div class="content">
@@ -132,7 +132,7 @@
             content.innerHTML = `
                 <div class="property-image">
                     <a href="/property/${property.id}">
-                    <img src="/images/${property.images_div}/${propertyWithImages[property.id]}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
+                    <img src="/storage/images/${property.images_div}/${propertyWithImages[property.id]}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
                     </a>
                 </div>
                 <div class="property-details">

@@ -117,7 +117,7 @@
                 <a href="/property/${prop.id}">
                     <div class="cardcontainer">
                         <div class="photo">
-                            <img src="/images/${prop.images_div}/${img}" alt="Image not found" style="height: 200px; width: 300px;">
+                            <img src="/storage/images/${prop.images_div}/${img}" alt="Image not found" style="height: 200px; width: 300px;">
                         </div>
                         <div class="content">
                             <p class="txt4">${prop.title}</p>
