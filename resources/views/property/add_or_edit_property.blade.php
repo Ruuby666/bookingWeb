@@ -20,7 +20,7 @@
                 method="POST" enctype="multipart/form-data">
                 @csrf
                 @if (isset($property))
-                    @method('PUT')
+                @method('PUT')
                 @endif
 
                 <div class="form-item">
@@ -67,7 +67,7 @@
                 <div class="form-item">
                     <label for="bedrooms">Bedrooms</label>
                     <input type="text" id="bedrooms" name="bedrooms"
-                        value="{{ old('bedrooms', $property->bedrooms ?? '') }}" required>
+                        value="{{ old('bedrooms', isset($property) ? implode(', ', json_decode($property->bedrooms, true)) : '') }}" required>
                 </div>
 
                 <div class="form-item">
@@ -76,10 +76,13 @@
                         value="{{ old('bathrooms', $property->bathrooms ?? '') }}" required>
                 </div>
 
-                <div class="form-item">
-                    <label for="images_div">Folder Images</label>
-                    <input type="text" id="images_div" name="images_div"
-                        value="{{ old('images_div', $property->images_div ?? '') }}" required>
+                <div class="form-item" style="grid-column: span 2;">
+                    <label for="images">Images</label>
+                    <input type="file" id="images" name="images[]" multiple accept="image/*"
+                        {{ isset($property) ? '' : 'required' }}>
+                    @if (isset($property))
+                    <small>Leave empty to keep current images.</small>
+                    @endif
                 </div>
 
                 <div class="form-item">
@@ -88,13 +91,13 @@
                 </div>
 
                 @foreach (['entertainment', 'parking', 'pool', 'garden', 'safeBox', 'terrace', 'wifi'] as $field)
-                    <div class="boolean-fields">
-                        <label for="{{ $field }}">{{ ucfirst($field) }}</label>
-                        <select id="{{ $field }}" name="{{ $field }}" required>
-                            <option value="1" {{ old($field, $property->$field ?? '') == 1 ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ old($field, $property->$field ?? '') == 0 ? 'selected' : '' }}>No</option>
-                        </select>
-                    </div>
+                <div class="boolean-fields">
+                    <label for="{{ $field }}">{{ ucfirst($field) }}</label>
+                    <select id="{{ $field }}" name="{{ $field }}" required>
+                        <option value="1" {{ old($field, $property->$field ?? '') == 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ old($field, $property->$field ?? '') == 0 ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
                 @endforeach
 
                 <div class="form-item">
