@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Property extends Model
 {
@@ -70,5 +71,12 @@ class Property extends Model
             ->where('start_date', '<=', $date)
             ->where('end_date', '>=', $date)
             ->value('price_per_night');
+    }
+
+    protected static function booted(): void
+    {
+        static::deleted(function (Property $property) {
+            Storage::disk('public')->deleteDirectory('images/' . $property->images_div);
+        });
     }
 }
