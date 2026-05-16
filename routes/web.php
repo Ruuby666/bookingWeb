@@ -22,7 +22,7 @@ Route::get('/login', function () {
 
 Route::post('/admin/login', [AdminController::class, 'loginFunction'])->name('admin.login.submit')->middleware('throttle:5,1');
 
-Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email');
+Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email')->middleware('throttle:3,1');
 
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
 
@@ -70,13 +70,9 @@ Route::middleware([IsAdmin::class])->group(function (): void {
 
 Route::get('/api/property-price-range', [ReservationPriceController::class, 'getPriceRange']);
 
-Route::get('/api/reservations', function () {
-    return Reservation::all();
-});
-
-Route::get('/api/properties', function () {
-    return Property::all();
-});
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
 
 Route::get('/api/images', function () {
     // Assuming you store the featured image per property
