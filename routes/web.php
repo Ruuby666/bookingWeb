@@ -70,6 +70,10 @@ Route::middleware([IsAdmin::class])->group(function (): void {
 
 Route::get('/api/property-price-range', [ReservationPriceController::class, 'getPriceRange']);
 
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
+
 Route::get('/api/images', function () {
     // Assuming you store the featured image per property
     $properties = Property::all();
