@@ -22,7 +22,7 @@ Route::get('/login', function () {
 
 Route::post('/admin/login', [AdminController::class, 'loginFunction'])->name('admin.login.submit')->middleware('throttle:5,1');
 
-Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email');
+Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email')->middleware('throttle:3,1');
 
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
 
