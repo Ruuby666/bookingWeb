@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PropertyService
 {
@@ -120,7 +121,7 @@ class PropertyService
      */
     private function generateFolderName(string $title): string
     {
-        return strtolower(str_replace(' ', '_', trim($title)));
+        return Str::slug($title, '_');
     }
 
     /**
