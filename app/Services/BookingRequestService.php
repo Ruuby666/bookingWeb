@@ -11,22 +11,23 @@ class BookingRequestService
         private readonly ReservationService $reservationService,
         private readonly UserService $userService,
         private readonly MailService $mailService,
+        private readonly ReservationPriceService $reservationPriceService,
     ) {}
 
     /**
      * Process a booking request end-to-end:
      *  1. Parse & validate dates
      *  2. Check for overlapping confirmed reservations
-     *  3. Find or create the guest user
-     *  4. Create the pending reservation
-     *  5. Send booking notification email
+     *  3. Calculate total price in the backend
+     *  4. Find or create the guest user
+     *  5. Create the pending reservation
+     *  6. Send booking notification email
      *
      * @param  array  $data  Keys: adults, children, guests, name, number, email,
      *                       message, daterange, total_price
      * @return array{success: bool, error?: string, checkIn?: Carbon, checkOut?: Carbon}
      */
-    public function process(Property $property, array $data): array
-    {
+    public function process(Property $property, array $data): array{
         // --- 1. Parse dates ---
         $dates = explode(' - ', $data['daterange']);
 
@@ -67,22 +68,33 @@ class BookingRequestService
             ];
         }
 
-        // --- 4. Find or create user ---
+        // --- 4. Calculate total price in the backend ---
+        // Ignore frontend price and recalculate here to prevent manipulation
+        $breakdown = $this->reservationPriceService->getPriceBreakdown(
+            $property->id,
+            $checkIn,
+            $checkOut
+        );
+
+        $totalPrice = array_sum(array_column($breakdown, 'price'));
+
+        // --- 5. Find or create user ---
         $user = $this->userService->findOrCreate(
             $data['name'],
             $data['email'],
             $data['number']
         );
 
-        // --- 5. Create reservation ---
+        // --- 6. Create reservation ---
         $bookingData = array_merge($data, [
-            'checkIn' => $checkIn,
-            'checkOut' => $checkOut,
+            'checkIn'     => $checkIn,
+            'checkOut'    => $checkOut,
+            'total_price' => $totalPrice, 
         ]);
 
         $this->reservationService->createReservation($property, $bookingData, $user);
 
-        // --- 6. Notify owner ---
+        // --- 7. Notify owner ---
         $this->mailService->sendBookingNotification(
             array_merge($bookingData, ['property' => $property])
         );
