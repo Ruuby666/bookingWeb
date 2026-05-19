@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -66,7 +66,7 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function properties()
+    public function properties(): View
     {
         $properties = Property::where('owner_id', Auth::id())->get();
 
@@ -78,7 +78,7 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function pending()
+    public function pending(): View
     {
         ['confirmed' => $reservations, 'pending' => $pending] =
             $this->reservationService->getPendingAndConfirmedForOwner();
@@ -111,7 +111,7 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function suggestionEmail(Reservation $reservation)
+    public function suggestionEmail(Reservation $reservation): View
     {
         if ($reservation->property->owner_id !== Auth::id()) {
             abort(403);
@@ -125,7 +125,7 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function calendar()
+    public function calendar(): View
     {
         $properties = Property::where('owner_id', Auth::id())->get();
 
@@ -144,6 +144,7 @@ class AdminController extends Controller
         $reservations = $this->reservationService
             ->getConfirmedReservationsForOwner($propiedad);
 
+        /** @var \Illuminate\Support\Collection<int, \App\Models\Reservation> $reservations */
         $events = $reservations->map(fn ($r) => [
             'id' => $r->id,
             'title' => $r->user->name . ' in ' . $r->property->title,

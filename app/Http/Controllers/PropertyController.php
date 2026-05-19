@@ -8,7 +8,7 @@ use App\Models\Property;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 
 /**
  * Controller responsible for property management.
