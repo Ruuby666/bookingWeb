@@ -39,7 +39,7 @@ class AdminController extends Controller
     {
         $result = $this->authService->attemptAdminLogin(
             $request->validated('email'),
-            $request->validated('password')
+            $request->validated('password'),
         );
 
         if (! $result['success']) {
@@ -146,7 +146,7 @@ class AdminController extends Controller
 
         $events = $reservations->map(fn ($r) => [
             'id' => $r->id,
-            'title' => $r->user->name.' in '.$r->property->title,
+            'title' => $r->user->name . ' in ' . $r->property->title,
             'note' => $r->notes,
             'user' => $r->user,
             'property' => $r->property->title,
@@ -171,7 +171,7 @@ class AdminController extends Controller
         $result = $this->reservationService->updateReservationTime(
             $reservation,
             $request->validated('start_time'),
-            $request->validated('end_time')
+            $request->validated('end_time'),
         );
 
         return $result['success']
@@ -198,7 +198,7 @@ class AdminController extends Controller
     {
         return $this->exportService->downloadInvoicesExcel(
             $request->input('ids'),
-            $request->input('invoice_amount')
+            $request->input('invoice_amount'),
         );
     }
 }

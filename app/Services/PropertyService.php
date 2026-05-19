@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -43,7 +42,7 @@ class PropertyService
 
         if (empty($files)) {
             return [
-                'mainImage'          => null,
+                'mainImage' => null,
                 'imagesWithoutFirst' => [],
             ];
         }
@@ -51,7 +50,7 @@ class PropertyService
         $images = array_map('basename', $files);
 
         return [
-            'mainImage'          => $images[0],
+            'mainImage' => $images[0],
             'imagesWithoutFirst' => array_slice($images, 1),
         ];
     }
@@ -72,8 +71,8 @@ class PropertyService
             $this->uploadImages($data['images'], $folder);
         }
 
-        $data['bedrooms']   = $this->parseBedroomsToJson($data['bedrooms']);
-        $data['owner_id']   = Auth::id();
+        $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
+        $data['owner_id'] = Auth::id();
         $data['images_div'] = $folder;
 
         unset($data['images']);

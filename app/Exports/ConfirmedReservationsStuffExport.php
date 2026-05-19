@@ -112,7 +112,7 @@ class ConfirmedReservationsStuffExport
         }
 
         // Guardar archivo temporalmente
-        $filename = 'Reservas_actualizado_stuff'.date('d.m.Y').'.xlsx';
+        $filename = 'Reservas_actualizado_stuff' . date('d.m.Y') . '.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $filename);
         (new Xlsx($spreadsheet))->save($temp_file);
 

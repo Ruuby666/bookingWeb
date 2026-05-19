@@ -27,16 +27,17 @@ class BookingRequestService
      *                       message, daterange, total_price
      * @return array{success: bool, error?: string, checkIn?: Carbon, checkOut?: Carbon}
      */
-    public function process(Property $property, array $data): array{
+    public function process(Property $property, array $data): array
+    {
         // --- 1. Parse dates ---
         $dates = explode(' - ', $data['daterange']);
 
         try {
             $checkIn = Carbon::createFromFormat(
                 'd/m/Y H:i',
-                trim($dates[0]).' '.$this->resolveCheckInHour($property)
+                trim($dates[0]) . ' ' . $this->resolveCheckInHour($property),
             );
-            $checkOut = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]).' 11:00');
+            $checkOut = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
         } catch (\Exception) {
             return ['success' => false, 'error' => 'Formato de fecha inválido.'];
         }
@@ -55,16 +56,16 @@ class BookingRequestService
         $conflict = $this->reservationService->findOverlappingReservation(
             $property->id,
             $checkIn,
-            $checkOut
+            $checkOut,
         );
 
         if ($conflict) {
             return [
                 'success' => false,
                 'error' => 'Select other date range, there is a reservation already from '
-                    .$conflict->check_in->format('d/m/Y H:i')
-                    .' to '
-                    .$conflict->check_out->format('d/m/Y H:i'),
+                    . $conflict->check_in->format('d/m/Y H:i')
+                    . ' to '
+                    . $conflict->check_out->format('d/m/Y H:i'),
             ];
         }
 
@@ -73,7 +74,7 @@ class BookingRequestService
         $breakdown = $this->reservationPriceService->getPriceBreakdown(
             $property->id,
             $checkIn,
-            $checkOut
+            $checkOut,
         );
 
         $totalPrice = array_sum(array_column($breakdown, 'price'));
@@ -82,21 +83,21 @@ class BookingRequestService
         $user = $this->userService->findOrCreate(
             $data['name'],
             $data['email'],
-            $data['number']
+            $data['number'],
         );
 
         // --- 6. Create reservation ---
         $bookingData = array_merge($data, [
-            'checkIn'     => $checkIn,
-            'checkOut'    => $checkOut,
-            'total_price' => $totalPrice, 
+            'checkIn' => $checkIn,
+            'checkOut' => $checkOut,
+            'total_price' => $totalPrice,
         ]);
 
         $this->reservationService->createReservation($property, $bookingData, $user);
 
         // --- 7. Notify owner ---
         $this->mailService->sendBookingNotification(
-            array_merge($bookingData, ['property' => $property])
+            array_merge($bookingData, ['property' => $property]),
         );
 
         return ['success' => true, 'checkIn' => $checkIn, 'checkOut' => $checkOut];

@@ -35,7 +35,7 @@ class MailController extends Controller
 
         $result = $this->bookingRequestService->process(
             $property,
-            $request->validated()
+            $request->validated(),
         );
 
         if (! $result['success']) {
@@ -64,7 +64,7 @@ class MailController extends Controller
 
         $this->mailService->sendSuggestionToGuest(
             $reservation,
-            $request->validated('note')
+            $request->validated('note'),
         );
 
         return redirect()

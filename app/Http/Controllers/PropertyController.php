@@ -39,7 +39,7 @@ class PropertyController extends Controller
 
         return view(
             'property.show',
-            compact('property', 'id', 'mainImage', 'imagesWithoutFirst')
+            compact('property', 'id', 'mainImage', 'imagesWithoutFirst'),
         );
     }
 
@@ -101,7 +101,7 @@ class PropertyController extends Controller
 
         $this->propertyService->updateProperty(
             $property,
-            $request->validated()
+            $request->validated(),
         );
 
         return redirect()

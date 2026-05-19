@@ -48,7 +48,7 @@ class FacturasExport
             $sheet->setTitle("Factura {$facturaNumber}");
 
             $sheet->setCellValue('B7', 'LANZAROTE');
-            $sheet->setCellValue('B10', 'Factura: '.$facturaNumber.'/'.date('y'));
+            $sheet->setCellValue('B10', 'Factura: ' . $facturaNumber . '/' . date('y'));
 
             $headers = ['ENTRADA', 'SALIDA', 'DIAS',  'NOMBRE CLIENTE', 'IGIC', 'IMPORTE BASE IMPONIBLE', 'IMPORTE TOTAL'];
             $sheet->fromArray($headers, null, 'C30');
@@ -65,7 +65,7 @@ class FacturasExport
             $sheet->getStyle('B2:M60')->applyFromArray(
                 [
                     'font' => ['size' => 40],
-                ]
+                ],
             );
 
             $sheet->getStyle('C30:I30')->applyFromArray($headerStyle);
@@ -83,9 +83,9 @@ class FacturasExport
                 $checkOut,
                 $days,
                 $userName,
-                number_format($igic, 2, '.').' €',
-                number_format($baseImponible, 2, '.').' €',
-                number_format($importeTotal, 2, '.').' €',
+                number_format($igic, 2, '.') . ' €',
+                number_format($baseImponible, 2, '.') . ' €',
+                number_format($importeTotal, 2, '.') . ' €',
             ];
 
             $sheet->fromArray($data, null, 'C31');
@@ -116,7 +116,7 @@ class FacturasExport
             $sheetIndex++;
         }
 
-        $filename = 'Facturas'.date('d.m.Y').'.xlsx';
+        $filename = 'Facturas' . date('d.m.Y') . '.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $filename);
         (new Xlsx($spreadsheet))->save($temp_file);
 

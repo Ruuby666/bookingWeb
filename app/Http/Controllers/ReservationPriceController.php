@@ -50,17 +50,17 @@ class ReservationPriceController extends Controller
     public function getPriceRange(Request $request)
     {
         $startDate = Carbon::parse(
-            trim(explode('GMT', $request->start_date)[0])
+            trim(explode('GMT', $request->start_date)[0]),
         )->startOfDay();
 
         $endDate = Carbon::parse(
-            trim(explode('GMT', $request->end_date)[0])
+            trim(explode('GMT', $request->end_date)[0]),
         )->startOfDay();
 
         $nights = $this->reservationPriceService->getPriceBreakdown(
             $request->property_id,
             $startDate,
-            $endDate
+            $endDate,
         );
 
         return response()->json($nights);
@@ -77,7 +77,7 @@ class ReservationPriceController extends Controller
             $request->validated('property_id'),
             Carbon::parse($request->validated('start_date')),
             Carbon::parse($request->validated('end_date')),
-            $request->validated('price_per_night')
+            $request->validated('price_per_night'),
         );
 
         return $result['success']
