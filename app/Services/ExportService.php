@@ -30,7 +30,7 @@ class ExportService
             ->getPathname();
 
         $date = Carbon::now()->format('d_m_Y');
-        $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_').'.zip';
+        $zipFile = tempnam(sys_get_temp_dir(), 'reservas_zip_') . '.zip';
 
         $zip = new \ZipArchive;
         $zip->open($zipFile, \ZipArchive::CREATE);

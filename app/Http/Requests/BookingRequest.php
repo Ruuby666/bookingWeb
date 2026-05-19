@@ -19,8 +19,8 @@ class BookingRequest extends FormRequest
 
         return [
             'property_id' => ['required', 'exists:properties,id'],
-            'adults' => ['required', 'integer', 'min:1', 'max:'.$capacity],
-            'children' => ['required', 'integer', 'min:0', 'max:'.($capacity - 1)],
+            'adults' => ['required', 'integer', 'min:1', 'max:' . $capacity],
+            'children' => ['required', 'integer', 'min:0', 'max:' . ($capacity - 1)],
             'name' => ['required', 'string', 'max:255'],
             'number' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:255'],
@@ -42,7 +42,7 @@ class BookingRequest extends FormRequest
             'adults.max' => "El número de adultos no puede exceder {$capacity}.",
             'children.required' => 'El número de niños es obligatorio.',
             'children.min' => 'El número de niños no puede ser negativo.',
-            'children.max' => 'El número de niños no puede exceder '.($capacity - 1).'.',
+            'children.max' => 'El número de niños no puede exceder ' . ($capacity - 1) . '.',
             'name.required' => 'El nombre es obligatorio.',
             'name.string' => 'El nombre debe ser texto.',
             'name.max' => 'El nombre no puede tener más de 255 caracteres.',
@@ -75,7 +75,7 @@ class BookingRequest extends FormRequest
             if ($property && $totalGuests > $property->capacity) {
                 $validator->errors()->add(
                     'adults',
-                    "El número total de personas ({$totalGuests}) no puede exceder la capacidad de la propiedad ({$property->capacity})."
+                    "El número total de personas ({$totalGuests}) no puede exceder la capacidad de la propiedad ({$property->capacity}).",
                 );
             }
         });

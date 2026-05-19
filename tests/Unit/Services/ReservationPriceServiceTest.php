@@ -27,7 +27,7 @@ class ReservationPriceServiceTest extends TestCase
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(array_merge(
             ['owner_id' => $owner->id, 'price_per_night' => 100.00],
-            $propertyOverrides
+            $propertyOverrides,
         ));
 
         return [$owner, $property];
@@ -45,7 +45,7 @@ class ReservationPriceServiceTest extends TestCase
         $breakdown = $this->service->getPriceBreakdown(
             $property->id,
             Carbon::parse('2026-06-01'),
-            Carbon::parse('2026-06-04')
+            Carbon::parse('2026-06-04'),
         );
 
         $this->assertCount(3, $breakdown); // 3 nights
@@ -69,7 +69,7 @@ class ReservationPriceServiceTest extends TestCase
         $breakdown = $this->service->getPriceBreakdown(
             $property->id,
             Carbon::parse('2026-06-01'),
-            Carbon::parse('2026-06-04')
+            Carbon::parse('2026-06-04'),
         );
 
         $this->assertEquals(100.00, $breakdown[0]['price']); // June 1 – default
@@ -91,7 +91,7 @@ class ReservationPriceServiceTest extends TestCase
             $property->id,
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-10'),
-            150.00
+            150.00,
         );
 
         $this->assertTrue($result['success']);
@@ -118,7 +118,7 @@ class ReservationPriceServiceTest extends TestCase
             $property->id,
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-10'),
-            200.00
+            200.00,
         );
 
         $this->assertFalse($result['success']);
@@ -136,7 +136,7 @@ class ReservationPriceServiceTest extends TestCase
             $property->id,
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-05'),
-            99.00
+            99.00,
         );
 
         $this->assertFalse($result['success']);

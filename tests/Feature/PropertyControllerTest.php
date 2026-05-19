@@ -6,6 +6,8 @@ use App\Models\Property;
 use App\Models\User;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PropertyControllerTest extends TestCase
@@ -98,6 +100,7 @@ class PropertyControllerTest extends TestCase
     /** @test */
     public function admin_can_store_a_new_property(): void
     {
+        Storage::fake('public');
         $admin = $this->admin();
 
         $data = array_merge([
@@ -110,7 +113,9 @@ class PropertyControllerTest extends TestCase
             'bedrooms' => 'King, Twin, Double',
             'bathrooms' => 3,
             'min_nights' => 3,
-            'images_div' => 'villa_sunset',
+            'images' => [
+                UploadedFile::fake()->image('property1.jpg'),
+            ],
             'lat' => 28.9635,
             'lng' => -13.5477,
         ], $this->amenities());

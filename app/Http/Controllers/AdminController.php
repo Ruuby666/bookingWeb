@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -39,7 +39,7 @@ class AdminController extends Controller
     {
         $result = $this->authService->attemptAdminLogin(
             $request->validated('email'),
-            $request->validated('password')
+            $request->validated('password'),
         );
 
         if (! $result['success']) {
@@ -66,7 +66,7 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function properties()
+    public function properties(): View
     {
         $properties = Property::where('owner_id', Auth::id())->get();
 
@@ -78,7 +78,7 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function pending()
+    public function pending(): View
     {
         ['confirmed' => $reservations, 'pending' => $pending] =
             $this->reservationService->getPendingAndConfirmedForOwner();
@@ -111,7 +111,7 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function suggestionEmail(Reservation $reservation)
+    public function suggestionEmail(Reservation $reservation): View
     {
         if ($reservation->property->owner_id !== Auth::id()) {
             abort(403);
@@ -125,7 +125,7 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function calendar()
+    public function calendar(): View
     {
         $properties = Property::where('owner_id', Auth::id())->get();
 
@@ -144,9 +144,10 @@ class AdminController extends Controller
         $reservations = $this->reservationService
             ->getConfirmedReservationsForOwner($propiedad);
 
+        /** @var \Illuminate\Support\Collection<int, \App\Models\Reservation> $reservations */
         $events = $reservations->map(fn ($r) => [
             'id' => $r->id,
-            'title' => $r->user->name.' in '.$r->property->title,
+            'title' => $r->user->name . ' in ' . $r->property->title,
             'note' => $r->notes,
             'user' => $r->user,
             'property' => $r->property->title,
@@ -171,7 +172,7 @@ class AdminController extends Controller
         $result = $this->reservationService->updateReservationTime(
             $reservation,
             $request->validated('start_time'),
-            $request->validated('end_time')
+            $request->validated('end_time'),
         );
 
         return $result['success']
@@ -198,7 +199,7 @@ class AdminController extends Controller
     {
         return $this->exportService->downloadInvoicesExcel(
             $request->input('ids'),
-            $request->input('invoice_amount')
+            $request->input('invoice_amount'),
         );
     }
 }

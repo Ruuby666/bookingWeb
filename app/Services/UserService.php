@@ -21,7 +21,7 @@ class UserService
                 'phone_number' => $phone,
                 'password' => 'password', // Should be changed on first login
                 'is_admin' => false,
-            ]
+            ],
         );
     }
 

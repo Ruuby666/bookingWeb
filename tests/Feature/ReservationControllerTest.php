@@ -185,7 +185,7 @@ class ReservationPriceControllerTest extends TestCase
             'price_per_night' => 100.00,
         ]);
 
-        $response = $this->getJson('/api/property-price-range?'.http_build_query([
+        $response = $this->getJson('/api/property-price-range?' . http_build_query([
             'property_id' => $property->id,
             'start_date' => '2026-06-01 00:00:00 GMT+0000',
             'end_date' => '2026-06-04 00:00:00 GMT+0000',

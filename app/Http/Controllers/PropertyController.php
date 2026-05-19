@@ -8,7 +8,7 @@ use App\Models\Property;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 
 /**
  * Controller responsible for property management.
@@ -39,7 +39,7 @@ class PropertyController extends Controller
 
         return view(
             'property.show',
-            compact('property', 'id', 'mainImage', 'imagesWithoutFirst')
+            compact('property', 'id', 'mainImage', 'imagesWithoutFirst'),
         );
     }
 
@@ -101,7 +101,7 @@ class PropertyController extends Controller
 
         $this->propertyService->updateProperty(
             $property,
-            $request->validated()
+            $request->validated(),
         );
 
         return redirect()

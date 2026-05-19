@@ -198,7 +198,7 @@ class ReservationServiceTest extends TestCase
         $overlap = $this->service->findOverlappingReservation(
             $property->id,
             Carbon::parse('2026-10-05'),
-            Carbon::parse('2026-10-15')
+            Carbon::parse('2026-10-15'),
         );
 
         $this->assertNotNull($overlap);
@@ -221,7 +221,7 @@ class ReservationServiceTest extends TestCase
         $overlap = $this->service->findOverlappingReservation(
             $property->id,
             Carbon::parse('2026-10-08'),
-            Carbon::parse('2026-10-15')
+            Carbon::parse('2026-10-15'),
         );
 
         $this->assertNull($overlap);

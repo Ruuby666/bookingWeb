@@ -2,17 +2,20 @@
 
 namespace App\Providers;
 
+use App\Models\Property;
+use App\Policies\PropertyPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // This method is intentionally left empty because there are no services to register at this time.
+        //
     }
 
     public function boot(): void
     {
-        // This method is intentionally left empty because there are no actions to perform during the application's bootstrapping phase.
+        Gate::policy(Property::class, PropertyPolicy::class);
     }
 }

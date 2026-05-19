@@ -18,7 +18,7 @@ class ReservationFactory extends Factory
     public function definition(): array
     {
         $checkIn = $this->faker->dateTimeBetween('now', '+1 year');
-        $checkOut = (clone $checkIn)->modify('+'.rand(2, 14).' days');
+        $checkOut = (clone $checkIn)->modify('+' . rand(2, 14) . ' days');
 
         return [
             'user_id' => User::factory(),

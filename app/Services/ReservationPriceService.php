@@ -56,7 +56,7 @@ class ReservationPriceService
         int $propertyId,
         Carbon $startDate,
         Carbon $endDate,
-        float $pricePerNight
+        float $pricePerNight,
     ): array {
         $property = Property::where('id', $propertyId)
             ->where('owner_id', Auth::id())

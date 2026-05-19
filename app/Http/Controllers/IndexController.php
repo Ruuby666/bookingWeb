@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\PropertyService;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 
 /**
  * Controller responsible for the homepage.

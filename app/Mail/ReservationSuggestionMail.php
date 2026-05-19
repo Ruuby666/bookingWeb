@@ -24,7 +24,7 @@ class ReservationSuggestionMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Sugerencia sobre tu reserva en '.$this->reservation->property->title)
+        return $this->subject('Sugerencia sobre tu reserva en ' . $this->reservation->property->title)
             ->view('emails.reservation-suggestion');
     }
 }

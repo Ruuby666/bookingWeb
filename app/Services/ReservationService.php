@@ -97,7 +97,7 @@ class ReservationService
     public function updateReservationTime(
         Reservation $reservation,
         string $startTime,
-        string $endTime
+        string $endTime,
     ): array {
         $dateStart = $reservation->check_in->format('Y-m-d');
         $dateEnd = $reservation->check_out->format('Y-m-d');
@@ -123,7 +123,7 @@ class ReservationService
     public function findOverlappingReservation(
         int $propertyId,
         Carbon $checkIn,
-        Carbon $checkOut
+        Carbon $checkOut,
     ): ?Reservation {
         return Reservation::where('property_id', $propertyId)
             ->where('status', 'confirmed')

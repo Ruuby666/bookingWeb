@@ -3,10 +3,11 @@
 > Laravel-based property booking web application — Docker powered, production ready.
 
 ![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)
-![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?logo=laravel&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-1.27-009639?logo=nginx&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![CI](https://github.com/Ruuby666/bookingWeb/actions/workflows/ci.yml/badge.svg)
 
 ---
 
@@ -62,7 +63,7 @@ bookingWeb/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/bookingWeb.git
+git clone https://github.com/Ruuby666/bookingWeb.git
 cd bookingWeb
 ```
 
@@ -146,12 +147,12 @@ DB_HOST=db                      # must be "db" (Docker service name)
 DB_PORT=3306
 DB_DATABASE=bookingweb
 DB_USERNAME=bookingweb
-DB_PASSWORD=bookingweb
+DB_PASSWORD=YourPassword123
 
 # Docker MySQL service
 MYSQL_DATABASE=bookingweb
 MYSQL_USER=bookingweb
-MYSQL_PASSWORD=bookingweb
+MYSQL_PASSWORD=YourPassword123
 MYSQL_ROOT_PASSWORD=root
 
 # Cache & Sessions
@@ -173,8 +174,6 @@ MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=your@gmail.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
-
-> ⚠️ **Never commit `.env` to version control.** Make sure it is listed in `.gitignore`.
 
 ---
 
@@ -199,8 +198,8 @@ docker compose exec app php artisan migrate:fresh --seed
 | Host | `127.0.0.1` |
 | Port | `33060` |
 | Database | `bookingweb` |
-| Username | `bookingweb` |
-| Password | `bookingweb` |
+| Username | ... |
+| Password | ... |
 
 ---
 
@@ -283,11 +282,32 @@ docker compose ps
 
 ## Deployment
 
-This project is currently deployed on **Heroku** with **Clever Cloud** as the managed MySQL database.
+Este proyecto se despliega en un **VPS con Docker Compose** y Nginx como reverse proxy.
 
-Production URL: `https://booking-ocra-ccf5db51b84a.herokuapp.com`
+### Requisitos en el servidor
 
-For self-hosted VPS deployment with Docker, SSL, and CI/CD via GitHub Actions, see [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) *(coming soon)*.
+- Docker + Docker Compose
+- Dominio apuntando a la IP del servidor
+- Certificado SSL (recomendado: [Caddy](https://caddyserver.com/) o Certbot)
+
+### Pasos
+
+```bash
+git clone https://github.com/tu-usuario/bookingWeb.git
+cd bookingWeb
+
+cp .env.production .env
+# Edita .env: APP_URL, credenciales DB, MAIL, etc.
+
+docker compose up -d --build
+docker compose exec app composer install --no-dev --optimize-autoloader
+docker compose exec app php artisan migrate --force
+docker compose exec app php artisan config:cache
+docker compose exec app php artisan route:cache
+docker compose exec app php artisan view:cache
+docker compose run --rm vite sh -c "npm ci && npm run build"
+` ` `
+```
 
 ---
 

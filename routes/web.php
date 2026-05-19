@@ -9,7 +9,6 @@ use App\Http\Controllers\ReservationPriceController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
 use App\Models\Property;
-use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');

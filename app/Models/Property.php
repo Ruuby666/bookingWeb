@@ -6,6 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property int $id
+ * @property int $owner_id
+ * @property string $title
+ * @property string $description
+ * @property string $location
+ * @property float $price_per_night
+ * @property int $capacity
+ * @property float $lat
+ * @property float $lng
+ * @method static \Illuminate\Database\Eloquent\Builder<static> where(string|\Closure $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
+ * @method static static findOrFail(mixed $id)
+ */
 class Property extends Model
 {
     use HasFactory;
