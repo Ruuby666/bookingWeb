@@ -7,6 +7,7 @@
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-1.27-009639?logo=nginx&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![CI](https://github.com/Ruuby666/bookingWeb/actions/workflows/ci.yml/badge.svg)
 
 ---
 
@@ -62,7 +63,7 @@ bookingWeb/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/bookingWeb.git
+git clone https://github.com/Ruuby666/bookingWeb.git
 cd bookingWeb
 ```
 
@@ -146,12 +147,12 @@ DB_HOST=db                      # must be "db" (Docker service name)
 DB_PORT=3306
 DB_DATABASE=bookingweb
 DB_USERNAME=bookingweb
-DB_PASSWORD=bookingweb
+DB_PASSWORD=YourPassword123
 
 # Docker MySQL service
 MYSQL_DATABASE=bookingweb
 MYSQL_USER=bookingweb
-MYSQL_PASSWORD=bookingweb
+MYSQL_PASSWORD=YourPassword123
 MYSQL_ROOT_PASSWORD=root
 
 # Cache & Sessions
