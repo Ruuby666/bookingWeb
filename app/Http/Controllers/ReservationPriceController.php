@@ -7,11 +7,11 @@ use App\Models\Property;
 use App\Models\ReservationPrice;
 use App\Services\ReservationPriceService;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\View\View;
 
 /**
  * Controller responsible for reservation price management.
@@ -35,7 +35,7 @@ class ReservationPriceController extends Controller
         $properties = Property::where('owner_id', Auth::id())->get();
 
         $reservationPrices = ReservationPrice::with('property')
-            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
+            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
             ->orderBy('property_id')
             ->get();
 

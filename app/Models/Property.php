@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
  * @property int $capacity
  * @property float $lat
  * @property float $lng
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static> where(string|\Closure $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
  * @method static static findOrFail(mixed $id)
  */

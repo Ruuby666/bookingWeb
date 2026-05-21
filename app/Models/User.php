@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * @mixin \Eloquent
+ *
  * @property int $id
  * @property string $name
  * @property string $email

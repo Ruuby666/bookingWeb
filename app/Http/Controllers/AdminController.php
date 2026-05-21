@@ -9,11 +9,11 @@ use App\Models\Reservation;
 use App\Services\AuthService;
 use App\Services\ExportService;
 use App\Services\ReservationService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -63,8 +63,6 @@ class AdminController extends Controller
 
     /**
      * Display properties owned by the authenticated user.
-     *
-     * @return View
      */
     public function properties(): View
     {
@@ -75,8 +73,6 @@ class AdminController extends Controller
 
     /**
      * Display confirmed and pending reservations.
-     *
-     * @return View
      */
     public function pending(): View
     {
@@ -108,8 +104,6 @@ class AdminController extends Controller
 
     /**
      * Show the suggestion email page.
-     *
-     * @return View
      */
     public function suggestionEmail(Reservation $reservation): View
     {
@@ -122,8 +116,6 @@ class AdminController extends Controller
 
     /**
      * Display the reservation calendar.
-     *
-     * @return View
      */
     public function calendar(): View
     {
@@ -144,7 +136,7 @@ class AdminController extends Controller
         $reservations = $this->reservationService
             ->getConfirmedReservationsForOwner($propiedad);
 
-        /** @var \Illuminate\Support\Collection<int, \App\Models\Reservation> $reservations */
+        /** @var \Illuminate\Support\Collection<int, Reservation> $reservations */
         $events = $reservations->map(fn ($r) => [
             'id' => $r->id,
             'title' => $r->user->name . ' in ' . $r->property->title,
