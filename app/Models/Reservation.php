@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $invoice
  * @property int $guests
  * @property float $total_price
- * @property-read \App\Models\Property $property
- * @property-read \App\Models\User $user
+ * @property-read Property $property
+ * @property-read User $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static> where(string|\Closure $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
  * @method static static findOrFail(mixed $id)

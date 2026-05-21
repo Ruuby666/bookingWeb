@@ -9,11 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @property int         $id
- * @property string      $name
- * @property string      $email
- * @property string      $phone_number
- * @property bool        $is_admin
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $phone_number
+ * @property bool $is_admin
  */
 class User extends Authenticatable
 {

@@ -9,28 +9,28 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @property int         $id
- * @property int         $owner_id
- * @property string      $title
- * @property string      $description
- * @property string      $location
- * @property float       $price_per_night
- * @property int         $capacity
- * @property int         $size
- * @property string      $bedrooms
- * @property int         $bathrooms
- * @property int         $min_nights
- * @property string      $images_div
+ * @property int $id
+ * @property int $owner_id
+ * @property string $title
+ * @property string $description
+ * @property string $location
+ * @property float $price_per_night
+ * @property int $capacity
+ * @property int $size
+ * @property string $bedrooms
+ * @property int $bathrooms
+ * @property int $min_nights
+ * @property string $images_div
  * @property string|null $tv
- * @property bool        $entertainment
- * @property bool        $parking
- * @property bool        $pool
- * @property bool        $garden
- * @property bool        $safeBox
- * @property bool        $terrace
- * @property bool        $wifi
- * @property float       $lat
- * @property float       $lng
+ * @property bool $entertainment
+ * @property bool $parking
+ * @property bool $pool
+ * @property bool $garden
+ * @property bool $safeBox
+ * @property bool $terrace
+ * @property bool $wifi
+ * @property float $lat
+ * @property float $lng
  */
 class Property extends Model
 {
@@ -62,15 +62,15 @@ class Property extends Model
 
     protected $casts = [
         'price_per_night' => 'decimal:2',
-        'lat'             => 'decimal:7',
-        'lng'             => 'decimal:7',
-        'parking'         => 'boolean',
-        'entertainment'   => 'boolean',
-        'pool'            => 'boolean',
-        'garden'          => 'boolean',
-        'safeBox'         => 'boolean',
-        'terrace'         => 'boolean',
-        'wifi'            => 'boolean',
+        'lat' => 'decimal:7',
+        'lng' => 'decimal:7',
+        'parking' => 'boolean',
+        'entertainment' => 'boolean',
+        'pool' => 'boolean',
+        'garden' => 'boolean',
+        'safeBox' => 'boolean',
+        'terrace' => 'boolean',
+        'wifi' => 'boolean',
     ];
 
     // --- Relations ---
@@ -103,7 +103,7 @@ class Property extends Model
     protected static function booted(): void
     {
         static::deleted(function (Property $property): void {
-            Storage::disk('public')->deleteDirectory('images/'.$property->images_div);
+            Storage::disk('public')->deleteDirectory('images/' . $property->images_div);
         });
     }
 }

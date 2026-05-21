@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property-read \App\Models\Property $property
+ * @property-read Property $property
  */
 class ReservationPrice extends Model
 {
