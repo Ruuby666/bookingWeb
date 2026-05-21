@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @mixin \Eloquent
- *
- * @property int $id
- * @property string $name
- * @property string $email
+ * @property int         $id
+ * @property string      $name
+ * @property string      $email
+ * @property string      $phone_number
+ * @property bool        $is_admin
  */
 class User extends Authenticatable
 {
@@ -38,23 +39,24 @@ class User extends Authenticatable
 
     // --- Relations ---
 
-    public function properties()
+    public function properties(): HasMany
     {
         return $this->hasMany(Property::class, 'owner_id');
     }
 
-    public function reservations()
+    public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);
     }
 
     // --- Methods ---
-    public function setPasswordAttribute($value)
+
+    public function setPasswordAttribute(string $value): void
     {
         $this->attributes['password'] = Hash::make($value);
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->is_admin;
     }

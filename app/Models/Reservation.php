@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $invoice
  * @property int $guests
  * @property float $total_price
- * @property Property $property
- * @property User $user
+ * @property-read \App\Models\Property $property
+ * @property-read \App\Models\User $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static> where(string|\Closure $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
  * @method static static findOrFail(mixed $id)
@@ -45,12 +45,12 @@ class Reservation extends Model
         'invoice' => 'boolean',
     ];
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function property()
+    public function property(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Property::class);
     }

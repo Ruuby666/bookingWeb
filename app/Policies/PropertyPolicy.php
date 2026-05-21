@@ -12,7 +12,7 @@ class PropertyPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return false;
     }
 
     /**

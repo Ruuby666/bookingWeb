@@ -49,7 +49,7 @@
         ],
         "lint": "pint",
         "lint:check": "pint --test",
-        "analyse": "phpstan analyse app --memory-limit=2G --level=3"
+        "analyse": "phpstan analyse --memory-limit=2G"
     },
     "extra": {
         "laravel": {

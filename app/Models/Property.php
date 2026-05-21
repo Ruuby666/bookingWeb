@@ -4,21 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @property int $id
- * @property int $owner_id
- * @property string $title
- * @property string $description
- * @property string $location
- * @property float $price_per_night
- * @property int $capacity
- * @property float $lat
- * @property float $lng
- *
- * @method static \Illuminate\Database\Eloquent\Builder<static> where(string|\Closure $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
- * @method static static findOrFail(mixed $id)
+ * @property int         $id
+ * @property int         $owner_id
+ * @property string      $title
+ * @property string      $description
+ * @property string      $location
+ * @property float       $price_per_night
+ * @property int         $capacity
+ * @property int         $size
+ * @property string      $bedrooms
+ * @property int         $bathrooms
+ * @property int         $min_nights
+ * @property string      $images_div
+ * @property string|null $tv
+ * @property bool        $entertainment
+ * @property bool        $parking
+ * @property bool        $pool
+ * @property bool        $garden
+ * @property bool        $safeBox
+ * @property bool        $terrace
+ * @property bool        $wifi
+ * @property float       $lat
+ * @property float       $lng
  */
 class Property extends Model
 {
@@ -50,36 +62,37 @@ class Property extends Model
 
     protected $casts = [
         'price_per_night' => 'decimal:2',
-        'lat' => 'decimal:7',
-        'lng' => 'decimal:7',
-        'parking' => 'boolean',
-        'entertainment' => 'boolean',
-        'pool' => 'boolean',
-        'garden' => 'boolean',
-        'safeBox' => 'boolean',
-        'terrace' => 'boolean',
-        'wifi' => 'boolean',
+        'lat'             => 'decimal:7',
+        'lng'             => 'decimal:7',
+        'parking'         => 'boolean',
+        'entertainment'   => 'boolean',
+        'pool'            => 'boolean',
+        'garden'          => 'boolean',
+        'safeBox'         => 'boolean',
+        'terrace'         => 'boolean',
+        'wifi'            => 'boolean',
     ];
 
     // --- Relations ---
 
-    public function owner()
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function reservations()
+    public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);
     }
 
-    public function reservationPrices()
+    public function reservationPrices(): HasMany
     {
         return $this->hasMany(ReservationPrice::class);
     }
 
     // --- Methods ---
-    public function priceForDate($date)
+
+    public function priceForDate(string $date): ?float
     {
         return $this->reservationPrices()
             ->where('start_date', '<=', $date)
@@ -89,8 +102,8 @@ class Property extends Model
 
     protected static function booted(): void
     {
-        static::deleted(function (Property $property) {
-            Storage::disk('public')->deleteDirectory('images/' . $property->images_div);
+        static::deleted(function (Property $property): void {
+            Storage::disk('public')->deleteDirectory('images/'.$property->images_div);
         });
     }
 }

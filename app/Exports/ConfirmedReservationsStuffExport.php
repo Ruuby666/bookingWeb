@@ -16,7 +16,7 @@ class ConfirmedReservationsStuffExport
             ->where('status', 'confirmed')
             ->orderBy('check_in')
             ->get()
-            ->groupBy(fn ($r) => $r->property->title);
+            ->groupBy(fn($r) => $r->property->title);
 
         $spreadsheet = new Spreadsheet;
         $sheetIndex = 0;
@@ -59,8 +59,8 @@ class ConfirmedReservationsStuffExport
 
                 $guests = $reservation->guests ?? 'N/A';
                 $notes = $reservation->notes ?? '';
-                $arrivalHour = $checkInHour ?? '';
-                $departureHour = $checkOutHour ?? '';
+                $arrivalHour = $checkInHour;
+                $departureHour = $checkOutHour;
 
                 // Mostrar el mes solo si ha cambiado
                 if ($month !== $lastMonth) {
@@ -75,7 +75,6 @@ class ConfirmedReservationsStuffExport
                             $prevCheckOutFormatted = $prevCheckOut->format('d.m.Y');
                             $row++;
                             $sheet->setCellValue("B{$row}", "Hasta {$prevCheckOutFormatted} {$prevName}");
-
                         }
                     }
                     $row++;

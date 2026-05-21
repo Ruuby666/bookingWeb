@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read \App\Models\Property $property
+ */
 class ReservationPrice extends Model
 {
     use HasFactory;
@@ -16,7 +19,7 @@ class ReservationPrice extends Model
         'price_per_night',
     ];
 
-    public function property()
+    public function property(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Property::class);
     }
