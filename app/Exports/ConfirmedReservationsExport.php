@@ -62,8 +62,8 @@ class ConfirmedReservationsExport
                 $id = $reservation->id;
                 $totalPrice = $reservation->total_price ?? 'N/A';
                 $notes = $reservation->notes ?? '';
-                $arrivalHour = $checkInHour ?? '';
-                $departureHour = $checkOutHour ?? '';
+                $arrivalHour = $checkInHour;
+                $departureHour = $checkOutHour;
 
                 // Mostrar el mes solo si ha cambiado
                 if ($month !== $lastMonth) {
@@ -78,7 +78,6 @@ class ConfirmedReservationsExport
                             $prevCheckOutFormatted = $prevCheckOut->format('d.m.Y');
                             $row++;
                             $sheet->setCellValue("B{$row}", "Hasta {$prevCheckOutFormatted} {$prevName}");
-
                         }
                     }
                     $row++;
