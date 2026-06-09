@@ -14,10 +14,10 @@ class StoreSuperAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'         => ['required', 'string', 'max:255'],
-            'email'        => ['required', 'email', 'max:255', 'unique:users,email'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'password'     => [
+            'password' => [
                 'required',
                 'string',
                 'min:8',
@@ -32,10 +32,10 @@ class StoreSuperAdminRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.unique'       => 'This email is already registered.',
-            'password.min'       => 'Password must be at least 8 characters.',
+            'email.unique' => 'This email is already registered.',
+            'password.min' => 'Password must be at least 8 characters.',
             'password.confirmed' => 'Passwords do not match.',
-            'password.regex'     => 'Password must contain uppercase, lowercase and numbers.',
+            'password.regex' => 'Password must contain uppercase, lowercase and numbers.',
         ];
     }
 }

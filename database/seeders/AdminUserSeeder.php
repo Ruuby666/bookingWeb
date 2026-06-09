@@ -13,11 +13,11 @@ class AdminUserSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name'           => 'Super Admin',
-            'email'          => env('SUPER_ADMIN_EMAIL', env('ADMIN_EMAIL')),
-            'phone_number'   => '1234567890',
-            'password'       => env('SUPER_ADMIN_PASSWORD', env('ADMIN_PASSWORD')),
-            'is_admin'       => true,
+            'name' => 'Super Admin',
+            'email' => env('SUPER_ADMIN_EMAIL', env('ADMIN_EMAIL')),
+            'phone_number' => '1234567890',
+            'password' => env('SUPER_ADMIN_PASSWORD', env('ADMIN_PASSWORD')),
+            'is_admin' => true,
             'is_super_admin' => true,
         ]);
 

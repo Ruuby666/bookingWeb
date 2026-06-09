@@ -16,10 +16,10 @@ class UpdateAdminRequest extends FormRequest
         $adminId = $this->route('admin')?->id;
 
         return [
-            'name'         => ['required', 'string', 'max:255'],
-            'email'        => ['required', 'email', 'max:255', 'unique:users,email,' . $adminId],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $adminId],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'password'     => [
+            'password' => [
                 'nullable',
                 'string',
                 'min:8',

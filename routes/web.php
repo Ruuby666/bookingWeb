@@ -26,7 +26,7 @@ Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.ema
 
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
 
-// --- Admin routes --- 
+// --- Admin routes ---
 Route::middleware([IsAdmin::class])->group(function (): void {
     Route::post('/admin/logout', [AdminController::class, 'logoutFunction'])->name('admin.logout');
     Route::get('/admin/properties', [AdminController::class, 'properties'])->name('admin.properties');

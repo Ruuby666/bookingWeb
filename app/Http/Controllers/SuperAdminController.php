@@ -23,6 +23,7 @@ class SuperAdminController extends Controller
             ->where('is_super_admin', false)
             ->orderBy('name')
             ->get();
+
         return view('superadmin.superadmin', compact('admins'));
     }
 
@@ -40,11 +41,11 @@ class SuperAdminController extends Controller
     public function store(StoreSuperAdminRequest $request): RedirectResponse
     {
         User::create([
-            'name'         => $request->validated('name'),
-            'email'        => $request->validated('email'),
+            'name' => $request->validated('name'),
+            'email' => $request->validated('email'),
             'phone_number' => $request->validated('phone_number'),
-            'password'     => $request->validated('password'),
-            'is_admin'     => true,
+            'password' => $request->validated('password'),
+            'is_admin' => true,
             'is_super_admin' => false,
         ]);
 
@@ -59,6 +60,7 @@ class SuperAdminController extends Controller
     public function edit(User $admin): View
     {
         abort_if($admin->is_super_admin, 403);
+
         return view('superadmin.adminedit', compact('admin'));
     }
 
