@@ -25,16 +25,20 @@ class User extends Authenticatable
         'email',
         'phone_number',
         'password',
+        'is_admin',
+        'is_super_admin',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
         'is_admin',
+        'is_super_admin',
     ];
 
     protected $casts = [
         'is_admin' => 'boolean',
+        'is_super_admin' => 'boolean',
     ];
 
     // --- Relations ---
@@ -59,5 +63,10 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->is_admin;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_super_admin;
     }
 }
