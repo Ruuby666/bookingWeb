@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateAdminRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * Controller responsible for super admin operations.
@@ -24,8 +23,7 @@ class SuperAdminController extends Controller
             ->where('is_super_admin', false)
             ->orderBy('name')
             ->get();
-
-        return view('super_admin.index', compact('admins'));
+        return view('superadmin.superadmin', compact('admins'));
     }
 
     /**
@@ -33,7 +31,7 @@ class SuperAdminController extends Controller
      */
     public function create(): View
     {
-        return view('super_admin.create');
+        return view('superadmin.admincreate');
     }
 
     /**
@@ -61,8 +59,7 @@ class SuperAdminController extends Controller
     public function edit(User $admin): View
     {
         abort_if($admin->is_super_admin, 403);
-
-        return view('super_admin.edit', compact('admin'));
+        return view('superadmin.adminedit', compact('admin'));
     }
 
     /**
@@ -76,8 +73,6 @@ class SuperAdminController extends Controller
 
         if (empty($data['password'])) {
             unset($data['password']);
-        } else {
-            $data['password'] = Hash::make($data['password']);
         }
 
         $admin->update($data);
