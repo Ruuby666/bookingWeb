@@ -13,11 +13,12 @@ class AdminUserSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name' => 'Admin',
-            'email' => env('ADMIN_EMAIL'),
-            'phone_number' => '1234567890',
-            'password' => env('ADMIN_PASSWORD'),
-            'is_admin' => true,
+            'name'           => 'Super Admin',
+            'email'          => env('SUPER_ADMIN_EMAIL', env('ADMIN_EMAIL')),
+            'phone_number'   => '1234567890',
+            'password'       => env('SUPER_ADMIN_PASSWORD', env('ADMIN_PASSWORD')),
+            'is_admin'       => true,
+            'is_super_admin' => true,
         ]);
 
         User::create([
@@ -26,6 +27,7 @@ class AdminUserSeeder extends Seeder
             'phone_number' => '1234567890',
             'password' => 'Ruben1234Q',
             'is_admin' => true,
+            'is_super_admin' => false,
         ]);
 
     }
