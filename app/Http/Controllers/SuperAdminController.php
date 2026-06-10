@@ -19,8 +19,7 @@ class SuperAdminController extends Controller
      */
     public function index(): View
     {
-        $admins = User::where('is_admin', true)
-            ->where('is_super_admin', false)
+        $admins = User::wherenot('is_super_admin', true)
             ->orderBy('name')
             ->get();
 

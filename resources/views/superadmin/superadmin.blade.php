@@ -5,17 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Super Admin — Manage Admins</title>
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/superadmin.css') }}" />
     <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
-    <style>
-        .badge-active   { background: #d4edda; color: #155724; border-radius: 4px; padding: 2px 8px; font-size: 13px; }
-        .badge-inactive { background: #f8d7da; color: #721c24; border-radius: 4px; padding: 2px 8px; font-size: 13px; }
-        .super-badge    { background: #cce5ff; color: #004085; border-radius: 4px; padding: 2px 8px; font-size: 13px; }
-        .btn-toggle     { background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-        .btn-toggle:hover { background: #e0a800; }
-        .btn-edit       { background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; }
-        .btn-edit:hover { background: #138496; color: white; }
-    </style>
 </head>
 
 <body>
@@ -29,7 +20,7 @@
     @endif
 
     <div class="container">
-        <h1 class="page-title">🛡️ Super Admin — Manage Admins</h1>
+        <h1 class="page-title">Super Admin — Manage Admins</h1>
 
         <div class="buttons">
             <a href="{{ route('super_admin.create') }}" class="btn">➕ Create New Admin</a>
@@ -61,12 +52,12 @@
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="{{ route('super_admin.edit', $admin) }}" class="btn-edit">✏️ Edit</a>
+                                    <a href="{{ route('super_admin.edit', $admin) }}" class="btn-edit">Edit</a>
 
                                     <form action="{{ route('super_admin.toggle', $admin) }}" method="POST" style="display:inline;">
                                         @csrf
                                         <button type="submit" class="btn-toggle">
-                                            {{ $admin->is_admin ? '🔴 Disable' : '🟢 Enable' }}
+                                            {{ $admin->is_admin ? 'Disable' : 'Enable' }}
                                         </button>
                                     </form>
 
@@ -74,7 +65,7 @@
                                         onsubmit="return confirm('Delete {{ $admin->name }}? This cannot be undone.');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn-delete">🗑️ Delete</button>
+                                        <button type="submit" class="btn-delete">Delete</button>
                                     </form>
                                 </div>
                             </td>

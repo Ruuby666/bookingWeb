@@ -176,6 +176,18 @@ body {
     margin-bottom: 10px;
 }
 
+#footer {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: #eee;
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #ccc;
+}
+
 /* ---------------------------- */
 /*        MEDIA QUERIES        */
 /* ---------------------------- */
