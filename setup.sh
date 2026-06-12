@@ -1,38 +1,52 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-echo "🚀 Setting up BookingWeb..."
+echo "Cleaning up..."
+docker compose down -v
 
-# Levantar contenedores
+echo "Setting up BookingWeb..."
+
+echo "Checking environment file..."
+if [ ! -f .env ]; then
+    echo "   - .env not found. Copying from .env.example..."
+    cp .env.example .env
+else
+    echo "   - .env already exists."
+fi
+
+echo "Starting Docker containers..."
 docker compose up -d
 
-# Esperar a que MySQL esté listo
-echo "⏳ Waiting for database..."
-sleep 5
+echo "Waiting for MySQL..."
 
-# Instalar dependencias
-docker compose exec app composer install
+until docker compose exec -T db mysqladmin ping --silent >/dev/null 2>&1
+do
+    echo "   - Database not ready yet..."
+    sleep 2
+done
 
-# Configurar entorno
-docker compose exec app sh -c '[ ! -f .env ] && cp .env.example .env || true'
-docker compose exec app php artisan key:generate
+echo "✅ MySQL is ready."
 
-# Migraciones
-docker compose exec app php artisan migrate --force
+echo "Installing Composer dependencies..."
+docker compose exec -T app composer config process-timeout 1200
+docker compose exec -T app composer install --prefer-dist --no-interaction
 
-# Seeders
-docker compose exec app php artisan db:seed --force
+echo "Generating application key..."
+docker compose exec -T app php artisan key:generate --force
 
-# Enlace simbólico de storage
-docker compose exec app php artisan storage:link
+echo "Running migrations..."
+docker compose exec -T app php artisan migrate --force
 
-# Permisos
-docker compose exec app chmod -R 775 storage bootstrap/cache
-docker compose exec app chown -R www-data:www-data storage bootstrap/cache
+echo "Running seeders..."
+docker compose exec -T app php artisan db:seed --force
 
-# Descargar imágenes desde GitHub Releases
-echo "📸 Downloading images..."
-curl -L https://github.com/Ruuby666/bookingWeb/releases/download/images_v1/imagens.zip -o imagens.zip
-unzip imagens.zip -d storage/app/public/images/
-rm imagens.zip
+echo "Creating storage link and setting permissions..."
+docker compose exec -T app rm -rf public/storage
+docker compose exec -T app php artisan storage:link || true
+docker compose exec -T app sh -c 'chmod -R 775 storage bootstrap/cache'
+docker compose exec -T app sh -c 'chown -R www-data:www-data storage bootstrap/cache || true'
+
+echo "Downloading images..."
+docker compose exec -T app bash -c 'curl -L https://github.com/Ruuby666/bookingWeb/releases/download/images_v1/imagens.zip -o /var/www/html/imagens.zip && unzip /var/www/html/imagens.zip -d /var/www/html/storage/app/public/images/ && rm /var/www/html/imagens.zip'
 
 echo "✅ Done! Visit http://localhost:8000"
