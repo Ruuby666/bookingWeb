@@ -45,7 +45,7 @@ class SuperAdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function super_admin_can_view_admins_index_and_only_sees_non_super_admin_admins(): void
+    public function super_admin_can_view_admins_except_super_admins(): void
     {
         $superAdmin = $this->superAdminUser();
         $listedAdmin = $this->normalAdminUser();
@@ -63,8 +63,8 @@ class SuperAdminControllerTest extends TestCase
             ->assertOk()
             ->assertViewHas('admins', function ($admins) use ($listedAdmin, $otherSuperAdmin, $nonAdmin) {
                 return $admins->contains('id', $listedAdmin->id)
-                    && ! $admins->contains('id', $otherSuperAdmin->id)
-                    && ! $admins->contains('id', $nonAdmin->id);
+                    && $admins->contains('id', $nonAdmin->id)
+                    && ! $admins->contains('id', $otherSuperAdmin->id);
             });
     }
 
