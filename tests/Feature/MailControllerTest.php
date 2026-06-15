@@ -161,4 +161,25 @@ class MailControllerTest extends TestCase
             ->post(route('reservations.sendSuggestion', $reservation->id), [])
             ->assertSessionHasErrors('note');
     }
+
+    #[Test]
+    public function admin_cannot_send_suggestion_for_another_admin_property(): void
+    {
+        $adminA = User::factory()->create(['is_admin' => true]);
+        $adminB = User::factory()->create(['is_admin' => true]);
+        $propertyB = Property::factory()->create(['owner_id' => $adminB->id]);
+        $guest = User::factory()->create();
+
+        $reservation = Reservation::factory()->create([
+            'property_id' => $propertyB->id,
+            'user_id' => $guest->id,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($adminA)
+            ->post(route('reservations.sendSuggestion', $reservation->id), [
+                'note' => 'Unauthorized attempt to send suggestion.',
+            ])
+            ->assertForbidden();
+    }
 }
