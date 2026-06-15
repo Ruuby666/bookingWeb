@@ -29,7 +29,6 @@ class UserController extends Controller
     {
         $this->userService->updateUser($id, $request->validated());
 
-        return redirect()->route('users.index')
-            ->with('success', 'User updated successfully.');
+        return redirect()->route('admin.properties')->with('success', 'User updated successfully.');
     }
 }

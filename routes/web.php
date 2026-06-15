@@ -10,6 +10,7 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
 use App\Models\Property;
+use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
@@ -25,6 +26,17 @@ Route::post('/admin/login', [AdminController::class, 'loginFunction'])->name('ad
 Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.email')->middleware('throttle:3,1');
 
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
+
+Route::get('/api/properties', function () {
+    return response()->json(Property::all());
+});
+
+Route::get('/api/reservations', function () {
+    return response()->json(
+        Reservation::where('status', 'confirmed')
+            ->get(['property_id', 'check_in', 'check_out'])
+    );
+});
 
 // --- Admin routes ---
 Route::middleware([IsAdmin::class])->group(function (): void {
@@ -48,6 +60,7 @@ Route::middleware([IsAdmin::class])->group(function (): void {
     Route::get('/admin/reservation-prices', [ReservationPriceController::class, 'index'])->name('admin.reservation_prices');
     Route::delete('/reservation-prices/{id}', [ReservationPriceController::class, 'destroy'])->name('reservation-prices.destroy');
     Route::post('/reservation-prices/create', [ReservationPriceController::class, 'create'])->name('reservation-prices.create');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
 });
 
 // --- Super Admin routes ---
@@ -77,6 +90,3 @@ Route::get('/api/images', function () {
     return response()->json($images);
 });
 
-// Resource routes
-Route::resource('users', UserController::class);
-Route::resource('properties', PropertyController::class)->only(['index', 'show']);
