@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ModelsTest extends TestCase
 {
@@ -18,21 +19,21 @@ class ModelsTest extends TestCase
     // User model
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function user_is_admin_returns_true_for_admin(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $this->assertTrue($admin->isAdmin());
     }
 
-    /** @test */
+    #[Test]
     public function user_is_admin_returns_false_for_regular_user(): void
     {
         $user = User::factory()->create(['is_admin' => false]);
         $this->assertFalse($user->isAdmin());
     }
 
-    /** @test */
+    #[Test]
     public function user_password_is_hashed_via_mutator(): void
     {
         $user = User::factory()->create(['password' => 'plain-password']);
@@ -41,7 +42,7 @@ class ModelsTest extends TestCase
         $this->assertNotEquals('plain-password', $user->password);
     }
 
-    /** @test */
+    #[Test]
     public function user_has_many_properties(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -50,7 +51,7 @@ class ModelsTest extends TestCase
         $this->assertCount(2, $owner->properties);
     }
 
-    /** @test */
+    #[Test]
     public function user_has_many_reservations(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -69,7 +70,7 @@ class ModelsTest extends TestCase
     // Property model
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function property_belongs_to_owner(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -78,7 +79,7 @@ class ModelsTest extends TestCase
         $this->assertEquals($owner->id, $property->owner->id);
     }
 
-    /** @test */
+    #[Test]
     public function property_has_many_reservations(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -93,7 +94,7 @@ class ModelsTest extends TestCase
         $this->assertCount(2, $property->reservations);
     }
 
-    /** @test */
+    #[Test]
     public function property_has_many_reservation_prices(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -109,7 +110,7 @@ class ModelsTest extends TestCase
         $this->assertCount(1, $property->reservationPrices);
     }
 
-    /** @test */
+    #[Test]
     public function property_price_for_date_returns_custom_price_when_in_range(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -130,7 +131,7 @@ class ModelsTest extends TestCase
         $this->assertEquals(200.00, $price);
     }
 
-    /** @test */
+    #[Test]
     public function property_price_for_date_returns_null_outside_range(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -152,7 +153,7 @@ class ModelsTest extends TestCase
     // Reservation model
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function reservation_belongs_to_user(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -166,7 +167,7 @@ class ModelsTest extends TestCase
         $this->assertEquals($user->id, $reservation->user->id);
     }
 
-    /** @test */
+    #[Test]
     public function reservation_belongs_to_property(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -180,7 +181,7 @@ class ModelsTest extends TestCase
         $this->assertEquals($property->id, $reservation->property->id);
     }
 
-    /** @test */
+    #[Test]
     public function reservation_casts_check_in_and_check_out_as_datetime(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -202,7 +203,7 @@ class ModelsTest extends TestCase
     // ReservationPrice model
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function reservation_price_belongs_to_property(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);

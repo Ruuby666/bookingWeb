@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PropertyControllerTest extends TestCase
 {
@@ -41,7 +42,7 @@ class PropertyControllerTest extends TestCase
     // Show (public)
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function anyone_can_view_a_property_page(): void
     {
         $owner = $this->admin();
@@ -65,7 +66,7 @@ class PropertyControllerTest extends TestCase
             ->assertViewIs('property.show');
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_404_for_nonexistent_property(): void
     {
         $this->get(route('property.show', 9999))
@@ -76,7 +77,7 @@ class PropertyControllerTest extends TestCase
     // Create form
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_access_property_create_form(): void
     {
         $this->actingAs($this->admin())
@@ -85,7 +86,7 @@ class PropertyControllerTest extends TestCase
             ->assertViewIs('property.add_or_edit_property');
     }
 
-    /** @test */
+    #[Test]
     public function guest_cannot_access_property_create_form(): void
     {
         // IsAdmin middleware redirects to '/' not '/login'
@@ -97,7 +98,7 @@ class PropertyControllerTest extends TestCase
     // Store
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_store_a_new_property(): void
     {
         Storage::fake('public');
@@ -127,7 +128,7 @@ class PropertyControllerTest extends TestCase
         $this->assertDatabaseHas('properties', ['title' => 'Villa Sunset', 'owner_id' => $admin->id]);
     }
 
-    /** @test */
+    #[Test]
     public function store_fails_when_required_fields_are_missing(): void
     {
         $this->actingAs($this->admin())
@@ -139,7 +140,7 @@ class PropertyControllerTest extends TestCase
     // Edit form
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function owner_can_access_edit_form_for_their_property(): void
     {
         $owner = $this->admin();
@@ -151,7 +152,7 @@ class PropertyControllerTest extends TestCase
             ->assertViewIs('property.add_or_edit_property');
     }
 
-    /** @test */
+    #[Test]
     public function non_owner_cannot_access_edit_form(): void
     {
         $otherAdmin = $this->admin();
@@ -167,7 +168,7 @@ class PropertyControllerTest extends TestCase
     // Update
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function owner_can_update_their_property(): void
     {
         $owner = $this->admin();
@@ -198,7 +199,7 @@ class PropertyControllerTest extends TestCase
         $this->assertDatabaseHas('properties', ['id' => $property->id, 'title' => 'Updated Title']);
     }
 
-    /** @test */
+    #[Test]
     public function non_owner_cannot_update_a_property(): void
     {
         $owner = $this->admin();
@@ -229,7 +230,7 @@ class PropertyControllerTest extends TestCase
     // Destroy
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function owner_can_delete_their_property(): void
     {
         $owner = $this->admin();
@@ -242,7 +243,7 @@ class PropertyControllerTest extends TestCase
         $this->assertDatabaseMissing('properties', ['id' => $property->id]);
     }
 
-    /** @test */
+    #[Test]
     public function non_owner_cannot_delete_a_property(): void
     {
         $owner = $this->admin();

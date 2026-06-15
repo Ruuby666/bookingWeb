@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AuthServiceTest extends TestCase
 {
@@ -39,7 +40,7 @@ class AuthServiceTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_user_does_not_exist(): void
     {
         $result = $this->authService->attemptAdminLogin('nonexistent@example.com', 'Password1A');
@@ -48,7 +49,7 @@ class AuthServiceTest extends TestCase
         $this->assertEquals('Email or password is incorrect.', $result['error']);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_password_is_wrong(): void
     {
         $this->insertUser('admin@example.com', 'Password1A', true);
@@ -59,7 +60,7 @@ class AuthServiceTest extends TestCase
         $this->assertEquals('Email or password is incorrect.', $result['error']);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_user_is_not_admin(): void
     {
         $this->insertUser('user@example.com', 'Password1A', false);
@@ -70,7 +71,7 @@ class AuthServiceTest extends TestCase
         $this->assertEquals('You are not authorized to access this page.', $result['error']);
     }
 
-    /** @test */
+    #[Test]
     public function it_logs_in_successfully_when_credentials_are_correct_and_user_is_admin(): void
     {
         $this->insertUser('admin@example.com', 'Password1A', true);
@@ -81,7 +82,7 @@ class AuthServiceTest extends TestCase
         $this->assertTrue(Auth::check());
     }
 
-    /** @test */
+    #[Test]
     public function it_logs_out_the_authenticated_user(): void
     {
         $user = User::factory()->create(['is_admin' => true]);

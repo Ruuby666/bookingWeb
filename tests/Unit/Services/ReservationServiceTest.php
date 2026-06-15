@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ReservationServiceTest extends TestCase
 {
@@ -41,7 +42,7 @@ class ReservationServiceTest extends TestCase
     // createReservation
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_creates_a_pending_reservation(): void
     {
         $property = $this->makeProperty();
@@ -62,7 +63,7 @@ class ReservationServiceTest extends TestCase
         $this->assertDatabaseHas('reservations', ['id' => $reservation->id, 'status' => 'pending']);
     }
 
-    /** @test */
+    #[Test]
     public function it_swaps_dates_if_check_in_is_after_check_out(): void
     {
         $property = $this->makeProperty();
@@ -83,7 +84,7 @@ class ReservationServiceTest extends TestCase
     // confirmReservation
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_confirms_a_reservation_and_sends_email(): void
     {
         $property = $this->makeProperty();
@@ -104,7 +105,7 @@ class ReservationServiceTest extends TestCase
         Mail::assertSent(ReservationConfirmedMail::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_confirming_overlapping_reservation(): void
     {
         $property = $this->makeProperty();
@@ -139,7 +140,7 @@ class ReservationServiceTest extends TestCase
     // updateReservationTime
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_updates_reservation_check_in_and_check_out_times(): void
     {
         $property = $this->makeProperty();
@@ -159,7 +160,7 @@ class ReservationServiceTest extends TestCase
         $this->assertEquals('12:00', $reservation->check_out->format('H:i'));
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_times_are_invalid_on_same_day(): void
     {
         $property = $this->makeProperty();
@@ -181,7 +182,7 @@ class ReservationServiceTest extends TestCase
     // findOverlappingReservation
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_finds_an_overlapping_confirmed_reservation(): void
     {
         $property = $this->makeProperty();
@@ -204,7 +205,7 @@ class ReservationServiceTest extends TestCase
         $this->assertNotNull($overlap);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_null_when_no_overlap_exists(): void
     {
         $property = $this->makeProperty();
@@ -231,7 +232,7 @@ class ReservationServiceTest extends TestCase
     // getPendingAndConfirmedForOwner
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_returns_pending_and_confirmed_reservations_for_owner(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);

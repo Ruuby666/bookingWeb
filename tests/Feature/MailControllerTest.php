@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class MailControllerTest extends TestCase
 {
@@ -23,7 +24,7 @@ class MailControllerTest extends TestCase
     // sendEmail – booking request
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function guest_can_submit_a_valid_booking_request(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -52,7 +53,7 @@ class MailControllerTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'alice@example.com']);
     }
 
-    /** @test */
+    #[Test]
     public function booking_fails_when_verification_email_does_not_match(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -71,7 +72,7 @@ class MailControllerTest extends TestCase
         ])->assertSessionHasErrors('verification_email');
     }
 
-    /** @test */
+    #[Test]
     public function booking_fails_when_required_fields_are_missing(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -83,7 +84,7 @@ class MailControllerTest extends TestCase
         ])->assertSessionHasErrors();
     }
 
-    /** @test */
+    #[Test]
     public function booking_fails_when_dates_overlap_confirmed_reservation(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -124,7 +125,7 @@ class MailControllerTest extends TestCase
     // sendSuggestion
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_send_a_suggestion_for_a_reservation(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
@@ -144,7 +145,7 @@ class MailControllerTest extends TestCase
             ->assertRedirect(route('admin.reservations.pending'));
     }
 
-    /** @test */
+    #[Test]
     public function suggestion_fails_when_note_is_missing(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);

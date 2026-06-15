@@ -7,6 +7,7 @@ use App\Services\UserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class UserServiceTest extends TestCase
 {
@@ -20,7 +21,7 @@ class UserServiceTest extends TestCase
         $this->userService = new UserService;
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_a_new_user_if_email_does_not_exist(): void
     {
         $user = $this->userService->findOrCreate('John Doe', 'john@example.com', '600123456');
@@ -29,7 +30,7 @@ class UserServiceTest extends TestCase
         $this->assertEquals('John Doe', $user->name);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_existing_user_if_email_already_exists(): void
     {
         $existing = User::factory()->create(['email' => 'existing@example.com']);
@@ -40,7 +41,7 @@ class UserServiceTest extends TestCase
         $this->assertEquals(1, User::count());
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_user_data_without_password(): void
     {
         $user = User::factory()->create(['name' => 'Old Name', 'email' => 'old@example.com']);
@@ -54,7 +55,7 @@ class UserServiceTest extends TestCase
         $this->assertEquals('new@example.com', $updated->email);
     }
 
-    /** @test */
+    #[Test]
     public function it_hashes_password_when_updating_user(): void
     {
         // NOTE: UserService::updateUser calls Hash::make() before user->update().
@@ -78,7 +79,7 @@ class UserServiceTest extends TestCase
         $this->assertStringStartsWith('$2y$', $user->password);
     }
 
-    /** @test */
+    #[Test]
     public function it_does_not_change_password_when_empty_string_provided(): void
     {
         $user = User::factory()->create();

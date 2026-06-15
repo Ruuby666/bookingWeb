@@ -9,6 +9,7 @@ use App\Services\ReservationPriceService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ReservationPriceServiceTest extends TestCase
 {
@@ -37,7 +38,7 @@ class ReservationPriceServiceTest extends TestCase
     // getPriceBreakdown
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_returns_default_price_when_no_custom_range_exists(): void
     {
         [, $property] = $this->makeOwnerAndProperty(['price_per_night' => 80.00]);
@@ -54,7 +55,7 @@ class ReservationPriceServiceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_uses_custom_price_within_range_and_default_outside(): void
     {
         [, $property] = $this->makeOwnerAndProperty(['price_per_night' => 100.00]);
@@ -81,7 +82,7 @@ class ReservationPriceServiceTest extends TestCase
     // createPriceRange
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_creates_a_price_range_for_the_owner(): void
     {
         [$owner, $property] = $this->makeOwnerAndProperty();
@@ -101,7 +102,7 @@ class ReservationPriceServiceTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_price_range_overlaps(): void
     {
         [$owner, $property] = $this->makeOwnerAndProperty();
@@ -125,7 +126,7 @@ class ReservationPriceServiceTest extends TestCase
         $this->assertStringContainsString('overlaps', $result['error']);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_unauthorized_error_when_property_does_not_belong_to_user(): void
     {
         [, $property] = $this->makeOwnerAndProperty();
@@ -147,7 +148,7 @@ class ReservationPriceServiceTest extends TestCase
     // deletePriceRange
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_deletes_a_price_range_owned_by_the_user(): void
     {
         [$owner, $property] = $this->makeOwnerAndProperty();
@@ -166,7 +167,7 @@ class ReservationPriceServiceTest extends TestCase
         $this->assertDatabaseMissing('reservation_prices', ['id' => $price->id]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_deleting_a_price_range_not_owned_by_user(): void
     {
         [, $property] = $this->makeOwnerAndProperty();

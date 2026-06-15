@@ -6,12 +6,13 @@ use App\Models\Property;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class IndexControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function homepage_is_accessible_to_guests(): void
     {
         $this->get(route('index'))
@@ -19,7 +20,7 @@ class IndexControllerTest extends TestCase
             ->assertViewIs('index');
     }
 
-    /** @test */
+    #[Test]
     public function homepage_shows_all_properties(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -32,7 +33,7 @@ class IndexControllerTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function homepage_works_with_no_properties(): void
     {
         $this->get(route('index'))
@@ -45,7 +46,7 @@ class IsAdminMiddlewareTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function unauthenticated_user_is_redirected_from_admin_routes(): void
     {
         // IsAdmin middleware redirects to '/' not '/login'
@@ -53,7 +54,7 @@ class IsAdminMiddlewareTest extends TestCase
             ->assertRedirect('/');
     }
 
-    /** @test */
+    #[Test]
     public function authenticated_non_admin_is_redirected_from_admin_routes(): void
     {
         // IsAdmin middleware redirects to '/' not '/login'
@@ -64,7 +65,7 @@ class IsAdminMiddlewareTest extends TestCase
             ->assertRedirect('/');
     }
 
-    /** @test */
+    #[Test]
     public function admin_user_can_access_admin_routes(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
@@ -74,7 +75,7 @@ class IsAdminMiddlewareTest extends TestCase
             ->assertOk();
     }
 
-    /** @test */
+    #[Test]
     public function login_page_is_accessible_to_guests(): void
     {
         $this->get(route('login'))

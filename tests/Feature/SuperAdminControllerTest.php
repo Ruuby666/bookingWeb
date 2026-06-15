@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SuperAdminControllerTest extends TestCase
 {
@@ -27,14 +28,14 @@ class SuperAdminControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function guest_is_redirected_from_super_admin_routes(): void
     {
         $this->get(route('super_admin.index'))
             ->assertRedirect('/');
     }
 
-    /** @test */
+    #[Test]
     public function non_super_admin_is_redirected_from_super_admin_routes(): void
     {
         $admin = $this->normalAdminUser();
@@ -44,7 +45,7 @@ class SuperAdminControllerTest extends TestCase
             ->assertRedirect('/');
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_can_view_admins_except_super_admins(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -68,7 +69,7 @@ class SuperAdminControllerTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_can_create_admin_user(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -96,7 +97,7 @@ class SuperAdminControllerTest extends TestCase
         $this->assertTrue(Hash::check('StrongPass1', $createdAdmin->password));
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_cannot_create_admin_with_invalid_data(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -115,7 +116,7 @@ class SuperAdminControllerTest extends TestCase
             ->assertSessionHasErrors(['name', 'email', 'phone_number', 'password']);
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_can_update_admin_without_changing_password(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -141,7 +142,7 @@ class SuperAdminControllerTest extends TestCase
         $this->assertSame($originalPassword, $admin->password);
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_can_update_admin_password(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -162,7 +163,7 @@ class SuperAdminControllerTest extends TestCase
         $this->assertTrue(Hash::check('NewStrongPass1', $admin->password));
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_cannot_edit_another_super_admin(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -176,7 +177,7 @@ class SuperAdminControllerTest extends TestCase
             ->assertForbidden();
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_can_toggle_admin_access_for_non_super_admin_user(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -190,7 +191,7 @@ class SuperAdminControllerTest extends TestCase
         $this->assertFalse($admin->fresh()->is_admin);
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_cannot_toggle_super_admin_access(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -204,7 +205,7 @@ class SuperAdminControllerTest extends TestCase
             ->assertForbidden();
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_can_delete_non_super_admin_user(): void
     {
         $superAdmin = $this->superAdminUser();
@@ -218,7 +219,7 @@ class SuperAdminControllerTest extends TestCase
         $this->assertDatabaseMissing('users', ['id' => $admin->id]);
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_cannot_delete_super_admin_user(): void
     {
         $superAdmin = $this->superAdminUser();

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AdminControllerTest extends TestCase
 {
@@ -47,7 +48,7 @@ class AdminControllerTest extends TestCase
     // Login
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_login_with_correct_credentials(): void
     {
         // Password must satisfy AdminLoginRequest: min:8, uppercase, lowercase, number
@@ -62,7 +63,7 @@ class AdminControllerTest extends TestCase
         $this->assertAuthenticated();
     }
 
-    /** @test */
+    #[Test]
     public function login_fails_with_wrong_password(): void
     {
         $this->insertUser('admin@test.com', 'Secret1A', true);
@@ -75,7 +76,7 @@ class AdminControllerTest extends TestCase
         $this->assertGuest();
     }
 
-    /** @test */
+    #[Test]
     public function login_fails_with_password_that_does_not_meet_requirements(): void
     {
         // Password 'secret' has no uppercase or number — should fail validation
@@ -89,7 +90,7 @@ class AdminControllerTest extends TestCase
         $this->assertGuest();
     }
 
-    /** @test */
+    #[Test]
     public function non_admin_user_cannot_login_as_admin(): void
     {
         $this->insertUser('user@test.com', 'Password1A', false);
@@ -106,7 +107,7 @@ class AdminControllerTest extends TestCase
     // Logout
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_logout(): void
     {
         $admin = $this->adminUser();
@@ -122,7 +123,7 @@ class AdminControllerTest extends TestCase
     // Admin properties page
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_see_their_properties(): void
     {
         $admin = $this->adminUser();
@@ -135,7 +136,7 @@ class AdminControllerTest extends TestCase
             ->assertViewHas('properties');
     }
 
-    /** @test */
+    #[Test]
     public function guest_is_redirected_from_admin_properties(): void
     {
         // IsAdmin middleware redirects to '/' (root), not '/login'
@@ -143,7 +144,7 @@ class AdminControllerTest extends TestCase
             ->assertRedirect('/');
     }
 
-    /** @test */
+    #[Test]
     public function non_admin_is_redirected_from_admin_properties(): void
     {
         // IsAdmin middleware redirects to '/' (root), not '/login'
@@ -156,7 +157,7 @@ class AdminControllerTest extends TestCase
     // Pending reservations
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_view_pending_reservations_page(): void
     {
         $admin = $this->adminUser();
@@ -171,7 +172,7 @@ class AdminControllerTest extends TestCase
     // Confirm reservation (updateStatus)
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_confirm_a_pending_reservation(): void
     {
         $admin = $this->adminUser();
@@ -193,7 +194,7 @@ class AdminControllerTest extends TestCase
         $this->assertEquals('confirmed', $reservation->fresh()->status);
     }
 
-    /** @test */
+    #[Test]
     public function admin_cannot_confirm_reservation_of_another_owner(): void
     {
         $admin = $this->adminUser();
@@ -216,7 +217,7 @@ class AdminControllerTest extends TestCase
     // Calendar
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_access_the_calendar_page(): void
     {
         $admin = $this->adminUser();
@@ -227,7 +228,7 @@ class AdminControllerTest extends TestCase
             ->assertViewIs('admin.calendar');
     }
 
-    /** @test */
+    #[Test]
     public function admin_gets_confirmed_reservations_as_json(): void
     {
         $admin = $this->adminUser();
