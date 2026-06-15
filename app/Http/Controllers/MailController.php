@@ -46,7 +46,7 @@ class MailController extends Controller
         }
 
         return redirect()
-            ->route('properties.show', ['property' => $property])
+            ->route('property.show', ['id' => $property->id])
             ->with('success', 'Email sent successfully! We will contact you shortly.');
     }
 

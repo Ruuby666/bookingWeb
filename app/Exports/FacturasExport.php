@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Reservation;
+use App\Models\User;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -12,10 +13,18 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class FacturasExport
 {
-    public static function download(array $ids, $invoiceAmount)
+    public static function download(User $user, array $ids, $invoiceAmount)
     {
-        $reservations = Reservation::with(['user', 'property'])
-            ->whereIn('id', $ids)
+        $query = Reservation::with(['user', 'property'])
+            ->whereIn('id', $ids);
+
+        if (! $user->is_super_admin) {
+            $query->whereHas('property', function ($q) use ($user) {
+                $q->where('owner_id', $user->id);
+            });
+        }
+
+        $reservations = $query
             ->orderBy('check_in')
             ->get();
 

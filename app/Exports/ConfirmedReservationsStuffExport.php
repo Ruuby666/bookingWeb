@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Reservation;
+use App\Models\User;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -10,14 +11,22 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ConfirmedReservationsStuffExport
 {
-    public static function download()
+    public static function download(User $user)
     {
-        $reservations = Reservation::with(['user', 'property'])
-            ->where('status', 'confirmed')
+        $query = Reservation::with(['user', 'property'])
+            ->where('status', 'confirmed');
+
+        if (! $user->is_super_admin) {
+            $query->whereHas('property', function ($q) use ($user) {
+                $q->where('owner_id', $user->id);
+            });
+        }
+
+        $reservations = $query
             ->orderBy('check_in')
             ->get()
-            ->groupBy(fn ($r) => $r->property->title);
-
+            ->groupBy(fn($r) => $r->property->title);
+            
         $spreadsheet = new Spreadsheet;
         $sheetIndex = 0;
 
