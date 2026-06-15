@@ -37,9 +37,7 @@ class UserService
     {
         $user = User::findOrFail($id);
 
-        if (! empty($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        } else {
+        if (empty($data['password'])) {
             unset($data['password']);
         }
 
