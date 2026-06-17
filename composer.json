@@ -1,5 +1,6 @@
 {
     "name": "ruben/booking-web",
+    "description": "Laravel booking platform for property reservations",
     "type": "project",
     "license": "MIT",
     "require": {
@@ -7,7 +8,7 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10",
         "maatwebsite/excel": "^3.1",
-        "maennchen/zipstream-php": "3.1"
+        "maennchen/zipstream-php": "^3.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
