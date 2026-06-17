@@ -43,7 +43,6 @@ jobs:
 
       - name: Check security vulnerabilities
         run: composer audit
-        continue-on-error: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
