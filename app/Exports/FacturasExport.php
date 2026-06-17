@@ -18,7 +18,9 @@ class FacturasExport
         $query = Reservation::with(['user', 'property'])
             ->whereIn('id', $ids);
 
-        if (! $user->is_super_admin) {
+        // Respect configuration for super-admin export policy. When disabled,
+        // super-admins are treated like regular admins and only see their properties.
+        if (! $user->is_super_admin || ! config('exports.super_admin_can_export_all')) {
             $query->whereHas('property', function ($q) use ($user) {
                 $q->where('owner_id', $user->id);
             });

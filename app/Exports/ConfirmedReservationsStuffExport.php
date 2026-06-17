@@ -16,7 +16,8 @@ class ConfirmedReservationsStuffExport
         $query = Reservation::with(['user', 'property'])
             ->where('status', 'confirmed');
 
-        if (! $user->is_super_admin) {
+        // Respect configuration: if super-admins should not export all, scope by owner
+        if (! $user->is_super_admin || ! config('exports.super_admin_can_export_all')) {
             $query->whereHas('property', function ($q) use ($user) {
                 $q->where('owner_id', $user->id);
             });

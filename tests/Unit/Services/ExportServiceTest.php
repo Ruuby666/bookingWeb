@@ -105,6 +105,8 @@ class ExportServiceTest extends TestCase
     #[Test]
     public function super_admin_can_export_facturas_from_any_admin_property(): void
     {
+        config(['exports.super_admin_can_export_all' => true]);
+
         $superAdmin = User::factory()->create([
             'is_admin' => true,
             'is_super_admin' => true,
@@ -148,6 +150,42 @@ class ExportServiceTest extends TestCase
         $this->assertInstanceOf(BinaryFileResponse::class, $result);
         $this->assertTrue($reservationA->invoice);
         $this->assertTrue($reservationB->invoice);
+    }
+
+    #[Test]
+    public function super_admin_respects_config_when_restricted(): void
+    {
+        config(['exports.super_admin_can_export_all' => false]);
+
+        $superAdmin = User::factory()->create([
+            'is_admin' => true,
+            'is_super_admin' => true,
+        ]);
+
+        $admin = User::factory()->create([
+            'is_admin' => true,
+        ]);
+
+        $propertyA = Property::factory()->create([
+            'owner_id' => $admin->id,
+        ]);
+
+        $reservationA = Reservation::factory()->create([
+            'property_id' => $propertyA->id,
+            'status' => 'confirmed',
+        ]);
+
+        $result = $this->ExportService->downloadInvoicesExcel(
+            $superAdmin,
+            [$reservationA->id],
+            1.0
+        );
+
+        $reservationA->refresh();
+
+        $this->assertInstanceOf(BinaryFileResponse::class, $result);
+        // Since config disables export-all, the super admin should NOT mark this reservation
+        $this->assertFalse($reservationA->invoice);
     }
 
     #[Test]

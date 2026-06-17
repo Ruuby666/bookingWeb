@@ -56,7 +56,9 @@ class ExportService
 
         $query = Reservation::whereIn('id', $ids);
 
-        if (! $user->is_super_admin) {
+        // If configuration disallows super-admin export-all, scope invoice updates
+        // to reservations that belong to properties owned by the user.
+        if (! $user->is_super_admin || ! config('exports.super_admin_can_export_all')) {
             $query->whereHas('property', function ($q) use ($user) {
                 $q->where('owner_id', $user->id);
             });
