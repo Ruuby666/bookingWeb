@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminLoginRequest;
+use App\Http\Requests\ExportInvoicesRequest;
 use App\Http\Requests\UpdateReservationTimeRequest;
 use App\Models\Property;
 use App\Models\Reservation;
@@ -189,12 +190,14 @@ class AdminController extends Controller
      *
      * @return BinaryFileResponse
      */
-    public function exportfacturaExcel(Request $request)
+    public function exportfacturaExcel(ExportInvoicesRequest $request)
     {
+        $validated = $request->validated();
+
         return $this->exportService->downloadInvoicesExcel(
             Auth::user(),
-            $request->input('ids'),
-            $request->input('invoice_amount'),
+            $validated['ids'] ?? [],
+            $validated['invoice_amount'] ?? null,
         );
     }
 }
