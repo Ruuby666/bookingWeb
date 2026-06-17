@@ -38,9 +38,25 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Validate composer.json
+        run: composer validate --strict
+
       - name: Check security vulnerabilities
         run: composer audit
         continue-on-error: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install Node dependencies
+        run: |
+          npm ci
+
+      - name: Build frontend assets
+        run: |
+          npm run build
 
       - name: Check code style
         run: composer lint:check
@@ -59,6 +75,9 @@ jobs:
           php artisan cache:clear
           php artisan route:clear
           php artisan view:clear
+
+      - name: Verify routes
+        run: php artisan route:list --except-vendor
 
       - name: Run migrations
         env:
