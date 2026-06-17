@@ -8,8 +8,8 @@ use App\Models\User;
 use App\Services\ReservationPriceService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ReservationPriceServiceTest extends TestCase
 {

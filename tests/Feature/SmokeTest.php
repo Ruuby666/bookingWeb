@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Property;
-use App\Models\User;
-use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
-
+use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class SmokeTest extends TestCase
 {
@@ -70,12 +67,12 @@ class SmokeTest extends TestCase
 
         Storage::disk('public')->put(
             'images/test-property/image1.jpg',
-            'fake-image-content'
+            'fake-image-content',
         );
 
         Storage::disk('public')->put(
             'images/test-property/image2.jpg',
-            'fake-image-content'
+            'fake-image-content',
         );
 
         $response = $this->get("/property/{$property->id}");
@@ -107,7 +104,6 @@ class SmokeTest extends TestCase
         $this->assertNotEquals(404, $response->status());
         $this->assertNotEquals(405, $response->status());
     }
-
 
     #[Test]
     public function test_homepage_contains_main_elements(): void

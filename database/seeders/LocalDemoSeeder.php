@@ -23,6 +23,7 @@ class LocalDemoSeeder extends Seeder
     {
         if (app()->isProduction()) {
             $this->command->warn('LocalDemoSeeder should not run in production.');
+
             return;
         }
 

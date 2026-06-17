@@ -34,7 +34,7 @@ Route::get('/api/properties', function () {
 Route::get('/api/reservations', function () {
     return response()->json(
         Reservation::where('status', 'confirmed')
-            ->get(['property_id', 'check_in', 'check_out'])
+            ->get(['property_id', 'check_in', 'check_out']),
     );
 });
 
@@ -89,4 +89,3 @@ Route::get('/api/images', function () {
 
     return response()->json($images);
 });
-

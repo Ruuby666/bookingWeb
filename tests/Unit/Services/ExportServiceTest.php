@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Services;
 
-use App\Services\ExportService;
-use App\Models\User;
 use App\Models\Property;
 use App\Models\Reservation;
+use App\Models\User;
+use App\Services\ExportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ExportServiceTest extends TestCase
 {
@@ -52,12 +52,12 @@ class ExportServiceTest extends TestCase
             'status' => 'confirmed',
         ]);
 
-        $service = app(\App\Services\ExportService::class);
+        $service = app(ExportService::class);
 
         $result = $service->downloadInvoicesExcel(
             $adminA,
             [$reservationA->id, $reservationB->id],
-            1.0
+            1.0,
         );
 
         $reservationA->refresh();
@@ -65,7 +65,7 @@ class ExportServiceTest extends TestCase
 
         $this->assertInstanceOf(
             BinaryFileResponse::class,
-            $result
+            $result,
         );
 
         $this->assertTrue($reservationA->invoice);
@@ -141,7 +141,7 @@ class ExportServiceTest extends TestCase
         $result = $this->ExportService->downloadInvoicesExcel(
             $superAdmin,
             [$reservationA->id, $reservationB->id],
-            1.0
+            1.0,
         );
 
         $reservationA->refresh();
@@ -178,7 +178,7 @@ class ExportServiceTest extends TestCase
         $result = $this->ExportService->downloadInvoicesExcel(
             $superAdmin,
             [$reservationA->id],
-            1.0
+            1.0,
         );
 
         $reservationA->refresh();
@@ -209,7 +209,7 @@ class ExportServiceTest extends TestCase
         $result = $this->ExportService->downloadInvoicesExcel(
             $admin,
             $ids,
-            1.0
+            1.0,
         );
 
         $this->assertInstanceOf(BinaryFileResponse::class, $result);

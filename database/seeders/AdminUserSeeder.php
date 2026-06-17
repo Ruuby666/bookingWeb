@@ -17,6 +17,7 @@ class AdminUserSeeder extends Seeder
     {
         if (! env('ADMIN_EMAIL')) {
             $this->command->warn('Skipping AdminUserSeeder: ADMIN_EMAIL not set.');
+
             return;
         }
 
