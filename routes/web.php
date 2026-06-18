@@ -44,11 +44,10 @@ Route::middleware([IsAdmin::class])->group(function (): void {
     Route::get('/admin/properties', [AdminController::class, 'properties'])->name('admin.properties');
     Route::get('/admin/reservations/pending', [AdminController::class, 'pending'])->name('admin.reservations.pending');
     Route::post('/admin/reservations/pending/update/{id}', [AdminController::class, 'updateStatus'])->name('admin.reservations.pending.update');
-    Route::put('/admin/properties/update/{property}', [AdminController::class, 'updateProperty'])->name('admin.properties.update');
     Route::delete('/properties/{id}', [PropertyController::class, 'destroy'])->name('properties.destroy');
     Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
     Route::post('/properties/store', [PropertyController::class, 'store'])->name('properties.store');
-    Route::get('/properties/{id}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
+    Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
     Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
     Route::get('/suggestion/{reservation}', [AdminController::class, 'suggestionEmail'])->name('suggestion.create');
     Route::post('/reservations/{id}/send-suggestion', [MailController::class, 'sendSuggestion'])->name('reservations.sendSuggestion');
