@@ -190,13 +190,18 @@
             const prevButton = document.querySelector(".prev");
             const nextButton = document.querySelector(".next");
 
-            // Validar si hay tarjetas en el carrusel
-            if (!carousel || !prevButton || !nextButton || !container) {
-                console.error("Error: Not elements found in carrusel.");
+            if (!carousel || !prevButton || !nextButton || !container) return;
+
+            const firstCard = document.querySelector(".cardcontainer");
+
+            // If there are no cards, hide the buttons and return
+            if (!firstCard) {
+                prevButton.style.display = "none";
+                nextButton.style.display = "none";
                 return;
             }
 
-            let cardWidth = document.querySelector(".cardcontainer").offsetWidth + 15;
+            let cardWidth = firstCard.offsetWidth + 15;
 
             function updateCarouselState() {
                 const canScroll = carousel.scrollWidth > carousel.clientWidth + 5;
@@ -223,7 +228,8 @@
             });
 
             window.addEventListener("resize", function() {
-                cardWidth = document.querySelector(".cardcontainer").offsetWidth + 15;
+                const card = document.querySelector(".cardcontainer");
+                if (card) cardWidth = card.offsetWidth + 15;
                 updateCarouselState();
             });
 
