@@ -125,28 +125,62 @@
         }
 
         // Function to build content for InfoWindow
+        // Function to build content for InfoWindow
         function buildContent(property) {
             const content = document.createElement("div");
-
             content.classList.add("property");
-            content.innerHTML = `
-                <div class="property-image">
-                    <a href="/property/${property.id}">
-                    <img src="/storage/images/${property.images_div}/${propertyWithImages[property.id]}" alt="${property.title}" style="width: 100px; height: 100px; object-fit: cover;">
-                    </a>
-                </div>
-                <div class="property-details">
-                    <h3>${property.title}</h3>
-                    <p>${property.description}</p>
-                    <p><strong>Location:</strong> ${property.location}</p>
-                    <p><strong>Price per Night:</strong> Around ${property.price_per_night}€</p>                    
-                    <p><strong>Capacity:</strong> ${property.capacity} people</p>
-                    <a href="/property/${property.id}">
-                        View Property Details
-                    </a>
 
-                </div>
-                `;
+            // imagen + link
+            const imgWrapper = document.createElement("div");
+            imgWrapper.classList.add("property-image");
+
+            const linkImg = document.createElement("a");
+            linkImg.href = `/property/${property.id}`;
+
+            const img = document.createElement("img");
+            img.src = `/storage/images/${property.images_div}/${propertyWithImages[property.id]}`;
+            img.alt = property.title;
+            img.style.cssText = "width: 100px; height: 100px; object-fit: cover;";
+
+            linkImg.appendChild(img);
+            imgWrapper.appendChild(linkImg);
+
+            // detalles
+            const details = document.createElement("div");
+            details.classList.add("property-details");
+
+            const title = document.createElement("h3");
+            title.textContent = property.title;
+
+            const desc = document.createElement("p");
+            desc.textContent = property.description;
+
+            const location = document.createElement("p");
+            location.innerHTML = "<strong>Location:</strong> ";
+            location.appendChild(document.createTextNode(property.location));
+
+            const price = document.createElement("p");
+            price.innerHTML = "<strong>Price per Night:</strong> ";
+            price.appendChild(document.createTextNode(`Around ${property.price_per_night}€`));
+
+            const capacity = document.createElement("p");
+            capacity.innerHTML = "<strong>Capacity:</strong> ";
+            capacity.appendChild(document.createTextNode(`${property.capacity} people`));
+
+            const linkDetails = document.createElement("a");
+            linkDetails.href = `/property/${property.id}`;
+            linkDetails.textContent = "View Property Details";
+
+            details.appendChild(title);
+            details.appendChild(desc);
+            details.appendChild(location);
+            details.appendChild(price);
+            details.appendChild(capacity);
+            details.appendChild(linkDetails);
+
+            content.appendChild(imgWrapper);
+            content.appendChild(details);
+
             return content;
         }
 
