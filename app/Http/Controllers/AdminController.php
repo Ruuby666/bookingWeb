@@ -67,9 +67,13 @@ class AdminController extends Controller
      */
     public function properties(): View
     {
-        $properties = Property::where('owner_id', Auth::id())->get();
+        $scope = request()->query('scope', 'mine');
 
-        return view('admin.admin', compact('properties'));
+        $properties = (Auth::user()->isSuperAdmin() && $scope === 'all')
+            ? Property::with('owner')->get()
+            : Property::where('owner_id', Auth::id())->get();
+
+        return view('admin.admin', compact('properties', 'scope'));
     }
 
     /**
@@ -93,7 +97,7 @@ class AdminController extends Controller
     {
         $reservation = Reservation::with(['user', 'property'])
             ->where('id', $id)
-            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
+            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
             ->firstOrFail();
 
         $result = $this->reservationService->confirmReservation($reservation);
@@ -138,7 +142,7 @@ class AdminController extends Controller
             ->getConfirmedReservationsForOwner($propiedad);
 
         /** @var \Illuminate\Support\Collection<int, Reservation> $reservations */
-        $events = $reservations->map(fn ($r) => [
+        $events = $reservations->map(fn($r) => [
             'id' => $r->id,
             'title' => $r->user->name . ' in ' . $r->property->title,
             'note' => $r->notes,
@@ -159,7 +163,7 @@ class AdminController extends Controller
     public function updateTime(UpdateReservationTimeRequest $request)
     {
         $reservation = Reservation::where('id', $request->validated('event_id'))
-            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
+            ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
             ->firstOrFail();
 
         $result = $this->reservationService->updateReservationTime(
