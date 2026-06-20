@@ -63,7 +63,9 @@
                     <td class="pending-checkout">
                         {{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y - H:i') }}
                     </td>
-                    <td class="pending-status">{{ $reservation->status }}</td>
+                    <td class="pending-status">
+                        <span class="status-badge status-{{ $reservation->status }}">{{ ucfirst($reservation->status) }}</span>
+                    </td>
                     <td class="pending-guests">{{ $reservation->guests }}</td>
                     <td class="pending-total-price">€{{ number_format($reservation->total_price, 2) }}</td>
                     @if ($reservation->status == 'pending')

@@ -101,14 +101,13 @@
 
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('properties.edit', $property) }}" class="btn-edit">✏️
-                                    Edit</a>
+                                <a href="{{ route('properties.edit', $property) }}" class="btn-edit">✏️</a>
                                 <form action="{{ route('properties.destroy', $property->id) }}" method="POST"
                                     onsubmit="return confirm('Are you sure you want to delete this property?');"
                                     style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-delete">🗑️ Delete</button>
+                                    <button type="submit" class="btn-delete">🗑️</button>
                                 </form>
                             </div>
                         </td>
