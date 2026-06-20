@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Mail\ReservationConfirmedMail;
+use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -15,14 +15,8 @@ class ReservationService
 {
     /**
      * Create a new pending reservation.
-     *
-     * Ensures check-in and check-out dates are in correct order
-     * and stores the reservation in "pending" state.
-     *
-     * @param  array  $data  Reservation data
-     * @param  User  $user  Authenticated user
      */
-    public function createReservation(Property $property, array $data, User $user): Reservation
+    public function createReservation(Property $property, array $data, Guest $guest): Reservation
     {
         $checkIn = $data['checkIn'];
         $checkOut = $data['checkOut'];
@@ -33,7 +27,7 @@ class ReservationService
 
         return Reservation::create([
             'property_id' => $property->id,
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'check_in' => $checkIn,
             'check_out' => $checkOut,
             'status' => 'pending',
@@ -46,11 +40,6 @@ class ReservationService
 
     /**
      * Confirm a reservation after checking for date conflicts.
-     *
-     * If no conflicts exist, the reservation is marked as confirmed
-     * and a confirmation email is sent to the user.
-     *
-     * @return array{success: bool, error?: string}
      */
     public function confirmReservation(Reservation $reservation): array
     {
@@ -78,7 +67,7 @@ class ReservationService
         $reservation->status = 'confirmed';
         $reservation->save();
 
-        Mail::to($reservation->user->email)
+        Mail::to($reservation->guest->email)
             ->send(new ReservationConfirmedMail($reservation));
 
         return ['success' => true];
@@ -86,13 +75,6 @@ class ReservationService
 
     /**
      * Update check-in and check-out times of a reservation.
-     *
-     * Ensures that time validation is correct when both dates
-     * belong to the same day.
-     *
-     * @param  string  $startTime  Format H:i
-     * @param  string  $endTime  Format H:i
-     * @return array{success: bool, error?: string}
      */
     public function updateReservationTime(
         Reservation $reservation,
@@ -136,14 +118,10 @@ class ReservationService
 
     /**
      * Get all confirmed reservations for the authenticated owner.
-     *
-     * Optionally filters by property title.
-     *
-     * @return Collection
      */
     public function getConfirmedReservationsForOwner(?string $propertyTitle = null)
     {
-        $query = Reservation::with(['user', 'property'])
+        $query = Reservation::with(['guest', 'property'])
             ->where('status', 'confirmed')
             ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()));
 
@@ -156,8 +134,6 @@ class ReservationService
 
     /**
      * Get both confirmed and pending reservations for the owner.
-     *
-     * @return array{confirmed: Collection, pending: Collection}
      */
     public function getPendingAndConfirmedForOwner(): array
     {
@@ -165,12 +141,12 @@ class ReservationService
 
         $confirmed = Reservation::where('status', 'confirmed')
             ->whereHas('property', $ownerFilter)
-            ->with('property', 'user')
+            ->with('property', 'guest')
             ->get();
 
         $pending = Reservation::where('status', 'pending')
             ->whereHas('property', $ownerFilter)
-            ->with('property', 'user')
+            ->with('property', 'guest')
             ->get();
 
         return compact('confirmed', 'pending');

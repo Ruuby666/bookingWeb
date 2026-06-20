@@ -9,7 +9,7 @@ class BookingRequestService
 {
     public function __construct(
         private readonly ReservationService $reservationService,
-        private readonly UserService $userService,
+        private readonly GuestService $guestService,
         private readonly MailService $mailService,
         private readonly ReservationPriceService $reservationPriceService,
     ) {}
@@ -79,8 +79,8 @@ class BookingRequestService
 
         $totalPrice = array_sum(array_column($breakdown, 'price'));
 
-        // --- 5. Find or create user ---
-        $user = $this->userService->findOrCreate(
+        // --- 5. Find or create guest ---
+        $guest = $this->guestService->findOrCreate(
             $data['name'],
             $data['email'],
             $data['number'],
@@ -93,7 +93,7 @@ class BookingRequestService
             'total_price' => $totalPrice,
         ]);
 
-        $this->reservationService->createReservation($property, $bookingData, $user);
+        $this->reservationService->createReservation($property, $bookingData, $guest);
 
         // --- 7. Notify owner ---
         $this->mailService->sendBookingNotification(
