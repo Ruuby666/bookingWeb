@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\Guest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
@@ -177,11 +178,11 @@ class AdminControllerTest extends TestCase
     {
         $admin = $this->adminUser();
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest = $this->regularUser();
-
+        $guest = Guest::factory()->create();
+        
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'pending',
             'check_in' => now()->addDays(5),
             'check_out' => now()->addDays(10),
@@ -200,11 +201,11 @@ class AdminControllerTest extends TestCase
         $admin = $this->adminUser();
         $other = $this->adminUser();
         $property = Property::factory()->create(['owner_id' => $other->id]);
-        $guest = $this->regularUser();
+        $guest = Guest::factory()->create();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'pending',
         ]);
 
@@ -233,11 +234,11 @@ class AdminControllerTest extends TestCase
     {
         $admin = $this->adminUser();
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest = $this->regularUser();
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'confirmed',
             'check_in' => now()->addDays(1),
             'check_out' => now()->addDays(5),

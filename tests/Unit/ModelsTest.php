@@ -6,6 +6,7 @@ use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\ReservationPrice;
 use App\Models\User;
+use App\Models\Guest;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -43,7 +44,7 @@ class ModelsTest extends TestCase
     }
 
     #[Test]
-    public function user_has_many_properties(): void
+    public function owner_has_many_properties(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         Property::factory()->count(2)->create(['owner_id' => $owner->id]);
@@ -52,18 +53,18 @@ class ModelsTest extends TestCase
     }
 
     #[Test]
-    public function user_has_many_reservations(): void
+    public function guest_has_many_reservations(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->count(3)->create([
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'property_id' => $property->id,
         ]);
 
-        $this->assertCount(3, $user->reservations);
+        $this->assertCount(3, $guest->reservations);
     }
 
     // -----------------------------------------------------------------------
@@ -84,11 +85,11 @@ class ModelsTest extends TestCase
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->count(2)->create([
             'property_id' => $property->id,
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
         ]);
 
         $this->assertCount(2, $property->reservations);
@@ -154,17 +155,17 @@ class ModelsTest extends TestCase
     // -----------------------------------------------------------------------
 
     #[Test]
-    public function reservation_belongs_to_user(): void
+    public function reservation_belongs_to_guest(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
         $reservation = Reservation::factory()->create([
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'property_id' => $property->id,
         ]);
 
-        $this->assertEquals($user->id, $reservation->user->id);
+        $this->assertEquals($guest->id, $reservation->guest->id);
     }
 
     #[Test]
@@ -172,9 +173,9 @@ class ModelsTest extends TestCase
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
         $reservation = Reservation::factory()->create([
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'property_id' => $property->id,
         ]);
 
@@ -186,10 +187,10 @@ class ModelsTest extends TestCase
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         $reservation = Reservation::factory()->create([
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'property_id' => $property->id,
             'check_in' => '2026-09-01 15:00:00',
             'check_out' => '2026-09-07 11:00:00',

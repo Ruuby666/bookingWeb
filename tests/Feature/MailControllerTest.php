@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\Guest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\Test;
@@ -50,7 +51,7 @@ class MailControllerTest extends TestCase
 
         $response->assertRedirect();
         $this->assertDatabaseHas('reservations', ['status' => 'pending']);
-        $this->assertDatabaseHas('users', ['email' => 'alice@example.com']);
+        $this->assertDatabaseHas('guests', ['email' => 'alice@example.com']);
     }
 
     #[Test]
@@ -93,12 +94,12 @@ class MailControllerTest extends TestCase
             'min_nights' => 1,
             'capacity' => 4,
         ]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         // Existing confirmed reservation blocks the period
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'confirmed',
             'check_in' => '2026-07-03 15:00:00',
             'check_out' => '2026-07-09 11:00:00',
@@ -130,11 +131,11 @@ class MailControllerTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'pending',
         ]);
 
@@ -150,11 +151,11 @@ class MailControllerTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
         ]);
 
         $this->actingAs($admin)
@@ -168,11 +169,11 @@ class MailControllerTest extends TestCase
         $adminA = User::factory()->create(['is_admin' => true]);
         $adminB = User::factory()->create(['is_admin' => true]);
         $propertyB = Property::factory()->create(['owner_id' => $adminB->id]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $propertyB->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'pending',
         ]);
 

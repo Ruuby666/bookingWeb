@@ -60,7 +60,7 @@ class MailController extends Controller
      */
     public function sendSuggestion(SendSuggestionRequest $request, $id)
     {
-        $reservation = Reservation::with(['user', 'property'])
+        $reservation = Reservation::with(['guest', 'property'])
             ->findOrFail($id);
 
         // Verify the authenticated user owns the property

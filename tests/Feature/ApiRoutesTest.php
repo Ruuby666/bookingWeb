@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Property;
 use App\Models\Reservation;
-use App\Models\User;
+use App\Models\Guest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -27,11 +27,11 @@ class ApiRoutesTest extends TestCase
     public function reservations_endpoint_returns_confirmed_reservations(): void
     {
         $property = Property::factory()->create();
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'confirmed',
             'check_in' => now()->addDay(),
             'check_out' => now()->addDays(2),
@@ -40,7 +40,7 @@ class ApiRoutesTest extends TestCase
         // pending reservation should not be returned
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'pending',
             'check_in' => now()->addDay(),
             'check_out' => now()->addDays(2),

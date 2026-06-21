@@ -6,6 +6,7 @@ use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\ReservationPrice;
 use App\Models\User;
+use App\Models\Guest;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -24,11 +25,11 @@ class ReservationControllerTest extends TestCase
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'confirmed',
             'check_in' => Carbon::parse('2026-06-01'),
             'check_out' => Carbon::parse('2026-06-07'),
@@ -37,7 +38,7 @@ class ReservationControllerTest extends TestCase
         // Pending reservation – should NOT appear
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'pending',
         ]);
 

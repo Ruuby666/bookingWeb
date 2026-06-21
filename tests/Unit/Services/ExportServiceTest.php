@@ -5,6 +5,7 @@ namespace Tests\Unit\Services;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\Guest;
 use App\Services\ExportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -83,13 +84,11 @@ class ExportServiceTest extends TestCase
             'owner_id' => $admin->id,
         ]);
 
-        $guest = User::factory()->create([
-            'is_admin' => false,
-        ]);
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'confirmed',
             'check_in' => now()->addDays(1),
             'check_out' => now()->addDays(4),

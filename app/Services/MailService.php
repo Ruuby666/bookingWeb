@@ -25,7 +25,7 @@ class MailService
      */
     public function sendSuggestionToGuest(Reservation $reservation, string $note): void
     {
-        Mail::to($reservation->user->email)
+        Mail::to($reservation->guest->email)
             ->send(new ReservationSuggestionMail($reservation, $note));
     }
 }

@@ -62,11 +62,11 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->is_admin;
+        return (bool) $this->is_admin;
     }
 
     public function isSuperAdmin(): bool
     {
-        return $this->is_super_admin;
+        return (bool) $this->is_super_admin;
     }
 }

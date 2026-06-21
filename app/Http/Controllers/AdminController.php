@@ -69,7 +69,9 @@ class AdminController extends Controller
     {
         $scope = request()->query('scope', 'mine');
 
-        $properties = (Auth::guest()->isSuperAdmin() && $scope === 'all')
+        $user = Auth::user();
+
+        $properties = ($user->isSuperAdmin() && $scope === 'all')
             ? Property::with('owner')->get()
             : Property::where('owner_id', Auth::id())->get();
 
@@ -185,7 +187,7 @@ class AdminController extends Controller
     public function exportExcel()
     {
         return $this->exportService->downloadReservationsZip(
-            Auth::guest(),
+            Auth::user(),
         );
     }
 
@@ -199,7 +201,7 @@ class AdminController extends Controller
         $validated = $request->validated();
 
         return $this->exportService->downloadInvoicesExcel(
-            Auth::guest(),
+            Auth::user(),
             $validated['ids'] ?? [],
             $validated['invoice_amount'] ?? null,
         );
