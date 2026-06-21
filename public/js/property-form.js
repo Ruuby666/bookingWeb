@@ -4,6 +4,11 @@
     // Configuración inyectada desde Blade
     const _maxCapacity = window.FORM_CONFIG?.maxCapacity ?? 0;
 
+    const reservationModal =
+        document.getElementById("reservationModal");
+
+    let confirmedSubmission = false;
+
     // --- Elementos del DOM ---
     const phoneInput = document.querySelector("#number");
     const contactForm = document.querySelector(".contact-form");
@@ -59,6 +64,33 @@
                 `The max guests possible are ${_maxCapacity}`,
             );
         }
+    }
+
+    function populateConfirmationModal() {
+
+        document.getElementById("modal-name").textContent =
+            document.getElementById("name").value;
+
+        document.getElementById("modal-email").textContent =
+            document.getElementById("email").value;
+
+        document.getElementById("modal-phone").textContent =
+            phoneInput.value;
+
+        document.getElementById("modal-adults").textContent =
+            document.getElementById("adults").value;
+
+        document.getElementById("modal-children").textContent =
+            document.getElementById("children").value;
+
+        document.getElementById("modal-dates").textContent =
+            document.getElementById("daterange").value;
+
+        document.getElementById("modal-message").textContent =
+            document.getElementById("message").value || "-";
+
+        document.getElementById("modal-price").textContent =
+            document.getElementById("total-price").textContent;
     }
 
     // --- Validación completa al enviar ---
@@ -124,12 +156,21 @@
 
     // --- Event Listeners ---
     contactForm.addEventListener("submit", function (e) {
+
+        if (confirmedSubmission) {
+            return;
+        }
+
         if (!validateForm()) {
             e.preventDefault();
             return false;
         }
-        document.getElementById("loadingOverlay").style.display = "flex";
-        phoneInput.value = iti.getNumber();
+
+        e.preventDefault();
+
+        populateConfirmationModal();
+
+        reservationModal.style.display = "flex";
     });
 
     document
@@ -150,6 +191,30 @@
         if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") {
             e.preventDefault();
         }
+    });
+
+    document
+    .getElementById("editReservationBtn")
+    ?.addEventListener("click", function () {
+
+        reservationModal.style.display = "none";
+    });
+
+    document
+    .getElementById("confirmReservationBtn")
+    ?.addEventListener("click", function () {
+
+        confirmedSubmission = true;
+
+        phoneInput.value = iti.getNumber();
+
+        reservationModal.style.display = "none";
+
+        document.getElementById(
+            "loadingOverlay"
+        ).style.display = "flex";
+
+        contactForm.submit();
     });
 
     document
