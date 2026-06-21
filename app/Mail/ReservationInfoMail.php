@@ -27,6 +27,10 @@ class ReservationInfoMail extends Mailable
     public function build()
     {
         return $this->subject('Información de tu reserva')
-            ->view('emails.reservation_info');
+            ->view('emails.reservation_info')
+            ->attach(public_path('images/nameEMLBlack.png'), [
+                'as' => 'nameEMLBlack.png',
+                'mime' => 'image/png',
+            ]);
     }
 }
