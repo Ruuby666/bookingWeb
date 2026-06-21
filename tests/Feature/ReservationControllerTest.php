@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\ReservationPrice;
 use App\Models\User;
-use App\Models\Guest;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;

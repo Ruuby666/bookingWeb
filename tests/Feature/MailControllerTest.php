@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
-use App\Models\Guest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\Test;

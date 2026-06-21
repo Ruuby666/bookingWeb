@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
-use App\Models\Guest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
@@ -179,7 +179,7 @@ class AdminControllerTest extends TestCase
         $admin = $this->adminUser();
         $property = Property::factory()->create(['owner_id' => $admin->id]);
         $guest = Guest::factory()->create();
-        
+
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
             'guest_id' => $guest->id,

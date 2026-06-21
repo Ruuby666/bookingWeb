@@ -25,7 +25,7 @@ class Guest extends Model
         'phone_number',
         'country',
         'language',
-        'notes'
+        'notes',
     ];
 
     public function reservations(): HasMany
