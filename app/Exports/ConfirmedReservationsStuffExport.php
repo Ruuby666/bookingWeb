@@ -13,7 +13,7 @@ class ConfirmedReservationsStuffExport
 {
     public static function download(User $user)
     {
-        $query = Reservation::with(['user', 'property'])
+        $query = Reservation::with(['guest', 'property'])
             ->where('status', 'confirmed');
 
         // Respect configuration: if super-admins should not export all, scope by owner
@@ -52,7 +52,7 @@ class ConfirmedReservationsStuffExport
             $prevReservation = null;
 
             foreach ($propertyReservations as $reservation) {
-                $userName = $reservation->user->name ?? '';
+                $userName = $reservation->guest->name ?? '';
 
                 $checkInDate = Carbon::parse($reservation->check_in);
                 $checkOutDate = Carbon::parse($reservation->check_out);
@@ -81,7 +81,7 @@ class ConfirmedReservationsStuffExport
                     if ($prevReservation) {
                         $prevCheckOut = Carbon::parse($prevReservation->check_out);
                         if ($prevCheckOut->month === $checkInMonth) {
-                            $prevName = $prevReservation->user->name ?? '';
+                            $prevName = $prevReservation->guest->name ?? '';
                             $prevCheckOutFormatted = $prevCheckOut->format('d.m.Y');
                             $row++;
                             $sheet->setCellValue("B{$row}", "Hasta {$prevCheckOutFormatted} {$prevName}");

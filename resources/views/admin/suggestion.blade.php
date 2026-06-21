@@ -15,8 +15,8 @@
         <div class="content">
             <h2>Reserva en {{ $reservation->property->title }}</h2>
             <ul>
-                <li><strong>Cliente: </strong> {{ $reservation->user->name }}</li>
-                <li><strong>Email: </strong> {{ $reservation->user->email }}</li>
+                <li><strong>Cliente: </strong> {{ $reservation->guest->name }}</li>
+                <li><strong>Email: </strong> {{ $reservation->guest->email }}</li>
                 <li><strong>Check-in: </strong> {{ $reservation->check_in }}</li>
                 <li><strong>Check-out: </strong> {{ $reservation->check_out }}</li>
                 <li><strong>Status: </strong> {{ $reservation->status }}</li>

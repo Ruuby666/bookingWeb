@@ -56,7 +56,7 @@
                         @if ($section['title'] == 'Confirmed Reservations' && $reservation->invoice == false) <input type="checkbox" value="{{ $reservation->id }}" class="reservation-checkbox"> @endif
                     </td>
                     <td class="pending-property">{{ $reservation->property->title }}</td>
-                    <td class="pending-guest">{{ $reservation->user->name }}</td>
+                    <td class="pending-guest">{{ $reservation->guest->name }}</td>
                     <td class="pending-checkin">
                         {{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y - H:i') }}
                     </td>
@@ -83,9 +83,9 @@
                         <span class="close" onclick="closeModal('{{ $reservation->id }}')">&times;</span>
                         <h2>Reserva en {{ $reservation->property->title }}</h2>
                         <ul>
-                            <li><strong>Cliente: </strong> {{ $reservation->user->name }}</li>
-                            <li><strong>Email: </strong>{{ $reservation->user->email }}</li>
-                            <li><strong>Phone Number: </strong>{{ $reservation->user->phone_number }}</li>
+                            <li><strong>Cliente: </strong> {{ $reservation->guest->name }}</li>
+                            <li><strong>Email: </strong>{{ $reservation->guest->email }}</li>
+                            <li><strong>Phone Number: </strong>{{ $reservation->guest->phone_number }}</li>
                             <li><strong>Check-in: </strong> {{ $reservation->check_in }}</li>
                             <li><strong>Check-out: </strong> {{ $reservation->check_out }}</li>
                             <li><strong>Status: </strong> {{ $reservation->status }}</li>

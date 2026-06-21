@@ -1,4 +1,4 @@
-<h2>Hola {{ $reservation->user->name }},</h2>
+<h2>Hola {{ $reservation->guest->name }},</h2>
 
 <p>Tenemos una sugerencia para tu reserva en <strong>{{ $reservation->property->title }}</strong>:</p>
 

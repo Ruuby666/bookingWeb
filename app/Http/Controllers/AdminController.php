@@ -63,13 +63,13 @@ class AdminController extends Controller
     }
 
     /**
-     * Display properties owned by the authenticated user.
+     * Display properties owned by the authenticated guest.
      */
     public function properties(): View
     {
         $scope = request()->query('scope', 'mine');
 
-        $properties = (Auth::user()->isSuperAdmin() && $scope === 'all')
+        $properties = (Auth::guest()->isSuperAdmin() && $scope === 'all')
             ? Property::with('owner')->get()
             : Property::where('owner_id', Auth::id())->get();
 
@@ -95,7 +95,7 @@ class AdminController extends Controller
      */
     public function updateStatus($id)
     {
-        $reservation = Reservation::with(['user', 'property'])
+        $reservation = Reservation::with(['guest', 'property'])
             ->where('id', $id)
             ->whereHas('property', fn($q) => $q->where('owner_id', Auth::id()))
             ->firstOrFail();
@@ -144,9 +144,9 @@ class AdminController extends Controller
         /** @var \Illuminate\Support\Collection<int, Reservation> $reservations */
         $events = $reservations->map(fn($r) => [
             'id' => $r->id,
-            'title' => $r->user->name . ' in ' . $r->property->title,
+            'title' => $r->guest->name . ' in ' . $r->property->title,
             'note' => $r->notes,
-            'user' => $r->user,
+            'guest' => $r->guest,
             'property' => $r->property->title,
             'start' => $r->check_in,
             'end' => $r->check_out,
@@ -185,7 +185,7 @@ class AdminController extends Controller
     public function exportExcel()
     {
         return $this->exportService->downloadReservationsZip(
-            Auth::user(),
+            Auth::guest(),
         );
     }
 
@@ -199,7 +199,7 @@ class AdminController extends Controller
         $validated = $request->validated();
 
         return $this->exportService->downloadInvoicesExcel(
-            Auth::user(),
+            Auth::guest(),
             $validated['ids'] ?? [],
             $validated['invoice_amount'] ?? null,
         );

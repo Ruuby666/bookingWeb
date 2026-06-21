@@ -15,7 +15,7 @@ class FacturasExport
 {
     public static function download(User $user, array $ids, $invoiceAmount)
     {
-        $query = Reservation::with(['user', 'property'])
+        $query = Reservation::with(['guest', 'property'])
             ->whereIn('id', $ids);
 
         // Respect configuration for super-admin export policy. When disabled,
@@ -81,7 +81,7 @@ class FacturasExport
 
             $sheet->getStyle('C30:I30')->applyFromArray($headerStyle);
 
-            $userName = $reservation->user->name ?? '';
+            $userName = $reservation->guest->name ?? '';
             $checkIn = Carbon::parse($reservation->check_in)->format('d.m.Y');
             $checkOut = Carbon::parse($reservation->check_out)->format('d.m.Y');
             $days = Carbon::parse($checkIn)->diffInDays($checkOut);

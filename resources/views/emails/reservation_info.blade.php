@@ -5,7 +5,7 @@
     <title>Información de tu reserva</title>
 </head>
 <body>
-    <h2>¡Hola {{ $reservation->name }}!</h2>
+    <h2>¡Hola {{ $reservation->guest->name }}!</h2>
     <p>Te recordamos que tu reserva está confirmada para mañana.</p>
     <ul>
         <li><strong>Propiedad:</strong> {{ $reservation->property->title ?? '' }}</li>

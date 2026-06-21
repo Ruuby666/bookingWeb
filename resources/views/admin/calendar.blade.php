@@ -105,12 +105,12 @@
                         .toLocaleString() : 'No especificado';
                     document.getElementById('modalNote').textContent = info.event.extendedProps.note ||
                         'Sin descripción';
-                    document.getElementById('modalUser').textContent = info.event.extendedProps.user
-                        .name ? info.event.extendedProps.user.name : 'No especificado';
-                    document.getElementById('modalEmail').textContent = info.event.extendedProps.user
-                        .email ? info.event.extendedProps.user.email : 'No especificado';
-                    document.getElementById('modalPhone').textContent = info.event.extendedProps.user
-                        .phone_number ? info.event.extendedProps.user.name : 'No especificado';
+                    document.getElementById('modalUser').textContent = info.event.extendedProps.guest
+                        .name ? info.event.extendedProps.guest.name : 'No especificado';
+                    document.getElementById('modalEmail').textContent = info.event.extendedProps.guest
+                        .email ? info.event.extendedProps.guest.email : 'No especificado';
+                    document.getElementById('modalPhone').textContent = info.event.extendedProps.guest
+                        .phone_number ? info.event.extendedProps.guest.name : 'No especificado';
                     document.getElementById('modalProperty').textContent = info.event.extendedProps
                         .property ? info.event.extendedProps.property : 'No especificado';
 
