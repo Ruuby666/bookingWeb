@@ -24,7 +24,7 @@ class IsAdmin
             return $next($request);
         }
 
-        return redirect('/')
+        return redirect('/login')
             ->with('error', 'Access denied.');
     }
 }
