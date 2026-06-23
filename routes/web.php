@@ -8,6 +8,7 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReservationPriceController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PublicApiController;
 use App\Http\Middleware\IsAdmin;
 use App\Models\Property;
 use App\Models\Reservation;
@@ -27,21 +28,9 @@ Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.ema
 
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
 
-Route::get('/api/properties', function () {
-    return response()->json(Property::all());
-});
-
-Route::get('/api/reservations', function () {
-    return response()->json(
-        Reservation::query()
-            ->where('status', 'confirmed')
-            ->get([
-                'property_id',
-                'check_in',
-                'check_out',
-            ])
-    );
-});
+Route::get('/api/properties', [PublicApiController::class, 'properties']);
+Route::get('/api/reservations', [PublicApiController::class, 'reservations']);
+Route::get('/api/images', [PublicApiController::class, 'images']);
 
 // --- Admin routes ---
 Route::middleware([IsAdmin::class])->group(function (): void {
@@ -84,12 +73,3 @@ Route::get('/privacy', function () {
     return view('privacy');
 })->name('privacy');
 
-Route::get('/api/images', function () {
-    $properties = Property::all();
-
-    $images = $properties->mapWithKeys(function ($property) {
-        return [$property->id => $property->images_div];
-    });
-
-    return response()->json($images);
-});
