@@ -20,7 +20,7 @@
     @endif
 
     <div class="container">
-        <h1 class="page-title">Super Admin — Manage Admins</h1>
+        <h1 class="page-title">Super Admin — Manage Users</h1>
 
         <div class="buttons">
             <a href="{{ route('super_admin.create') }}" class="btn">➕ Create New Admin</a>

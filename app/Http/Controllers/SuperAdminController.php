@@ -15,7 +15,7 @@ use Illuminate\Http\RedirectResponse;
 class SuperAdminController extends Controller
 {
     /**
-     * Display all admin users.
+     * Display all users except super admins.
      */
     public function index(): View
     {
