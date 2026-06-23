@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Property;
 use App\Models\ReservationPrice;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 class ReservationPriceService
 {
@@ -52,14 +51,10 @@ class ReservationPriceService
      *
      * @return array{success: bool, error?: string, model?: ReservationPrice}
      */
-    public function createPriceRange(
-        int $propertyId,
-        Carbon $startDate,
-        Carbon $endDate,
-        float $pricePerNight,
-    ): array {
+    public function createPriceRange(int $propertyId, Carbon $startDate, Carbon $endDate, float $pricePerNight, int $ownerId): array
+    {
         $property = Property::where('id', $propertyId)
-            ->where('owner_id', Auth::id())
+            ->where('owner_id', $ownerId)
             ->first();
 
         if (! $property) {
@@ -100,10 +95,10 @@ class ReservationPriceService
      *
      * @return array{success: bool, error?: string}
      */
-    public function deletePriceRange(int $id): array
+    public function deletePriceRange(int $id, int $ownerId): array
     {
         $price = ReservationPrice::where('id', $id)
-            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
+            ->whereHas('property', fn($q) => $q->where('owner_id', $ownerId))
             ->first();
 
         if (! $price) {

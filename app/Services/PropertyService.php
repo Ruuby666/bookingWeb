@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -61,7 +60,7 @@ class PropertyService
      *
      * @param  array  $data  Validated property data
      */
-    public function createProperty(array $data): Property
+    public function createProperty(array $data, int $ownerId): Property
     {
         // La carpeta se genera a partir del título de la propiedad
         $folder = $this->generateFolderName($data['title']);
@@ -72,7 +71,7 @@ class PropertyService
         }
 
         $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
-        $data['owner_id'] = Auth::id();
+        $data['owner_id'] = $ownerId;
         $data['images_div'] = $folder;
 
         unset($data['images']);

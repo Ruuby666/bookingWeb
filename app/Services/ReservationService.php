@@ -7,7 +7,6 @@ use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class ReservationService
@@ -118,14 +117,14 @@ class ReservationService
     /**
      * Get all confirmed reservations for the authenticated owner.
      */
-    public function getConfirmedReservationsForOwner(?string $propertyTitle = null)
+    public function getConfirmedReservationsForOwner(int $ownerId, ?string $propertyTitle = null)
     {
         $query = Reservation::with(['guest', 'property'])
             ->where('status', 'confirmed')
-            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()));
+            ->whereHas('property', fn($q) => $q->where('owner_id', $ownerId));
 
         if ($propertyTitle && $propertyTitle !== 'todos') {
-            $query->whereHas('property', fn ($q) => $q->where('title', $propertyTitle));
+            $query->whereHas('property', fn($q) => $q->where('title', $propertyTitle));
         }
 
         return $query->get();
@@ -134,9 +133,9 @@ class ReservationService
     /**
      * Get both confirmed and pending reservations for the owner.
      */
-    public function getPendingAndConfirmedForOwner(): array
+    public function getPendingAndConfirmedForOwner(int $ownerId): array
     {
-        $ownerFilter = fn ($q) => $q->where('owner_id', Auth::id());
+        $ownerFilter = fn($q) => $q->where('owner_id', $ownerId);
 
         $confirmed = Reservation::where('status', 'confirmed')
             ->whereHas('property', $ownerFilter)
