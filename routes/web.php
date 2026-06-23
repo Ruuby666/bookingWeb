@@ -33,8 +33,13 @@ Route::get('/api/properties', function () {
 
 Route::get('/api/reservations', function () {
     return response()->json(
-        Reservation::where('status', 'confirmed')
-            ->get(['property_id', 'check_in', 'check_out']),
+        Reservation::query()
+            ->where('status', 'confirmed')
+            ->get([
+                'property_id',
+                'check_in',
+                'check_out',
+            ])
     );
 });
 
