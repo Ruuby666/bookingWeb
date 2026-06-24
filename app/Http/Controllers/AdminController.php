@@ -84,7 +84,7 @@ class AdminController extends Controller
     public function pending(): View
     {
         ['confirmed' => $reservations, 'pending' => $pending] =
-            $this->reservationService->getPendingAndConfirmedForOwner();
+            $this->reservationService->getPendingAndConfirmedForOwner(Auth::id());
 
         return view('admin.pending', compact('reservations', 'pending'));
     }
@@ -141,7 +141,7 @@ class AdminController extends Controller
         $propiedad = $request->query('propiedad');
 
         $reservations = $this->reservationService
-            ->getConfirmedReservationsForOwner($propiedad);
+            ->getConfirmedReservationsForOwner(Auth::id(), $propiedad);
 
         /** @var \Illuminate\Support\Collection<int, Reservation> $reservations */
         $events = $reservations->map(fn ($r) => [

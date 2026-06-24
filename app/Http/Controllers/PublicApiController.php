@@ -21,7 +21,7 @@ class PublicApiController extends Controller
     {
         return response()->json(
             Reservation::where('status', 'confirmed')
-                ->get(['property_id', 'check_in', 'check_out'])
+                ->get(['property_id', 'check_in', 'check_out','status'])
         );
     }
 
