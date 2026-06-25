@@ -14,7 +14,6 @@ class SendReservationInfo extends Command
 
     protected $description = 'Command description';
 
-
     // To try this command, you can run it manually using the following Artisan command:
     // docker compose exec app php artisan app:send-reservation-info
     public function handle()

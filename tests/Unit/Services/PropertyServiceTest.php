@@ -52,7 +52,7 @@ class PropertyServiceTest extends TestCase
             'safeBox' => false,
             'terrace' => false,
             'wifi' => true,
-        ]);
+        ], $owner->id);
 
         $decoded = json_decode($property->bedrooms, true);
 
@@ -88,7 +88,7 @@ class PropertyServiceTest extends TestCase
             'safeBox' => false,
             'terrace' => true,
             'wifi' => true,
-        ]);
+        ], $owner->id);
 
         $this->assertEquals($owner->id, $property->owner_id);
     }

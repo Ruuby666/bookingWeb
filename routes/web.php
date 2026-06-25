@@ -4,14 +4,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReservationPriceController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\PublicApiController;
 use App\Http\Middleware\IsAdmin;
-use App\Models\Property;
-use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
@@ -72,4 +70,3 @@ Route::get('/api/property-price-range', [ReservationPriceController::class, 'get
 Route::get('/privacy', function () {
     return view('privacy');
 })->name('privacy');
-

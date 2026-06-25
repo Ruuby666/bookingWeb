@@ -65,6 +65,7 @@ class ReservationPriceServiceTest extends TestCase
             'start_date' => Carbon::parse('2026-06-02'),
             'end_date' => Carbon::parse('2026-06-03')->endOfDay(),
             'price_per_night' => 200.00,
+            'owner_id' => $property->owner_id,
         ]);
 
         $breakdown = $this->service->getPriceBreakdown(
@@ -93,6 +94,7 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-10'),
             150.00,
+            $owner->id,
         );
 
         $this->assertTrue($result['success']);
@@ -120,6 +122,7 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-10'),
             200.00,
+            $owner->id,
         );
 
         $this->assertFalse($result['success']);
@@ -138,6 +141,7 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-05'),
             99.00,
+            $otherUser->id,
         );
 
         $this->assertFalse($result['success']);
@@ -161,7 +165,7 @@ class ReservationPriceServiceTest extends TestCase
             'price_per_night' => 130.00,
         ]);
 
-        $result = $this->service->deletePriceRange($price->id);
+        $result = $this->service->deletePriceRange($price->id, $owner->id);
 
         $this->assertTrue($result['success']);
         $this->assertDatabaseMissing('reservation_prices', ['id' => $price->id]);
@@ -170,7 +174,7 @@ class ReservationPriceServiceTest extends TestCase
     #[Test]
     public function it_returns_error_when_deleting_a_price_range_not_owned_by_user(): void
     {
-        [, $property] = $this->makeOwnerAndProperty();
+        [$owner, $property] = $this->makeOwnerAndProperty();
         $otherUser = User::factory()->create(['is_admin' => true]);
         $this->actingAs($otherUser);
 
@@ -179,9 +183,10 @@ class ReservationPriceServiceTest extends TestCase
             'start_date' => Carbon::parse('2026-08-01'),
             'end_date' => Carbon::parse('2026-08-10')->endOfDay(),
             'price_per_night' => 130.00,
+            'owner_id' => $otherUser->id,
         ]);
 
-        $result = $this->service->deletePriceRange($price->id);
+        $result = $this->service->deletePriceRange($price->id, $otherUser->id);
 
         $this->assertFalse($result['success']);
         $this->assertEquals('Price range not found.', $result['error']);

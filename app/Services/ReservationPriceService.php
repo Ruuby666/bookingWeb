@@ -98,7 +98,7 @@ class ReservationPriceService
     public function deletePriceRange(int $id, int $ownerId): array
     {
         $price = ReservationPrice::where('id', $id)
-            ->whereHas('property', fn($q) => $q->where('owner_id', $ownerId))
+            ->whereHas('property', fn ($q) => $q->where('owner_id', $ownerId))
             ->first();
 
         if (! $price) {

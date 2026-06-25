@@ -253,7 +253,7 @@ class ReservationServiceTest extends TestCase
 
         $this->actingAs($owner);
 
-        $result = $this->service->getPendingAndConfirmedForOwner();
+        $result = $this->service->getPendingAndConfirmedForOwner($owner->id);
 
         $this->assertCount(1, $result['confirmed']);
         $this->assertCount(1, $result['pending']);

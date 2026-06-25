@@ -94,4 +94,22 @@ class AuthServiceTest extends TestCase
 
         $this->assertFalse(Auth::check());
     }
+
+    #[Test]
+    public function super_admin_can_login(): void
+    {
+        $user = User::factory()->create([
+            'is_admin' => true,
+            'is_super_admin' => true,
+            'password' => 'Password1A',
+        ]);
+
+        $result = $this->authService->attemptAdminLogin(
+            $user->email,
+            'Password1A',
+        );
+
+        $this->assertTrue($result['success']);
+        $this->assertAuthenticatedAs($user);
+    }
 }

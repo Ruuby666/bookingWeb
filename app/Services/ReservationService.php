@@ -121,10 +121,10 @@ class ReservationService
     {
         $query = Reservation::with(['guest', 'property'])
             ->where('status', 'confirmed')
-            ->whereHas('property', fn($q) => $q->where('owner_id', $ownerId));
+            ->whereHas('property', fn ($q) => $q->where('owner_id', $ownerId));
 
         if ($propertyTitle && $propertyTitle !== 'todos') {
-            $query->whereHas('property', fn($q) => $q->where('title', $propertyTitle));
+            $query->whereHas('property', fn ($q) => $q->where('title', $propertyTitle));
         }
 
         return $query->get();
@@ -135,7 +135,7 @@ class ReservationService
      */
     public function getPendingAndConfirmedForOwner(int $ownerId): array
     {
-        $ownerFilter = fn($q) => $q->where('owner_id', $ownerId);
+        $ownerFilter = fn ($q) => $q->where('owner_id', $ownerId);
 
         $confirmed = Reservation::where('status', 'confirmed')
             ->whereHas('property', $ownerFilter)

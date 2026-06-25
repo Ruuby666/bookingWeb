@@ -19,11 +19,11 @@ class SuperAdminController extends Controller
      */
     public function index(): View
     {
-        $users = User::where('is_super_admin', false)
+        $admins = User::where('is_super_admin', false)
             ->orderByDesc('created_at')
             ->get();
 
-        return view('superadmin.superadmin', compact('users'));
+        return view('superadmin.superadmin', compact('admins'));
     }
 
     /**
@@ -53,14 +53,14 @@ class SuperAdminController extends Controller
             ->with('success', 'Admin created successfully.');
     }
 
-   /**
+    /**
      * Show the edit admin form.
      * Aborts if target is a super admin (super admins cannot edit each other).
      */
     public function edit(User $admin): View
     {
         abort_if($admin->is_super_admin, 403, 'Cannot edit another ones properties.');
- 
+
         return view('superadmin.adminedit', compact('admin'));
     }
 
