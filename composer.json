@@ -1,7 +1,7 @@
 {
     "name": "ruben/booking-web",
     "type": "project",
-    "license": "MIT",
+    "license": "proprietary",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
