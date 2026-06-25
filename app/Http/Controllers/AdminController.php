@@ -68,7 +68,6 @@ class AdminController extends Controller
     public function properties(): View
     {
         $scope = request()->query('scope', 'mine');
-
         $user = Auth::user();
 
         $properties = ($user->isSuperAdmin() && $scope === 'all')
