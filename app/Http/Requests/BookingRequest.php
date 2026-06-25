@@ -27,7 +27,10 @@ class BookingRequest extends FormRequest
             'verification_email' => ['required', 'same:email', 'email', 'max:255'],
             'message' => ['nullable', 'string', 'max:1000'],
             'daterange' => ['required', 'string', 'regex:/\d{2}\/\d{2}\/\d{4} - \d{2}\/\d{2}\/\d{4}/'],
-            'total_price' => ['required', 'numeric', 'min:0.01'],
+            // total_price is NOT validated here.
+            // BookingRequestService recalculates the real price server-side
+            // from ReservationPriceService::getPriceBreakdown().
+            // The client-side hidden input is only a convenience for UX display.
         ];
     }
 
