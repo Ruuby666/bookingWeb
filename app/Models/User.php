@@ -48,11 +48,6 @@ class User extends Authenticatable
         return $this->hasMany(Property::class, 'owner_id');
     }
 
-    public function reservations(): HasMany
-    {
-        return $this->hasMany(Reservation::class);
-    }
-
     // --- Methods ---
 
     public function setPasswordAttribute(string $value): void
