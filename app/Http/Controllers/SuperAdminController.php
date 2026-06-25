@@ -15,15 +15,15 @@ use Illuminate\Http\RedirectResponse;
 class SuperAdminController extends Controller
 {
     /**
-     * Display all users except super admins.
+     * Display all users except super users.
      */
     public function index(): View
     {
-        $admins = User::where('is_super_admin', false)
+        $users = User::where('is_super_admin', false)
             ->orderByDesc('created_at')
             ->get();
 
-        return view('superadmin.superadmin', compact('admins'));
+        return view('superadmin.superadmin', compact('users'));
     }
 
     /**
@@ -53,22 +53,24 @@ class SuperAdminController extends Controller
             ->with('success', 'Admin created successfully.');
     }
 
-    /**
+   /**
      * Show the edit admin form.
+     * Aborts if target is a super admin (super admins cannot edit each other).
      */
     public function edit(User $admin): View
     {
-        abort_if($admin->is_super_admin, 403);
-
+        abort_if($admin->is_super_admin, 403, 'Cannot edit another ones properties.');
+ 
         return view('superadmin.adminedit', compact('admin'));
     }
 
     /**
      * Update an admin user.
+     * Password is only updated when a non-empty value is provided.
      */
     public function update(UpdateAdminRequest $request, User $admin): RedirectResponse
     {
-        abort_if($admin->is_super_admin, 403);
+        abort_if($admin->is_super_admin, 403, 'Cannot edit another ones properties.');
 
         $data = $request->validated();
 
@@ -84,7 +86,8 @@ class SuperAdminController extends Controller
     }
 
     /**
-     * Toggle the is_admin status of a user.
+     * Toggle the is_admin flag of a non-super-admin user.
+     * Disabling an admin removes their access to the admin panel.
      */
     public function toggleAdmin(User $admin): RedirectResponse
     {
@@ -101,6 +104,7 @@ class SuperAdminController extends Controller
 
     /**
      * Delete an admin user.
+     * Super admins cannot delete each other.
      */
     public function destroy(User $admin): RedirectResponse
     {
