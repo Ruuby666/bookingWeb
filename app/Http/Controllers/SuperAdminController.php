@@ -19,11 +19,11 @@ class SuperAdminController extends Controller
      */
     public function index(): View
     {
-        $admins = User::where('is_super_admin', false)
+        $users = User::where('is_super_admin', false)
             ->orderByDesc('created_at')
             ->get();
 
-        return view('superadmin.superadmin', compact('admins'));
+        return view('superadmin.superadmin', compact('users'));
     }
 
     /**

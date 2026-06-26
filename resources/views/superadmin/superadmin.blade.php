@@ -38,13 +38,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($admins as $admin)
+                    @forelse ($users as $user)
                         <tr>
-                            <td>{{ $admin->name }}</td>
-                            <td>{{ $admin->email }}</td>
-                            <td>{{ $admin->phone_number ?? '—' }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->phone_number ?? '—' }}</td>
                             <td>
-                                @if ($admin->is_admin)
+                                @if ($user->is_admin)
                                     <span class="badge-active">Active</span>
                                 @else
                                     <span class="badge-inactive">Disabled</span>
@@ -52,17 +52,17 @@
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="{{ route('super_admin.edit', $admin) }}" class="btn-edit">Edit</a>
+                                    <a href="{{ route('super_admin.edit', $user) }}" class="btn-edit">Edit</a>
 
-                                    <form action="{{ route('super_admin.toggle', $admin) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('super_admin.toggle', $user) }}" method="POST" style="display:inline;">
                                         @csrf
                                         <button type="submit" class="btn-toggle">
-                                            {{ $admin->is_admin ? 'Disable' : 'Enable' }}
+                                            {{ $user->is_admin ? 'Disable' : 'Enable' }}
                                         </button>
                                     </form>
 
-                                    <form action="{{ route('super_admin.destroy', $admin) }}" method="POST"
-                                        onsubmit="return confirm('Delete {{ $admin->name }}? This cannot be undone.');">
+                                    <form action="{{ route('super_admin.destroy', $user) }}" method="POST"
+                                        onsubmit="return confirm('Delete {{ $user->name }}? This cannot be undone.');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn-delete">Delete</button>
@@ -72,7 +72,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5">No admin users found.</td>
+                            <td colspan="5">No users found.</td>
                         </tr>
                     @endforelse
                 </tbody>

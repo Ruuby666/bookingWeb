@@ -10,7 +10,6 @@ class DevelopmentSeeder extends Seeder
     {
         $this->call([
             AdminUserSeeder::class,
-            LocalDemoSeeder::class,
             PropertiesTableSeeder::class,
             ReservationPriceSeeder::class,
         ]);
