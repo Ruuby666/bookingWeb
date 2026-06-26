@@ -66,7 +66,6 @@ window.initMap = async function () {
 }
 
 // Function to build content for InfoWindow
-// Function to build content for InfoWindow
 function buildContent(property) {
     const content = document.createElement("div");
     content.classList.add("property");
