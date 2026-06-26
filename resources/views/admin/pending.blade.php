@@ -81,30 +81,68 @@
 
                 <div id="modal-{{ $reservation->id }}" class="modal hidden">
                     <div class="modal-content">
-                        <span class="close" onclick="closeModal('{{ $reservation->id }}')">&times;</span>
-                        <h2>Reserva en {{ $reservation->property->title }}</h2>
-                        <ul>
-                            <li><strong>Cliente: </strong> {{ $reservation->guest->name }}</li>
-                            <li><strong>Email: </strong>{{ $reservation->guest->email }}</li>
-                            <li><strong>Phone Number: </strong>{{ $reservation->guest->phone_number }}</li>
-                            <li><strong>Check-in: </strong> {{ $reservation->check_in }}</li>
-                            <li><strong>Check-out: </strong> {{ $reservation->check_out }}</li>
-                            <li><strong>Status: </strong> {{ $reservation->status }}</li>
-                            <li><strong>Notes: </strong> {{ $reservation->notes }}</li>
-                            <li><strong>Guests: </strong> {{ $reservation->guests }}</li>
-                            <li><strong>Total Price: </strong> €{{ number_format($reservation->total_price, 2)}}</li>
-                        </ul>
-                        <div class="div-buttons">
-                            @if ($reservation->status == 'pending')
-                            <button class="mark-sugerencia-button" data-url="{{ route('suggestion.create', $reservation) }}" onclick="redirectFromButton(this)">
-                                Suggestion
-                            </button>
-                            <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                <button type="submit" class="mark-completed-button">Confirmed</button>
-                            </form>
-                            @endif
+
+                        <div class="modal-header">
+                            <h2>{{ $reservation->property->title }}</h2>
+
+                            <span class="close"
+                                onclick="closeModal('{{ $reservation->id }}')">
+                                &times;
+                            </span>
                         </div>
+
+                        <div class="modal-body">
+
+                            <ul class="reservation-info">
+                                <li><strong>Client</strong><span>{{ $reservation->guest->name }}</span></li>
+
+                                <li><strong>Email</strong><span>{{ $reservation->guest->email }}</span></li>
+
+                                <li><strong>Phone</strong><span>{{ $reservation->guest->phone_number }}</span></li>
+
+                                <li><strong>Check-in</strong><span>{{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y H:i') }}</span></li>
+
+                                <li><strong>Check-out</strong><span>{{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y H:i') }}</span></li>
+
+                                <li>
+                                    <strong>Status</strong>
+
+                                    <span class="status-badge status-{{ $reservation->status }}">
+                                        {{ ucfirst($reservation->status) }}
+                                    </span>
+                                </li>
+
+                                <li><strong>Guests</strong><span>{{ $reservation->guests }}</span></li>
+
+                                <li><strong>Total</strong><span>€{{ number_format($reservation->total_price,2) }}</span></li>
+
+                                <li><strong>Notes</strong><span>{{ $reservation->notes ?: '-' }}</span></li>
+                            </ul>
+
+                            @if ($reservation->status == 'pending')
+                            <div class="div-buttons">
+
+                                <button
+                                    class="mark-sugerencia-button"
+                                    data-url="{{ route('suggestion.create', $reservation) }}"
+                                    onclick="redirectFromButton(this)">
+                                    Suggestion
+                                </button>
+
+                                <form action="{{ route('admin.reservations.pending.update',$reservation->id) }}"
+                                    method="POST">
+                                    @csrf
+
+                                    <button class="mark-completed-button">
+                                        Confirm
+                                    </button>
+                                </form>
+
+                            </div>
+                            @endif
+
+                        </div>
+
                     </div>
                 </div>
 
