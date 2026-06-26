@@ -18,7 +18,7 @@ class PublicApiController extends Controller
     public function properties(): JsonResponse
     {
         return response()->json(
-            Property::all([
+            Property::query()->get([
                 'id',
                 'title',
                 'location',
@@ -57,7 +57,7 @@ class PublicApiController extends Controller
      */
     public function images(): JsonResponse
     {
-        $images = Property::all(['id', 'images_div'])
+        $images = Property::query()->get(['id', 'images_div'])
             ->mapWithKeys(fn ($p) => [$p->id => $p->images_div]);
 
         return response()->json($images);

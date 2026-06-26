@@ -60,6 +60,6 @@ class PropertyPolicy
      */
     public function forceDelete(User $user, Property $property): bool
     {
-        return $user->id === $property->owner_id ;
+        return $user->id === $property->owner_id;
     }
 }
