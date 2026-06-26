@@ -44,7 +44,7 @@ class PropertyPolicy
      */
     public function delete(User $user, Property $property): bool
     {
-        return $user->id === $property->owner_id || $user->isSuperAdmin();
+        return $user->id === $property->owner_id;
     }
 
     /**
@@ -52,7 +52,7 @@ class PropertyPolicy
      */
     public function restore(User $user, Property $property): bool
     {
-        return $user->id === $property->owner_id || $user->isSuperAdmin();
+        return $user->id === $property->owner_id;
     }
 
     /**
@@ -60,6 +60,6 @@ class PropertyPolicy
      */
     public function forceDelete(User $user, Property $property): bool
     {
-        return $user->id === $property->owner_id || $user->isSuperAdmin();
+        return $user->id === $property->owner_id ;
     }
 }
