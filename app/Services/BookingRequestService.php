@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Property;
 use Carbon\Carbon;
 use InvalidArgumentException;
+use App\Events\BookingCreated;
 
 class BookingRequestService
 {
@@ -13,7 +14,6 @@ class BookingRequestService
         private readonly GuestService $guestService,
         private readonly BookingDateService $bookingDateService,
         private readonly BookingValidationService $bookingValidationService,
-        private readonly MailService $mailService,
         private readonly ReservationPriceService $reservationPriceService,
     ) {}
 
@@ -69,19 +69,14 @@ class BookingRequestService
             ]);
 
             // Create reservation
-            $this->reservationService->createReservation(
+            $reservation = $this->reservationService->createReservation(
                 $property,
                 $bookingData,
                 $guest,
             );
 
-            // Notify property owner
-            $this->mailService->sendBookingNotification(
-                array_merge(
-                    $bookingData,
-                    ['property' => $property],
-                ),
-            );
+            // Dispatch booking event
+            event(new BookingCreated($reservation));
 
             return [
                 'success' => true,
