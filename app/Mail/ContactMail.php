@@ -8,18 +8,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
+use App\Models\Reservation;
+
 class ContactMail extends Mailable
 {
-    use Queueable;
-    use SerializesModels;
+    use Queueable, SerializesModels;
 
-    public $data;
+    public Reservation $reservation;
+    public string $subject;
 
-    public $subject;
-
-    public function __construct($data, $subject)
+    public function __construct(Reservation $reservation, string $subject)
     {
-        $this->data = $data;
+        $this->reservation = $reservation;
         $this->subject = $subject;
     }
 

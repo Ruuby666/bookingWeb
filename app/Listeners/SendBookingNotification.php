@@ -14,11 +14,6 @@ class SendBookingNotification implements ShouldQueue
 
     public function handle(BookingCreated $event): void
     {
-        $this->mailService->sendBookingNotification(
-            [
-                'property' => $event->reservation->property,
-                'reservation' => $event->reservation,
-            ]
-        );
+        $this->mailService->sendBookingNotification($event->reservation);
     }
 }
