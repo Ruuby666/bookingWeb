@@ -2,7 +2,7 @@
     "name": "ruben/booking-web",
     "description": "Laravel booking platform for property reservations",
     "type": "project",
-    "license": "MIT",
+    "license": "proprietary",
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.12.1",
