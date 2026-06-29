@@ -16,7 +16,7 @@
         </tr>
         <tr>
             <td style="padding: 30px;">
-                <h2 style="margin-top: 0;">Hello {{ $reservation->user->name }},</h2>
+                <h2 style="margin-top: 0;">Hello {{ $reservation->guest->name }},</h2>
                 <p>We are pleased to confirm your reservation at <strong>{{ $reservation->property->title }}</strong>.</p>
 
                 <table style="width: 100%; margin-top: 20px;">

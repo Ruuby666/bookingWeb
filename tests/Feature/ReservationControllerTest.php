@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\ReservationPrice;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ReservationControllerTest extends TestCase
@@ -18,16 +20,16 @@ class ReservationControllerTest extends TestCase
     // ReservationController – public JSON endpoint
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_returns_confirmed_reservations_as_json_for_a_property(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'confirmed',
             'check_in' => Carbon::parse('2026-06-01'),
             'check_out' => Carbon::parse('2026-06-07'),
@@ -36,7 +38,7 @@ class ReservationControllerTest extends TestCase
         // Pending reservation – should NOT appear
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'pending',
         ]);
 
@@ -46,7 +48,7 @@ class ReservationControllerTest extends TestCase
             ->assertJsonFragment(['property_id' => $property->id]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_empty_array_when_no_confirmed_reservations_exist(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -73,7 +75,7 @@ class ReservationPriceControllerTest extends TestCase
     // index
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_view_reservation_prices_index(): void
     {
         $admin = $this->admin();
@@ -84,7 +86,7 @@ class ReservationPriceControllerTest extends TestCase
             ->assertViewIs('admin.reservation_price');
     }
 
-    /** @test */
+    #[Test]
     public function guest_is_redirected_from_reservation_prices_index(): void
     {
         $this->get(route('admin.reservation_prices'))
@@ -95,7 +97,7 @@ class ReservationPriceControllerTest extends TestCase
     // create (POST)
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_create_a_price_range(): void
     {
         $admin = $this->admin();
@@ -117,7 +119,7 @@ class ReservationPriceControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function price_range_creation_fails_with_missing_fields(): void
     {
         $admin = $this->admin();
@@ -131,7 +133,7 @@ class ReservationPriceControllerTest extends TestCase
     // destroy (DELETE)
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function owner_can_delete_their_price_range(): void
     {
         $admin = $this->admin();
@@ -151,7 +153,7 @@ class ReservationPriceControllerTest extends TestCase
         $this->assertDatabaseMissing('reservation_prices', ['id' => $price->id]);
     }
 
-    /** @test */
+    #[Test]
     public function non_owner_cannot_delete_a_price_range(): void
     {
         $owner = $this->admin();
@@ -176,7 +178,7 @@ class ReservationPriceControllerTest extends TestCase
     // getPriceRange (API)
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_returns_price_breakdown_for_a_date_range(): void
     {
         $owner = $this->admin();

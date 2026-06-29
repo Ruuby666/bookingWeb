@@ -2,12 +2,14 @@
 
 namespace Tests\Unit;
 
+use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\ReservationPrice;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ModelsTest extends TestCase
@@ -18,21 +20,21 @@ class ModelsTest extends TestCase
     // User model
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function user_is_admin_returns_true_for_admin(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $this->assertTrue($admin->isAdmin());
     }
 
-    /** @test */
+    #[Test]
     public function user_is_admin_returns_false_for_regular_user(): void
     {
         $user = User::factory()->create(['is_admin' => false]);
         $this->assertFalse($user->isAdmin());
     }
 
-    /** @test */
+    #[Test]
     public function user_password_is_hashed_via_mutator(): void
     {
         $user = User::factory()->create(['password' => 'plain-password']);
@@ -41,8 +43,8 @@ class ModelsTest extends TestCase
         $this->assertNotEquals('plain-password', $user->password);
     }
 
-    /** @test */
-    public function user_has_many_properties(): void
+    #[Test]
+    public function owner_has_many_properties(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         Property::factory()->count(2)->create(['owner_id' => $owner->id]);
@@ -50,26 +52,26 @@ class ModelsTest extends TestCase
         $this->assertCount(2, $owner->properties);
     }
 
-    /** @test */
-    public function user_has_many_reservations(): void
+    #[Test]
+    public function guest_has_many_reservations(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->count(3)->create([
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'property_id' => $property->id,
         ]);
 
-        $this->assertCount(3, $user->reservations);
+        $this->assertCount(3, $guest->reservations);
     }
 
     // -----------------------------------------------------------------------
     // Property model
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function property_belongs_to_owner(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -78,22 +80,22 @@ class ModelsTest extends TestCase
         $this->assertEquals($owner->id, $property->owner->id);
     }
 
-    /** @test */
+    #[Test]
     public function property_has_many_reservations(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         Reservation::factory()->count(2)->create([
             'property_id' => $property->id,
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
         ]);
 
         $this->assertCount(2, $property->reservations);
     }
 
-    /** @test */
+    #[Test]
     public function property_has_many_reservation_prices(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -109,7 +111,7 @@ class ModelsTest extends TestCase
         $this->assertCount(1, $property->reservationPrices);
     }
 
-    /** @test */
+    #[Test]
     public function property_price_for_date_returns_custom_price_when_in_range(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -130,7 +132,7 @@ class ModelsTest extends TestCase
         $this->assertEquals(200.00, $price);
     }
 
-    /** @test */
+    #[Test]
     public function property_price_for_date_returns_null_outside_range(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -152,43 +154,43 @@ class ModelsTest extends TestCase
     // Reservation model
     // -----------------------------------------------------------------------
 
-    /** @test */
-    public function reservation_belongs_to_user(): void
+    #[Test]
+    public function reservation_belongs_to_guest(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
         $reservation = Reservation::factory()->create([
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'property_id' => $property->id,
         ]);
 
-        $this->assertEquals($user->id, $reservation->user->id);
+        $this->assertEquals($guest->id, $reservation->guest->id);
     }
 
-    /** @test */
+    #[Test]
     public function reservation_belongs_to_property(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
         $reservation = Reservation::factory()->create([
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'property_id' => $property->id,
         ]);
 
         $this->assertEquals($property->id, $reservation->property->id);
     }
 
-    /** @test */
+    #[Test]
     public function reservation_casts_check_in_and_check_out_as_datetime(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $owner->id]);
-        $user = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         $reservation = Reservation::factory()->create([
-            'user_id' => $user->id,
+            'guest_id' => $guest->id,
             'property_id' => $property->id,
             'check_in' => '2026-09-01 15:00:00',
             'check_out' => '2026-09-07 11:00:00',
@@ -202,7 +204,7 @@ class ModelsTest extends TestCase
     // ReservationPrice model
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function reservation_price_belongs_to_property(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);

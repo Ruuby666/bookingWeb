@@ -63,7 +63,9 @@ class PropertyController extends Controller
     {
         $this->authorize('create', Property::class);
 
-        $this->propertyService->createProperty($request->validated());
+        $this->propertyService->createProperty($request->validated(),
+            auth()->id(),
+        );
 
         return redirect()
             ->route('admin.properties')

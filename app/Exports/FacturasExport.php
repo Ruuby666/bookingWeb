@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Reservation;
+use App\Models\User;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -12,10 +13,20 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class FacturasExport
 {
-    public static function download(array $ids, $invoiceAmount)
+    public static function download(User $user, array $ids, $invoiceAmount)
     {
-        $reservations = Reservation::with(['user', 'property'])
-            ->whereIn('id', $ids)
+        $query = Reservation::with(['guest', 'property'])
+            ->whereIn('id', $ids);
+
+        // Respect configuration for super-admin export policy. When disabled,
+        // super-admins are treated like regular admins and only see their properties.
+        if (! $user->is_super_admin || ! config('exports.super_admin_can_export_all')) {
+            $query->whereHas('property', function ($q) use ($user) {
+                $q->where('owner_id', $user->id);
+            });
+        }
+
+        $reservations = $query
             ->orderBy('check_in')
             ->get();
 
@@ -70,7 +81,7 @@ class FacturasExport
 
             $sheet->getStyle('C30:I30')->applyFromArray($headerStyle);
 
-            $userName = $reservation->user->name ?? '';
+            $userName = $reservation->guest->name ?? '';
             $checkIn = Carbon::parse($reservation->check_in)->format('d.m.Y');
             $checkOut = Carbon::parse($reservation->check_out)->format('d.m.Y');
             $days = Carbon::parse($checkIn)->diffInDays($checkOut);

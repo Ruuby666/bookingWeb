@@ -9,6 +9,7 @@ use App\Models\Reservation;
 use App\Services\BookingRequestService;
 use App\Services\MailService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Controller responsible for email and booking request operations.
@@ -46,7 +47,7 @@ class MailController extends Controller
         }
 
         return redirect()
-            ->route('properties.show', ['property' => $property])
+            ->route('property.show', ['id' => $property->id])
             ->with('success', 'Email sent successfully! We will contact you shortly.');
     }
 
@@ -59,8 +60,13 @@ class MailController extends Controller
      */
     public function sendSuggestion(SendSuggestionRequest $request, $id)
     {
-        $reservation = Reservation::with(['user', 'property'])
+        $reservation = Reservation::with(['guest', 'property'])
             ->findOrFail($id);
+
+        // Verify the authenticated user owns the property
+        if ($reservation->property->owner_id !== Auth::id()) {
+            abort(403);
+        }
 
         $this->mailService->sendSuggestionToGuest(
             $reservation,

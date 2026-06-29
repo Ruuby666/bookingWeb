@@ -20,7 +20,7 @@ class PropertyPolicy
      */
     public function view(User $user, Property $property): bool
     {
-        return $user->id === $property->owner_id;
+        return $user->id === $property->owner_id || $user->isSuperAdmin();
     }
 
     /**

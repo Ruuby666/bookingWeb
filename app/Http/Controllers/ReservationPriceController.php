@@ -78,6 +78,7 @@ class ReservationPriceController extends Controller
             Carbon::parse($request->validated('start_date')),
             Carbon::parse($request->validated('end_date')),
             $request->validated('price_per_night'),
+            Auth::id(),
         );
 
         return $result['success']
@@ -93,7 +94,7 @@ class ReservationPriceController extends Controller
      */
     public function destroy($id)
     {
-        $result = $this->reservationPriceService->deletePriceRange($id);
+        $result = $this->reservationPriceService->deletePriceRange($id, Auth::id());
 
         return $result['success']
             ? redirect()->back()->with('success', 'Price range deleted successfully.')

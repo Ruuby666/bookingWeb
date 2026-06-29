@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Reservation;
+use App\Models\User;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -10,10 +11,19 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ConfirmedReservationsStuffExport
 {
-    public static function download()
+    public static function download(User $user)
     {
-        $reservations = Reservation::with(['user', 'property'])
-            ->where('status', 'confirmed')
+        $query = Reservation::with(['guest', 'property'])
+            ->where('status', 'confirmed');
+
+        // Respect configuration: if super-admins should not export all, scope by owner
+        if (! $user->is_super_admin || ! config('exports.super_admin_can_export_all')) {
+            $query->whereHas('property', function ($q) use ($user) {
+                $q->where('owner_id', $user->id);
+            });
+        }
+
+        $reservations = $query
             ->orderBy('check_in')
             ->get()
             ->groupBy(fn ($r) => $r->property->title);
@@ -42,7 +52,7 @@ class ConfirmedReservationsStuffExport
             $prevReservation = null;
 
             foreach ($propertyReservations as $reservation) {
-                $userName = $reservation->user->name ?? '';
+                $userName = $reservation->guest->name ?? '';
 
                 $checkInDate = Carbon::parse($reservation->check_in);
                 $checkOutDate = Carbon::parse($reservation->check_out);
@@ -71,7 +81,7 @@ class ConfirmedReservationsStuffExport
                     if ($prevReservation) {
                         $prevCheckOut = Carbon::parse($prevReservation->check_out);
                         if ($prevCheckOut->month === $checkInMonth) {
-                            $prevName = $prevReservation->user->name ?? '';
+                            $prevName = $prevReservation->guest->name ?? '';
                             $prevCheckOutFormatted = $prevCheckOut->format('d.m.Y');
                             $row++;
                             $sheet->setCellValue("B{$row}", "Hasta {$prevCheckOutFormatted} {$prevName}");

@@ -25,6 +25,6 @@ class IsAdmin
         }
 
         return redirect('/')
-            ->with('error', 'Access denied.');
+            ->with('error', 'Access denied — admin privileges required.');
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Property;
 use App\Models\User;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PropertyServiceTest extends TestCase
@@ -24,7 +25,7 @@ class PropertyServiceTest extends TestCase
     // parseBedroomsToJson (tested indirectly via createProperty)
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_converts_bedrooms_string_to_json_on_create(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -51,7 +52,7 @@ class PropertyServiceTest extends TestCase
             'safeBox' => false,
             'terrace' => false,
             'wifi' => true,
-        ]);
+        ], $owner->id);
 
         $decoded = json_decode($property->bedrooms, true);
 
@@ -60,7 +61,7 @@ class PropertyServiceTest extends TestCase
         $this->assertEquals('Double', $decoded['3']);
     }
 
-    /** @test */
+    #[Test]
     public function it_assigns_owner_id_from_authenticated_user_on_create(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -87,7 +88,7 @@ class PropertyServiceTest extends TestCase
             'safeBox' => false,
             'terrace' => true,
             'wifi' => true,
-        ]);
+        ], $owner->id);
 
         $this->assertEquals($owner->id, $property->owner_id);
     }
@@ -96,7 +97,7 @@ class PropertyServiceTest extends TestCase
     // updateProperty
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_updates_property_fields(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -118,7 +119,7 @@ class PropertyServiceTest extends TestCase
     // getImagesForProperty – no filesystem, returns nulls gracefully
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_returns_null_main_image_when_folder_does_not_exist(): void
     {
         $owner = User::factory()->create();
@@ -137,7 +138,7 @@ class PropertyServiceTest extends TestCase
     // getAllWithFirstImage – no filesystem, defaults gracefully
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_returns_default_image_when_property_folder_does_not_exist(): void
     {
         $owner = User::factory()->create();

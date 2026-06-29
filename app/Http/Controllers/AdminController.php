@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminLoginRequest;
+use App\Http\Requests\ExportInvoicesRequest;
 use App\Http\Requests\UpdateReservationTimeRequest;
 use App\Models\Property;
 use App\Models\Reservation;
@@ -62,13 +63,18 @@ class AdminController extends Controller
     }
 
     /**
-     * Display properties owned by the authenticated user.
+     * Display properties owned by the authenticated guest.
      */
     public function properties(): View
     {
-        $properties = Property::where('owner_id', Auth::id())->get();
+        $scope = request()->query('scope', 'mine');
+        $user = Auth::user();
 
-        return view('admin.admin', compact('properties'));
+        $properties = ($user->isSuperAdmin() && $scope === 'all')
+            ? Property::with('owner')->get()
+            : Property::where('owner_id', Auth::id())->get();
+
+        return view('admin.admin', compact('properties', 'scope'));
     }
 
     /**
@@ -77,7 +83,7 @@ class AdminController extends Controller
     public function pending(): View
     {
         ['confirmed' => $reservations, 'pending' => $pending] =
-            $this->reservationService->getPendingAndConfirmedForOwner();
+            $this->reservationService->getPendingAndConfirmedForOwner(Auth::id());
 
         return view('admin.pending', compact('reservations', 'pending'));
     }
@@ -90,7 +96,7 @@ class AdminController extends Controller
      */
     public function updateStatus($id)
     {
-        $reservation = Reservation::with(['user', 'property'])
+        $reservation = Reservation::with(['guest', 'property'])
             ->where('id', $id)
             ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
             ->firstOrFail();
@@ -134,14 +140,14 @@ class AdminController extends Controller
         $propiedad = $request->query('propiedad');
 
         $reservations = $this->reservationService
-            ->getConfirmedReservationsForOwner($propiedad);
+            ->getConfirmedReservationsForOwner(Auth::id(), $propiedad);
 
         /** @var \Illuminate\Support\Collection<int, Reservation> $reservations */
         $events = $reservations->map(fn ($r) => [
             'id' => $r->id,
-            'title' => $r->user->name . ' in ' . $r->property->title,
+            'title' => $r->guest->name . ' in ' . $r->property->title,
             'note' => $r->notes,
-            'user' => $r->user,
+            'guest' => $r->guest,
             'property' => $r->property->title,
             'start' => $r->check_in,
             'end' => $r->check_out,
@@ -179,7 +185,9 @@ class AdminController extends Controller
      */
     public function exportExcel()
     {
-        return $this->exportService->downloadReservationsZip();
+        return $this->exportService->downloadReservationsZip(
+            Auth::user(),
+        );
     }
 
     /**
@@ -187,11 +195,14 @@ class AdminController extends Controller
      *
      * @return BinaryFileResponse
      */
-    public function exportfacturaExcel(Request $request)
+    public function exportfacturaExcel(ExportInvoicesRequest $request)
     {
+        $validated = $request->validated();
+
         return $this->exportService->downloadInvoicesExcel(
-            $request->input('ids'),
-            $request->input('invoice_amount'),
+            Auth::user(),
+            $validated['ids'] ?? [],
+            $validated['invoice_amount'] ?? null,
         );
     }
 }

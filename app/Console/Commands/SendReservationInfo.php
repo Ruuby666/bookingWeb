@@ -10,34 +10,24 @@ use Illuminate\Support\Facades\Mail;
 
 class SendReservationInfo extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:send-reservation-info';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Command description';
 
-    /**
-     * Execute the console command.
-     */
+    // To try this command, you can run it manually using the following Artisan command:
+    // docker compose exec app php artisan app:send-reservation-info
     public function handle()
     {
         $tomorrow = Carbon::tomorrow()->toDateString();
 
-        $reservations = Reservation::where('status', 'confirmed')
+        $reservations = Reservation::with(['guest', 'property'])
+            ->where('status', 'confirmed')
             ->whereDate('check_in', $tomorrow)
             ->get();
 
         foreach ($reservations as $reservation) {
-            if ($reservation->user && ! empty($reservation->user->email)) {
-                Mail::to($reservation->user->email)->send(new ReservationInfoMail($reservation));
+            if ($reservation->guest && ! empty($reservation->guest->email)) {
+                Mail::to($reservation->guest->email)->send(new ReservationInfoMail($reservation));
             }
         }
 

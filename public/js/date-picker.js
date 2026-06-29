@@ -106,7 +106,7 @@ $(document).ready(async function () {
             const reservations = await response.json();
 
             reservations.forEach(reservation => {
-                if (reservation.property_id == propertyId && reservation.status === 'confirmed') {
+                if (reservation.property_id == propertyId) {
                     const range = generateAllDates(reservation.check_in, reservation.check_out);
                     fullDates.push(...range);
                 }

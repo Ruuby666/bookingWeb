@@ -25,16 +25,20 @@ class User extends Authenticatable
         'email',
         'phone_number',
         'password',
+        'is_admin',
+        'is_super_admin',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
         'is_admin',
+        'is_super_admin',
     ];
 
     protected $casts = [
         'is_admin' => 'boolean',
+        'is_super_admin' => 'boolean',
     ];
 
     // --- Relations ---
@@ -42,11 +46,6 @@ class User extends Authenticatable
     public function properties(): HasMany
     {
         return $this->hasMany(Property::class, 'owner_id');
-    }
-
-    public function reservations(): HasMany
-    {
-        return $this->hasMany(Reservation::class);
     }
 
     // --- Methods ---
@@ -58,6 +57,11 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->is_admin;
+        return (bool) $this->is_admin;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return (bool) $this->is_super_admin;
     }
 }

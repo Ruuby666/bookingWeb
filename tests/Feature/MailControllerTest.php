@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MailControllerTest extends TestCase
@@ -23,7 +25,7 @@ class MailControllerTest extends TestCase
     // sendEmail – booking request
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function guest_can_submit_a_valid_booking_request(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -49,10 +51,10 @@ class MailControllerTest extends TestCase
 
         $response->assertRedirect();
         $this->assertDatabaseHas('reservations', ['status' => 'pending']);
-        $this->assertDatabaseHas('users', ['email' => 'alice@example.com']);
+        $this->assertDatabaseHas('guests', ['email' => 'alice@example.com']);
     }
 
-    /** @test */
+    #[Test]
     public function booking_fails_when_verification_email_does_not_match(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -71,7 +73,7 @@ class MailControllerTest extends TestCase
         ])->assertSessionHasErrors('verification_email');
     }
 
-    /** @test */
+    #[Test]
     public function booking_fails_when_required_fields_are_missing(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -83,7 +85,7 @@ class MailControllerTest extends TestCase
         ])->assertSessionHasErrors();
     }
 
-    /** @test */
+    #[Test]
     public function booking_fails_when_dates_overlap_confirmed_reservation(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);
@@ -92,12 +94,12 @@ class MailControllerTest extends TestCase
             'min_nights' => 1,
             'capacity' => 4,
         ]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         // Existing confirmed reservation blocks the period
         Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'confirmed',
             'check_in' => '2026-07-03 15:00:00',
             'check_out' => '2026-07-09 11:00:00',
@@ -124,16 +126,16 @@ class MailControllerTest extends TestCase
     // sendSuggestion
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function admin_can_send_a_suggestion_for_a_reservation(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
             'status' => 'pending',
         ]);
 
@@ -144,20 +146,41 @@ class MailControllerTest extends TestCase
             ->assertRedirect(route('admin.reservations.pending'));
     }
 
-    /** @test */
+    #[Test]
     public function suggestion_fails_when_note_is_missing(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $property = Property::factory()->create(['owner_id' => $admin->id]);
-        $guest = User::factory()->create();
+        $guest = Guest::factory()->create();
 
         $reservation = Reservation::factory()->create([
             'property_id' => $property->id,
-            'user_id' => $guest->id,
+            'guest_id' => $guest->id,
         ]);
 
         $this->actingAs($admin)
             ->post(route('reservations.sendSuggestion', $reservation->id), [])
             ->assertSessionHasErrors('note');
+    }
+
+    #[Test]
+    public function admin_cannot_send_suggestion_for_another_admin_property(): void
+    {
+        $adminA = User::factory()->create(['is_admin' => true]);
+        $adminB = User::factory()->create(['is_admin' => true]);
+        $propertyB = Property::factory()->create(['owner_id' => $adminB->id]);
+        $guest = Guest::factory()->create();
+
+        $reservation = Reservation::factory()->create([
+            'property_id' => $propertyB->id,
+            'guest_id' => $guest->id,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($adminA)
+            ->post(route('reservations.sendSuggestion', $reservation->id), [
+                'note' => 'Unauthorized attempt to send suggestion.',
+            ])
+            ->assertForbidden();
     }
 }

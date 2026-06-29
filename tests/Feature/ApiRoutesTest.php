@@ -1,0 +1,53 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Guest;
+use App\Models\Property;
+use App\Models\Reservation;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
+
+class ApiRoutesTest extends TestCase
+{
+    use RefreshDatabase;
+
+    #[Test]
+    public function properties_endpoint_returns_list(): void
+    {
+        Property::factory()->count(2)->create();
+
+        $this->getJson('/api/properties')
+            ->assertOk()
+            ->assertJsonCount(2);
+    }
+
+    #[Test]
+    public function reservations_endpoint_returns_confirmed_reservations(): void
+    {
+        $property = Property::factory()->create();
+        $guest = Guest::factory()->create();
+
+        Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'confirmed',
+            'check_in' => now()->addDay(),
+            'check_out' => now()->addDays(2),
+        ]);
+
+        // pending reservation should not be returned
+        Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'pending',
+            'check_in' => now()->addDay(),
+            'check_out' => now()->addDays(2),
+        ]);
+
+        $this->getJson('/api/reservations')
+            ->assertOk()
+            ->assertJsonCount(1);
+    }
+}

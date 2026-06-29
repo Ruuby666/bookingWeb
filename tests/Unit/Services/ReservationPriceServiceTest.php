@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\ReservationPriceService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ReservationPriceServiceTest extends TestCase
@@ -37,7 +38,7 @@ class ReservationPriceServiceTest extends TestCase
     // getPriceBreakdown
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_returns_default_price_when_no_custom_range_exists(): void
     {
         [, $property] = $this->makeOwnerAndProperty(['price_per_night' => 80.00]);
@@ -54,7 +55,7 @@ class ReservationPriceServiceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_uses_custom_price_within_range_and_default_outside(): void
     {
         [, $property] = $this->makeOwnerAndProperty(['price_per_night' => 100.00]);
@@ -64,6 +65,7 @@ class ReservationPriceServiceTest extends TestCase
             'start_date' => Carbon::parse('2026-06-02'),
             'end_date' => Carbon::parse('2026-06-03')->endOfDay(),
             'price_per_night' => 200.00,
+            'owner_id' => $property->owner_id,
         ]);
 
         $breakdown = $this->service->getPriceBreakdown(
@@ -81,7 +83,7 @@ class ReservationPriceServiceTest extends TestCase
     // createPriceRange
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_creates_a_price_range_for_the_owner(): void
     {
         [$owner, $property] = $this->makeOwnerAndProperty();
@@ -92,6 +94,7 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-10'),
             150.00,
+            $owner->id,
         );
 
         $this->assertTrue($result['success']);
@@ -101,7 +104,7 @@ class ReservationPriceServiceTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_price_range_overlaps(): void
     {
         [$owner, $property] = $this->makeOwnerAndProperty();
@@ -119,13 +122,14 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-10'),
             200.00,
+            $owner->id,
         );
 
         $this->assertFalse($result['success']);
         $this->assertStringContainsString('overlaps', $result['error']);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_unauthorized_error_when_property_does_not_belong_to_user(): void
     {
         [, $property] = $this->makeOwnerAndProperty();
@@ -137,6 +141,7 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-05'),
             99.00,
+            $otherUser->id,
         );
 
         $this->assertFalse($result['success']);
@@ -147,7 +152,7 @@ class ReservationPriceServiceTest extends TestCase
     // deletePriceRange
     // -----------------------------------------------------------------------
 
-    /** @test */
+    #[Test]
     public function it_deletes_a_price_range_owned_by_the_user(): void
     {
         [$owner, $property] = $this->makeOwnerAndProperty();
@@ -160,16 +165,16 @@ class ReservationPriceServiceTest extends TestCase
             'price_per_night' => 130.00,
         ]);
 
-        $result = $this->service->deletePriceRange($price->id);
+        $result = $this->service->deletePriceRange($price->id, $owner->id);
 
         $this->assertTrue($result['success']);
         $this->assertDatabaseMissing('reservation_prices', ['id' => $price->id]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_error_when_deleting_a_price_range_not_owned_by_user(): void
     {
-        [, $property] = $this->makeOwnerAndProperty();
+        [$owner, $property] = $this->makeOwnerAndProperty();
         $otherUser = User::factory()->create(['is_admin' => true]);
         $this->actingAs($otherUser);
 
@@ -178,9 +183,10 @@ class ReservationPriceServiceTest extends TestCase
             'start_date' => Carbon::parse('2026-08-01'),
             'end_date' => Carbon::parse('2026-08-10')->endOfDay(),
             'price_per_night' => 130.00,
+            'owner_id' => $otherUser->id,
         ]);
 
-        $result = $this->service->deletePriceRange($price->id);
+        $result = $this->service->deletePriceRange($price->id, $otherUser->id);
 
         $this->assertFalse($result['success']);
         $this->assertEquals('Price range not found.', $result['error']);

@@ -87,8 +87,6 @@
             let occupied = [];
 
             reservations.forEach(res => {
-                if (res.status !== 'confirmed') return;
-
                 const checkIn = moment(res.check_in);
                 const checkOut = moment(res.check_out);
 

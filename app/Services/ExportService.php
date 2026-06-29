@@ -6,6 +6,7 @@ use App\Exports\ConfirmedReservationsExport;
 use App\Exports\ConfirmedReservationsStuffExport;
 use App\Exports\FacturasExport;
 use App\Models\Reservation;
+use App\Models\User;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -19,13 +20,13 @@ class ExportService
      * - Confirmed reservations
      * - Staff view reservations
      */
-    public function downloadReservationsZip(): BinaryFileResponse
+    public function downloadReservationsZip(User $user): BinaryFileResponse
     {
-        $file1 = ConfirmedReservationsExport::download()
+        $file1 = ConfirmedReservationsExport::download($user)
             ->getFile()
             ->getPathname();
 
-        $file2 = ConfirmedReservationsStuffExport::download()
+        $file2 = ConfirmedReservationsStuffExport::download($user)
             ->getFile()
             ->getPathname();
 
@@ -49,11 +50,21 @@ class ExportService
      * @param  array  $ids  List of reservation IDs
      * @param  float|null  $invoiceAmount  Optional invoice amount
      */
-    public function downloadInvoicesExcel(array $ids, ?float $invoiceAmount): BinaryFileResponse
+    public function downloadInvoicesExcel(User $user, array $ids, ?float $invoiceAmount): BinaryFileResponse
     {
-        $response = FacturasExport::download($ids, $invoiceAmount);
+        $response = FacturasExport::download($user, $ids, $invoiceAmount);
 
-        Reservation::whereIn('id', $ids)->update([
+        $query = Reservation::whereIn('id', $ids);
+
+        // If configuration disallows super-admin export-all, scope invoice updates
+        // to reservations that belong to properties owned by the user.
+        if (! $user->is_super_admin || ! config('exports.super_admin_can_export_all')) {
+            $query->whereHas('property', function ($q) use ($user) {
+                $q->where('owner_id', $user->id);
+            });
+        }
+
+        $query->update([
             'invoice' => true,
         ]);
 

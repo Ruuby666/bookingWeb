@@ -9,24 +9,36 @@ class AdminUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * Creates the super admin user from environment variables.
+     * For local demo users, use LocalDemoSeeder instead.
      */
     public function run()
     {
+        if (! env('ADMIN_EMAIL')) {
+            $this->command->warn('Skipping AdminUserSeeder: ADMIN_EMAIL not set.');
+
+            return;
+        }
+
         User::create([
-            'name' => 'Admin',
+            'name' => 'Super Admin',
             'email' => env('ADMIN_EMAIL'),
             'phone_number' => '1234567890',
             'password' => env('ADMIN_PASSWORD'),
             'is_admin' => true,
+            'is_super_admin' => true,
         ]);
 
         User::create([
-            'name' => 'Ruben',
-            'email' => 'ruben@gmail.com',
+            'name' => 'Demo Admin',
+            'email' => 'admin@example.local',
             'phone_number' => '1234567890',
-            'password' => 'Ruben1234Q',
+            'password' => 'Password1A',
             'is_admin' => true,
+            'is_super_admin' => false,
         ]);
 
+        $this->command->info(' Super admin user created from environment variables.');
     }
 }
