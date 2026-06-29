@@ -48,7 +48,7 @@ class BookingRequestService
             );
 
             // Calculate total price securely
-            $totalPrice = $this->reservationPriceService->getPriceBreakdown(
+            $totalPrice = $this->reservationPriceService->calculateTotal(
                 $property->id,
                 $checkIn,
                 $checkOut,

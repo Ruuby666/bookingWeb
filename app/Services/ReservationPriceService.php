@@ -45,6 +45,25 @@ class ReservationPriceService
     }
 
     /**
+     * Calculate the total reservation price for a date range.
+     */
+    public function calculateTotal(
+        int $propertyId,
+        Carbon $startDate,
+        Carbon $endDate,
+    ): float {
+        $breakdown = $this->getPriceBreakdown(
+            $propertyId,
+            $startDate,
+            $endDate,
+        );
+
+        return (float) array_sum(
+            array_column($breakdown, 'price'),
+        );
+    }
+
+    /**
      * Create a custom price range for a property.
      *
      * Validates ownership and prevents overlapping date ranges.
@@ -98,7 +117,7 @@ class ReservationPriceService
     public function deletePriceRange(int $id, int $ownerId): array
     {
         $price = ReservationPrice::where('id', $id)
-            ->whereHas('property', fn ($q) => $q->where('owner_id', $ownerId))
+            ->whereHas('property', fn($q) => $q->where('owner_id', $ownerId))
             ->first();
 
         if (! $price) {
