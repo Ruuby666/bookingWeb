@@ -11,6 +11,7 @@ class BookingRequestService
         private readonly ReservationService $reservationService,
         private readonly GuestService $guestService,
         private readonly BookingDateService $bookingDateService,
+        private readonly BookingValidationService $bookingValidationService,
         private readonly MailService $mailService,
         private readonly ReservationPriceService $reservationPriceService,
     ) {}
@@ -31,6 +32,7 @@ class BookingRequestService
     public function process(Property $property, array $data): array
     {
         // --- 1. Parse dates ---
+
         $dates = $this->bookingDateService->parse(
             $property,
             $data['daterange']
@@ -39,32 +41,13 @@ class BookingRequestService
         $checkIn = $dates['checkIn'];
         $checkOut = $dates['checkOut'];
 
-        // --- 2. Validate minimum nights ---
-        $nights = (int) round($checkIn->diffInDays($checkOut));
+        // --- 2. Validate minimum nights and Overlap ---
 
-        if ($nights < $property->min_nights) {
-            return [
-                'success' => false,
-                'error' => "This property requires a minimum of {$property->min_nights} nights. You selected {$nights} nights.",
-            ];
-        }
-
-        // --- 3. Overlap check ---
-        $conflict = $this->reservationService->findOverlappingReservation(
-            $property->id,
+        $this->bookingValidationService->validate(
+            $property,
             $checkIn,
             $checkOut,
         );
-
-        if ($conflict) {
-            return [
-                'success' => false,
-                'error' => 'Select other date range, there is a reservation already from '
-                    . $conflict->check_in->format('d/m/Y H:i')
-                    . ' to '
-                    . $conflict->check_out->format('d/m/Y H:i'),
-            ];
-        }
 
         // --- 4. Calculate total price in the backend ---
         // Ignore frontend price and recalculate here to prevent manipulation
