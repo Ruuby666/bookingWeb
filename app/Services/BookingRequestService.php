@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Property;
 use Carbon\Carbon;
+use InvalidArgumentException;
 
 class BookingRequestService
 {
@@ -17,79 +18,81 @@ class BookingRequestService
     ) {}
 
     /**
-     * Process a booking request end-to-end:
-     *  1. Parse & validate dates
-     *  2. Check for overlapping confirmed reservations
-     *  3. Calculate total price in the backend
-     *  4. Find or create the guest user
-     *  5. Create the pending reservation
-     *  6. Send booking notification email
+     * Process a booking request.
      *
-     * @param  array  $data  Keys: adults, children, guests, name, number, email,
-     *                       message, daterange, total_price
-     * @return array{success: bool, error?: string, checkIn?: Carbon, checkOut?: Carbon}
+     * @param array $data
+     * @return array{
+     *     success: bool,
+     *     error?: string,
+     *     checkIn?: Carbon,
+     *     checkOut?: Carbon
+     * }
      */
     public function process(Property $property, array $data): array
     {
-        // --- 1. Parse dates ---
+        try {
+            // Parse booking dates
+            $dates = $this->bookingDateService->parse(
+                $property,
+                $data['daterange'],
+            );
 
-        $dates = $this->bookingDateService->parse(
-            $property,
-            $data['daterange']
-        );
+            $checkIn = $dates['checkIn'];
+            $checkOut = $dates['checkOut'];
 
-        $checkIn = $dates['checkIn'];
-        $checkOut = $dates['checkOut'];
+            // Validate booking rules
+            $this->bookingValidationService->validate(
+                $property,
+                $checkIn,
+                $checkOut,
+            );
 
-        // --- 2. Validate minimum nights and Overlap ---
+            // Calculate total price securely
+            $totalPrice = $this->reservationPriceService->getPriceBreakdown(
+                $property->id,
+                $checkIn,
+                $checkOut,
+            );
 
-        $this->bookingValidationService->validate(
-            $property,
-            $checkIn,
-            $checkOut,
-        );
+            // Find or create guest
+            $guest = $this->guestService->findOrCreate(
+                $data['name'],
+                $data['email'],
+                $data['number'],
+            );
 
-        // --- 4. Calculate total price in the backend ---
-        // Ignore frontend price and recalculate here to prevent manipulation
-        $breakdown = $this->reservationPriceService->getPriceBreakdown(
-            $property->id,
-            $checkIn,
-            $checkOut,
-        );
+            // Booking payload
+            $bookingData = array_merge($data, [
+                'checkIn' => $checkIn,
+                'checkOut' => $checkOut,
+                'total_price' => $totalPrice,
+            ]);
 
-        $totalPrice = array_sum(array_column($breakdown, 'price'));
+            // Create reservation
+            $this->reservationService->createReservation(
+                $property,
+                $bookingData,
+                $guest,
+            );
 
-        // --- 5. Find or create guest ---
-        $guest = $this->guestService->findOrCreate(
-            $data['name'],
-            $data['email'],
-            $data['number'],
-        );
+            // Notify property owner
+            $this->mailService->sendBookingNotification(
+                array_merge(
+                    $bookingData,
+                    ['property' => $property],
+                ),
+            );
 
-        // --- 6. Create reservation ---
-        $bookingData = array_merge($data, [
-            'checkIn' => $checkIn,
-            'checkOut' => $checkOut,
-            'total_price' => $totalPrice,
-        ]);
-
-        $this->reservationService->createReservation($property, $bookingData, $guest);
-
-        // --- 7. Notify owner ---
-        $this->mailService->sendBookingNotification(
-            array_merge($bookingData, ['property' => $property]),
-        );
-
-        return ['success' => true, 'checkIn' => $checkIn, 'checkOut' => $checkOut];
-    }
-
-    /**
-     * Determine the check-in hour based on the property type.
-     */
-    private function resolveCheckInHour(Property $property): string
-    {
-        return str_contains($property->title, 'Casa') || str_contains($property->title, 'Villa')
-            ? '15:00'
-            : '14:00';
+            return [
+                'success' => true,
+                'checkIn' => $checkIn,
+                'checkOut' => $checkOut,
+            ];
+        } catch (InvalidArgumentException $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+            ];
+        }
     }
 }
