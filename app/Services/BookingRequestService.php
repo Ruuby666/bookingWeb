@@ -10,6 +10,7 @@ class BookingRequestService
     public function __construct(
         private readonly ReservationService $reservationService,
         private readonly GuestService $guestService,
+        private readonly BookingDateService $bookingDateService,
         private readonly MailService $mailService,
         private readonly ReservationPriceService $reservationPriceService,
     ) {}
@@ -30,17 +31,13 @@ class BookingRequestService
     public function process(Property $property, array $data): array
     {
         // --- 1. Parse dates ---
-        $dates = explode(' - ', $data['daterange']);
+        $dates = $this->bookingDateService->parse(
+            $property,
+            $data['daterange']
+        );
 
-        try {
-            $checkIn = Carbon::createFromFormat(
-                'd/m/Y H:i',
-                trim($dates[0]) . ' ' . $this->resolveCheckInHour($property),
-            );
-            $checkOut = Carbon::createFromFormat('d/m/Y H:i', trim($dates[1]) . ' 11:00');
-        } catch (\Exception) {
-            return ['success' => false, 'error' => 'Formato de fecha inválido.'];
-        }
+        $checkIn = $dates['checkIn'];
+        $checkOut = $dates['checkOut'];
 
         // --- 2. Validate minimum nights ---
         $nights = (int) round($checkIn->diffInDays($checkOut));
