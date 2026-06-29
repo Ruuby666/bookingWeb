@@ -15,18 +15,16 @@ class ContactMail extends Mailable
     use Queueable, SerializesModels;
 
     public Reservation $reservation;
-    public string $subject;
 
-    public function __construct(Reservation $reservation, string $subject)
+    public function __construct(Reservation $reservation)
     {
         $this->reservation = $reservation;
-        $this->subject = $subject;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->subject,
+            subject: 'New Booking',
         );
     }
 
