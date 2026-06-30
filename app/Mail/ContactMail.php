@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Reservation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -10,23 +11,19 @@ use Illuminate\Queue\SerializesModels;
 
 class ContactMail extends Mailable
 {
-    use Queueable;
-    use SerializesModels;
+    use Queueable, SerializesModels;
 
-    public $data;
+    public Reservation $reservation;
 
-    public $subject;
-
-    public function __construct($data, $subject)
+    public function __construct(Reservation $reservation)
     {
-        $this->data = $data;
-        $this->subject = $subject;
+        $this->reservation = $reservation;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->subject,
+            subject: 'New Booking',
         );
     }
 

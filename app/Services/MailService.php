@@ -12,12 +12,14 @@ class MailService
     /**
      * Send a new-booking notification to the site owner.
      *
-     * @param  array  $data  Booking data (name, email, checkIn, checkOut, property, …)
+     * @param  Reservation  $reservation  Booking data (name, email, checkIn, checkOut, property, …)
      */
-    public function sendBookingNotification(array $data): void
+    public function sendBookingNotification(Reservation $reservation): void
     {
+        $reservation->load(['guest', 'property']);
+
         Mail::to(config('mail.mailers.smtp.username'))
-            ->send(new ContactMail($data, 'New Booking'));
+            ->send(new ContactMail($reservation));
     }
 
     /**
