@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Property;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;

@@ -162,7 +162,7 @@
             <ul id="selected-reservations-list"></ul>
             <input type="number" id="invoice-amount" placeholder="Número de la primera factura" required>
             <div class="div-buttons">
-                <button class="mark-export-button" data-url="{{ route('admin.calendar.export-factura-excel') }}" onclick="redirectfacturaFromButton(this)">
+                <button class="mark-export-button" data-url="{{ route('admin.calendar.export-invoice-excel') }}" onclick="redirectfacturaFromButton(this)">
                     Exportar a Exel
                 </button>
             </div>
