@@ -24,7 +24,7 @@ class BookingValidationService
 
         if ($nights < $property->min_nights) {
             throw new InvalidArgumentException(
-                "This property requires a minimum of {$property->min_nights} nights. You selected {$nights} nights."
+                "This property requires a minimum of {$property->min_nights} nights. You selected {$nights} nights.",
             );
         }
     }
@@ -48,7 +48,7 @@ class BookingValidationService
                 'Select other date range, there is a reservation already from '
                 . $conflict->check_in->format('d/m/Y H:i')
                 . ' to '
-                . $conflict->check_out->format('d/m/Y H:i')
+                . $conflict->check_out->format('d/m/Y H:i'),
             );
         }
     }

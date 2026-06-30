@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\Events\BookingCreated;
 use App\Models\Property;
 use Carbon\Carbon;
 use InvalidArgumentException;
-use App\Events\BookingCreated;
 
 class BookingRequestService
 {
@@ -20,7 +20,6 @@ class BookingRequestService
     /**
      * Process a booking request.
      *
-     * @param array $data
      * @return array{
      *     success: bool,
      *     error?: string,
