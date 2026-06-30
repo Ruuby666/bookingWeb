@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\AdminPropertyController;
 use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\ExportController;
+use App\Http\Controllers\Admin\StatusReservationController;
+use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReservationPriceController;
-use App\Http\Controllers\Admin\StatusReservationController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;

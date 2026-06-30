@@ -16,7 +16,7 @@ class ExportInvoicesRequest extends FormRequest
         return [
             'ids' => ['required', 'array', 'min:1'],
             'ids.*' => ['integer', 'distinct', 'min:1'],
-            'invoice_amount' => ['nullable', 'integer', 'min:1'],
+            'invoice_amount' => ['nullable', 'numeric', 'min:1'],
         ];
     }
 

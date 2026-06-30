@@ -17,7 +17,7 @@ class StatusReservationController extends Controller
     public function __construct(
         private readonly ReservationService $reservationService,
     ) {}
-    
+
     /**
      * Display confirmed and pending reservations.
      */
