@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Data;
+
+use App\Http\Requests\BookingRequest;
+
+/**
+ * Data Transfer Object for a booking request.
+ *
+ * Replaces the implicit array $data that was passed through
+ * BookingRequestService, MailService, and ReservationService.
+ * Any renamed/missing field now fails at construction time (type error),
+ * not silently at runtime when array key is accessed.
+ */
+readonly class BookingData
+{
+    public function __construct(
+        public int     $propertyId,
+        public string  $name,
+        public string  $email,
+        public string  $phone,
+        public int     $adults,
+        public int     $children,
+        public string  $daterange,
+        public ?string $message = null,
+    ) {}
+
+    public static function fromRequest(BookingRequest $request): self
+    {
+        $data = $request->validated();
+
+        return new self(
+            propertyId: (int) $data['property_id'],
+            name:       $data['name'],
+            email:      $data['email'],
+            phone:      $data['number'],
+            adults:     (int) $data['adults'],
+            children:   (int) $data['children'],
+            daterange:  $data['daterange'],
+            message:    $data['message'] ?? null,
+        );
+    }
+
+    /**
+     * Total number of guests (adults + children).
+     * Avoids repeating this calculation in multiple services.
+     */
+    public function totalGuests(): int
+    {
+        return $this->adults + $this->children;
+    }
+}
