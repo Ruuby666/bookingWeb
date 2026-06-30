@@ -19,7 +19,7 @@ class MailService
         $reservation->load(['guest', 'property']);
 
         Mail::to(config('mail.mailers.smtp.username'))
-            ->send(new ContactMail($reservation, 'New Booking'));
+            ->send(new ContactMail($reservation));
     }
 
     /**
