@@ -2,12 +2,11 @@
 
 namespace App\Services;
 
-use App\Mail\ReservationConfirmedMail;
 use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
+use App\Events\ReservationConfirmed;
 
 class ReservationService
 {
@@ -65,8 +64,7 @@ class ReservationService
         $reservation->status = 'confirmed';
         $reservation->save();
 
-        Mail::to($reservation->guest->email)
-            ->send(new ReservationConfirmedMail($reservation));
+        event(new ReservationConfirmed($reservation));
 
         return ['success' => true];
     }

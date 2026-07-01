@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\ContactMail;
 use App\Mail\ReservationSuggestionMail;
+use App\Mail\ReservationConfirmedMail;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Mail;
 
@@ -20,6 +21,12 @@ class MailService
 
         Mail::to(config('mail.mailers.smtp.username'))
             ->send(new ContactMail($reservation));
+    }
+
+    public function sendReservationConfirmation(Reservation $reservation): void 
+    {
+        Mail::to($reservation->guest->email)
+            ->send(new ReservationConfirmedMail($reservation));
     }
 
     /**
