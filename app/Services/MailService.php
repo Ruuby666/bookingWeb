@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Mail\ContactMail;
-use App\Mail\ReservationSuggestionMail;
 use App\Mail\ReservationConfirmedMail;
+use App\Mail\ReservationSuggestionMail;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Mail;
 
@@ -23,7 +23,7 @@ class MailService
             ->send(new ContactMail($reservation));
     }
 
-    public function sendReservationConfirmation(Reservation $reservation): void 
+    public function sendReservationConfirmation(Reservation $reservation): void
     {
         Mail::to($reservation->guest->email)
             ->send(new ReservationConfirmedMail($reservation));

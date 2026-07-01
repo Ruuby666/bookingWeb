@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use App\Events\ReservationConfirmed;
 use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use Carbon\Carbon;
-use App\Events\ReservationConfirmed;
 
 class ReservationService
 {
