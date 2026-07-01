@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\BookingData;
 use App\Http\Requests\BookingRequest;
 use App\Http\Requests\SendSuggestionRequest;
 use App\Models\Property;
@@ -36,7 +37,7 @@ class MailController extends Controller
 
         $result = $this->bookingRequestService->process(
             $property,
-            $request->validated(),
+            BookingData::fromRequest($request),
         );
 
         if (! $result['success']) {
