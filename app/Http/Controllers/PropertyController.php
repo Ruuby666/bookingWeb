@@ -121,7 +121,7 @@ class PropertyController extends Controller
     {
         $property = Property::findOrFail($id);
 
-        $this->authorize('update', $property);
+        $this->authorize('delete', $property);
 
         $property->delete();
 
