@@ -39,14 +39,14 @@ class SuperAdminController extends Controller
      */
     public function store(StoreSuperAdminRequest $request): RedirectResponse
     {
-        User::create([
+        $user = User::create([
             'name' => $request->validated('name'),
             'email' => $request->validated('email'),
             'phone_number' => $request->validated('phone_number'),
             'password' => $request->validated('password'),
-            'is_admin' => true,
-            'is_super_admin' => false,
         ]);
+
+        $user->promoteToAdmin();
 
         return redirect()
             ->route('super_admin.index')
