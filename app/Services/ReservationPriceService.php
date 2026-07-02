@@ -11,9 +11,11 @@ class ReservationPriceService
     /**
      * Get the nightly price breakdown for a property within a date range.
      *
-     * Each night is evaluated against custom price ranges, falling back to
-     * the property's default price if no override exists.
+     * Fetches all applicable price ranges in a single query and maps them
+     * to each night, falling back to the property's default price if no
+     * override exists. This prevents N+1 queries (30 nights = 30 queries).
      *
+     * @param  int  $propertyId
      * @param  Carbon  $startDate  Check-in date (inclusive)
      * @param  Carbon  $endDate  Check-out date (exclusive)
      * @return array<int, array{date: string, price: float}>
@@ -21,21 +23,26 @@ class ReservationPriceService
     public function getPriceBreakdown(int $propertyId, Carbon $startDate, Carbon $endDate): array
     {
         $property = Property::findOrFail($propertyId);
-        $defaultPrice = $property->price_per_night;
+
+        // 1 query: fetch all price ranges that overlap with the period
+        $priceRanges = ReservationPrice::where('property_id', $propertyId)
+            ->where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $startDate)
+            ->get();
 
         $nights = [];
         $current = $startDate->copy()->startOfDay();
         $end = $endDate->copy()->startOfDay();
 
         while ($current->lt($end)) {
-            $price = ReservationPrice::where('property_id', $propertyId)
-                ->where('start_date', '<=', $current)
-                ->where('end_date', '>=', $current)
-                ->value('price_per_night');
+            // Find matching range for this night using in-memory collection
+            $matchingRange = $priceRanges->first(
+                fn ($r) => $r->start_date <= $current && $r->end_date >= $current
+            );
 
             $nights[] = [
                 'date' => $current->toDateString(),
-                'price' => $price ?? $defaultPrice,
+                'price' => $matchingRange?->price_per_night ?? $property->price_per_night,
             ];
 
             $current->addDay();
