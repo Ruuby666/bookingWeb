@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Enums\ReservationStatus;
 use App\Mail\ReservationConfirmedMail;
 use App\Models\Guest;
 use App\Models\Property;
@@ -58,7 +59,9 @@ class ReservationServiceTest extends TestCase
             'total_price' => 600.00,
         ], $guest);
 
-        $this->assertEquals('pending', $reservation->status);
+        $this->assertDatabaseHas('reservations', [
+            'status' => ReservationStatus::Pending->value,
+        ]);
         $this->assertEquals(3, $reservation->guests);
         $this->assertEquals(600.00, $reservation->total_price);
         $this->assertDatabaseHas('reservations', ['id' => $reservation->id, 'status' => 'pending']);
@@ -102,7 +105,7 @@ class ReservationServiceTest extends TestCase
 
         $this->assertTrue($result['success']);
         $reservation->refresh();
-        $this->assertEquals('confirmed', $reservation->status);
+        $this->assertEquals(ReservationStatus::Confirmed, $reservation->status);
         Mail::assertSent(ReservationConfirmedMail::class);
     }
 

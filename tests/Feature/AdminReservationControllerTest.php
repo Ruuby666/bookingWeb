@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ReservationStatus;
 use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
@@ -71,7 +72,10 @@ class AdminReservationControllerTest extends TestCase
             ->post(route('admin.reservations.pending.update', $reservation->id))
             ->assertRedirect();
 
-        $this->assertEquals('confirmed', $reservation->fresh()->status);
+        $this->assertEquals(
+            ReservationStatus::Confirmed,
+            $reservation->fresh()->status,
+        );
     }
 
     #[Test]

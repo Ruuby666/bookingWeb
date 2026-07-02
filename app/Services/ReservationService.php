@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ReservationStatus;
 use App\Events\ReservationConfirmed;
 use App\Models\Guest;
 use App\Models\Property;
@@ -61,7 +62,7 @@ class ReservationService
             ];
         }
 
-        $reservation->status = 'confirmed';
+        $reservation->status = ReservationStatus::Confirmed;
         $reservation->save();
 
         event(new ReservationConfirmed($reservation));
