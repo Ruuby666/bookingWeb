@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('property_id')->constrained('properties')->cascadeOnDelete();
             $table->dateTime('check_in');
             $table->dateTime('check_out');
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->text('notes')->nullable();
             $table->boolean('invoice')->default(false);
             $table->integer('guests');
