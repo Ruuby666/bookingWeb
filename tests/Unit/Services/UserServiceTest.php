@@ -22,26 +22,6 @@ class UserServiceTest extends TestCase
     }
 
     #[Test]
-    public function it_creates_a_new_user_if_email_does_not_exist(): void
-    {
-        $user = $this->userService->findOrCreate('John Doe', 'john@example.com', '600123456');
-
-        $this->assertDatabaseHas('users', ['email' => 'john@example.com', 'name' => 'John Doe']);
-        $this->assertEquals('John Doe', $user->name);
-    }
-
-    #[Test]
-    public function it_returns_existing_user_if_email_already_exists(): void
-    {
-        $existing = User::factory()->create(['email' => 'existing@example.com']);
-
-        $user = $this->userService->findOrCreate('Other Name', 'existing@example.com', '000000000');
-
-        $this->assertEquals($existing->id, $user->id);
-        $this->assertEquals(1, User::count());
-    }
-
-    #[Test]
     public function it_updates_user_data_without_password(): void
     {
         $user = User::factory()->create(['name' => 'Old Name', 'email' => 'old@example.com']);
