@@ -32,7 +32,7 @@ class SuperAdminControllerTest extends TestCase
     public function guest_is_redirected_from_super_admin_routes(): void
     {
         $this->get(route('super_admin.index'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]
@@ -42,7 +42,7 @@ class SuperAdminControllerTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('super_admin.index'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]

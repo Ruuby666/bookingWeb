@@ -24,7 +24,7 @@ class IsSuperAdmin
             return $next($request);
         }
 
-        return redirect('/')
+        return redirect('/login')
             ->with('error', 'Access denied. Super admin privileges required.');
     }
 }

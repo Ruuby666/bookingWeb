@@ -32,7 +32,7 @@ class ExportControllerTest extends TestCase
     public function guest_cannot_export_reservations(): void
     {
         $this->get(route('admin.calendar.export-excel'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]
@@ -40,7 +40,7 @@ class ExportControllerTest extends TestCase
     {
         $this->actingAs($this->regularUser())
             ->get(route('admin.calendar.export-excel'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]
@@ -64,7 +64,7 @@ class ExportControllerTest extends TestCase
     public function guest_cannot_export_invoices(): void
     {
         $this->post(route('admin.calendar.export-invoice-excel'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]
@@ -72,7 +72,7 @@ class ExportControllerTest extends TestCase
     {
         $this->actingAs($this->regularUser())
             ->post(route('admin.calendar.export-invoice-excel'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]

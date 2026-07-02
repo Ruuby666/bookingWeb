@@ -91,7 +91,7 @@ class PropertyControllerTest extends TestCase
     {
         // IsAdmin middleware redirects to '/' not '/login'
         $this->get(route('properties.create'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     // -----------------------------------------------------------------------

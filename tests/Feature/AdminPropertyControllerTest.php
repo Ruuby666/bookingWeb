@@ -55,17 +55,15 @@ class AdminPropertyControllerTest extends TestCase
     #[Test]
     public function guest_is_redirected_from_admin_properties(): void
     {
-        // IsAdmin middleware redirects to '/' (root), not '/login'
         $this->get(route('admin.properties'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]
     public function non_admin_is_redirected_from_admin_properties(): void
     {
-        // IsAdmin middleware redirects to '/' (root), not '/login'
         $this->actingAs($this->regularUser())
             ->get(route('admin.properties'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 }
