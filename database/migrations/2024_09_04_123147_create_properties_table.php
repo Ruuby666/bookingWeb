@@ -10,6 +10,10 @@ return new class extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('owner_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
             $table->string('title');
             $table->text('description');
             $table->string('location');
@@ -21,16 +25,19 @@ return new class extends Migration
             $table->integer('min_nights');
             $table->string('images_div');
             $table->string('tv')->nullable();
-            $table->boolean('entertainment')->nullable();
-            $table->boolean('parking');
-            $table->boolean('pool');
-            $table->boolean('garden');
-            $table->boolean('safeBox');
-            $table->boolean('terrace');
-            $table->boolean('wifi');
+            $table->boolean('entertainment')->default(false);
+            $table->boolean('parking')->default(false);
+            $table->boolean('pool')->default(false);
+            $table->boolean('garden')->default(false);
+            $table->boolean('safeBox')->default(false);
+            $table->boolean('terrace')->default(false);
+            $table->boolean('wifi')->default(false);
             $table->decimal('lat', 10, 7);
             $table->decimal('lng', 10, 7);
             $table->timestamps();
+
+            // Indexes
+            $table->index('owner_id', 'properties_owner_idx');
         });
     }
 
