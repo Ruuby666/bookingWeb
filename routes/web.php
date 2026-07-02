@@ -69,7 +69,8 @@ Route::middleware(['super_admin'])->prefix('super-admin')->name('super_admin.')-
     Route::delete('/admins/{admin}', [SuperAdminController::class, 'destroy'])->name('destroy');
 });
 
-Route::get('/api/property-price-range', [ReservationPriceController::class, 'getPriceRange']);
+Route::get('/api/property-price-range', [ReservationPriceController::class, 'getPriceRange'])
+    ->middleware('throttle:30,1');;
 
 Route::get('/privacy', function () {
     return view('privacy');
