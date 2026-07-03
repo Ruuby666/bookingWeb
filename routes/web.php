@@ -12,7 +12,6 @@ use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReservationPriceController;
 use App\Http\Controllers\SuperAdminController;
-use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +31,6 @@ Route::get('/property/{id}/reservations', [ReservationController::class, 'data']
 
 Route::get('/api/properties', [PublicApiController::class, 'properties']);
 Route::get('/api/reservations', [PublicApiController::class, 'reservations']);
-Route::get('/api/images', [PublicApiController::class, 'images']);
 
 // --- Admin routes ---
 Route::middleware([IsAdmin::class])->group(function (): void {
@@ -55,7 +53,6 @@ Route::middleware([IsAdmin::class])->group(function (): void {
     Route::get('/admin/reservation-prices', [ReservationPriceController::class, 'index'])->name('admin.reservation_prices');
     Route::delete('/reservation-prices/{id}', [ReservationPriceController::class, 'destroy'])->name('reservation-prices.destroy');
     Route::post('/reservation-prices/create', [ReservationPriceController::class, 'create'])->name('reservation-prices.create');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
 });
 
 // --- Super Admin routes ---
