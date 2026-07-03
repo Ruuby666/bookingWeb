@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -11,20 +12,29 @@ class PropertyService
 {
     /**
      * Get all properties with a representative image for each one.
+     * Uses Cache::remember() to avoid N filesystem calls on every request.
      *
      * @return array{properties: Collection, propertyWithImages: array<int, string>}
      */
     public function getAllWithFirstImage(): array
     {
         $properties = Property::all();
-        $propertyWithImages = [];
 
-        foreach ($properties as $property) {
-            $files = Storage::disk('public')->files('images/' . $property->images_div);
-            $propertyWithImages[$property->id] = ! empty($files)
-                ? basename($files[0])
-                : 'default.jpg';
-        }
+        // Cache images for 1 hour to avoid N filesystem calls
+        $propertyWithImages = Cache::remember(
+            'property_images',
+            now()->addHour(),
+            function () use ($properties) {
+                $result = [];
+                foreach ($properties as $property) {
+                    $files = Storage::disk('public')->files('images/' . $property->images_div);
+                    $result[$property->id] = ! empty($files)
+                        ? basename($files[0])
+                        : 'default.jpg';
+                }
+                return $result;
+            }
+        );
 
         return compact('properties', 'propertyWithImages');
     }
@@ -103,6 +113,7 @@ class PropertyService
 
     /**
      * Sube un array de archivos a la carpeta de la propiedad en Storage.
+     * Invalida el caché de imágenes después de subir nuevas imágenes.
      *
      * @param  \Illuminate\Http\UploadedFile[]  $images
      */
@@ -111,6 +122,9 @@ class PropertyService
         foreach ($images as $image) {
             $image->store('images/' . $folder, 'public');
         }
+
+        // Invalidate cache so the new images are fetched on next request
+        Cache::forget('property_images');
     }
 
     /**

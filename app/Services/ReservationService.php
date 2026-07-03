@@ -8,6 +8,7 @@ use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class ReservationService
 {
@@ -23,7 +24,7 @@ class ReservationService
             [$checkIn, $checkOut] = [$checkOut, $checkIn];
         }
 
-        return Reservation::create([
+        $reservation = Reservation::create([
             'property_id' => $property->id,
             'guest_id' => $guest->id,
             'check_in' => $checkIn,
@@ -34,6 +35,11 @@ class ReservationService
             'invoice' => false,
             'total_price' => $data['total_price'],
         ]);
+
+        // Invalidate reservations cache on new booking
+        Cache::forget('reservations_confirmed');
+
+        return $reservation;
     }
 
     /**
@@ -64,6 +70,9 @@ class ReservationService
 
         $reservation->status = ReservationStatus::Confirmed;
         $reservation->save();
+
+        // Invalidate cache when a reservation is confirmed
+        Cache::forget('reservations_confirmed');
 
         event(new ReservationConfirmed($reservation));
 
