@@ -15,7 +15,6 @@ class ReservationPriceService
      * to each night, falling back to the property's default price if no
      * override exists. This prevents N+1 queries (30 nights = 30 queries).
      *
-     * @param  int  $propertyId
      * @param  Carbon  $startDate  Check-in date (inclusive)
      * @param  Carbon  $endDate  Check-out date (exclusive)
      * @return array<int, array{date: string, price: float}>
@@ -37,7 +36,7 @@ class ReservationPriceService
         while ($current->lt($end)) {
             // Find matching range for this night using in-memory collection
             $matchingRange = $priceRanges->first(
-                fn ($r) => $r->start_date <= $current && $r->end_date >= $current
+                fn ($r) => $r->start_date <= $current && $r->end_date >= $current,
             );
 
             $nights[] = [

@@ -32,8 +32,9 @@ class PropertyService
                         ? basename($files[0])
                         : 'default.jpg';
                 }
+
                 return $result;
-            }
+            },
         );
 
         return compact('properties', 'propertyWithImages');

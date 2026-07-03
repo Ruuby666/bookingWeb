@@ -49,20 +49,18 @@ class IsAdminMiddlewareTest extends TestCase
     #[Test]
     public function unauthenticated_user_is_redirected_from_admin_routes(): void
     {
-        // IsAdmin middleware redirects to '/' not '/login'
         $this->get(route('admin.properties'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]
     public function authenticated_non_admin_is_redirected_from_admin_routes(): void
     {
-        // IsAdmin middleware redirects to '/' not '/login'
         $user = User::factory()->create(['is_admin' => false]);
 
         $this->actingAs($user)
             ->get(route('admin.properties'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]

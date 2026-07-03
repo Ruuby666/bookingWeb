@@ -93,9 +93,9 @@ class SuperAdminController extends Controller
     {
         abort_if($admin->is_super_admin, 403);
 
-        $admin->update(['is_admin' => ! $admin->is_admin]);
+        $admin->is_admin ? $admin->revokeAdmin() : $admin->promoteToAdmin();
 
-        $status = $admin->is_admin ? 'enabled' : 'disabled';
+        $status = $admin->fresh()->is_admin ? 'enabled' : 'disabled';
 
         return redirect()
             ->route('super_admin.index')

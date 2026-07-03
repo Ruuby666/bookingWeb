@@ -30,6 +30,7 @@ return new class extends Migration
             $table->index('status', 'reservations_status_idx');
         });
     }
+
     /**
      * Reverse the migrations.
      */

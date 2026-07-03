@@ -34,7 +34,7 @@ class PublicApiController extends Controller
                     'lat',
                     'lng',
                 ]);
-            }
+            },
         );
 
         return response()->json($properties);
@@ -61,7 +61,7 @@ class PublicApiController extends Controller
             function () {
                 return Reservation::where('status', 'confirmed')
                     ->get(['property_id', 'check_in', 'check_out', 'status']);
-            }
+            },
         );
 
         return response()->json($reservations);

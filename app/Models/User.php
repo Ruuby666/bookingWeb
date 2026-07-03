@@ -65,11 +65,11 @@ class User extends Authenticatable
 
     public function promoteToAdmin(): void
     {
-        $this->update(['is_admin' => true]);
+        $this->forceFill(['is_admin' => true])->save();
     }
 
     public function revokeAdmin(): void
     {
-        $this->update(['is_admin' => false, 'is_super_admin' => false]);
+        $this->forceFill(['is_admin' => false, 'is_super_admin' => false])->save();
     }
 }
