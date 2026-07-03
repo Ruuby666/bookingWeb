@@ -146,7 +146,7 @@
 
     <p>
         <strong>Estado:</strong>
-        <span class="status">{{ ucfirst($reservation->status) }}</span>
+        <span class="status">{{ ucfirst($reservation->status->value) }}</span>
     </p>
 
     <hr class="divider">

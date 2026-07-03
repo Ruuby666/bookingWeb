@@ -51,7 +51,7 @@ Route::middleware([IsAdmin::class])->group(function (): void {
     Route::get('/admin/calendar/reservations', [CalendarController::class, 'getConfirmedReservations'])->name('admin.calendar.reservations');
     Route::post('/admin/calendar/reservation/update-time', [CalendarController::class, 'updateTime'])->name('admin.calendar.reservations.update-time');
     Route::get('/admin/calendar/export-excel', [ExportController::class, 'exportExcel'])->name('admin.calendar.export-excel');
-    Route::post('/admin/calendar/export-invoice-excel', [ExportController::class, 'exportInvoiceExcel'])->name('admin.calendar.export-invoice-excel');
+    Route::get('/admin/calendar/export-invoice-excel', [ExportController::class, 'exportInvoiceExcel'])->name('admin.calendar.export-invoice-excel');
     Route::get('/admin/reservation-prices', [ReservationPriceController::class, 'index'])->name('admin.reservation_prices');
     Route::delete('/reservation-prices/{id}', [ReservationPriceController::class, 'destroy'])->name('reservation-prices.destroy');
     Route::post('/reservation-prices/create', [ReservationPriceController::class, 'create'])->name('reservation-prices.create');
