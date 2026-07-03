@@ -13,14 +13,6 @@ window.initMap = async function () {
             lat: 29.0669,
             lng: -13.5900
         },
-        mapId: "af934e8f21fb7b29",
-    });
-
-    map.addListener('mapcapabilities_changed', () => {
-        const mapCapabilities = map.getMapCapabilities();
-        if (!mapCapabilities.isAdvancedMarkersAvailable) {
-            console.log('Advanced markers are not available');
-        }
     });
 
     const markerElements = [];
@@ -32,15 +24,10 @@ window.initMap = async function () {
             lng: parseFloat(markerInfo.lng)
         };
 
-        const pin = new google.maps.marker.PinElement({
-            glyphColor: "white",
-        });
-
-        const marker = new google.maps.marker.AdvancedMarkerElement({
+        const marker = new google.maps.Marker({
             position: position,
             map: map,
             title: markerInfo.title,
-            content: pin.element,
         });
 
         const infoWindow = new google.maps.InfoWindow({
@@ -59,10 +46,12 @@ window.initMap = async function () {
     });
 
     // Aplicar MarkerClusterer
-    new markerClusterer.MarkerClusterer({
-        map: map,
-        markers: markerElements,
-    });
+    if (markerClusterer && markerClusterer.MarkerClusterer) {
+        new markerClusterer.MarkerClusterer({
+            map: map,
+            markers: markerElements,
+        });
+    }
 }
 
 // Function to build content for InfoWindow
