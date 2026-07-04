@@ -52,7 +52,7 @@ bookingWeb/
 │   └── Exports/                # PhpSpreadsheet Excel exports
 ├── database/
 │   ├── migrations/             # Database schema
-│   ├── seeders/                # AdminUserSeeder
+│   ├── seeders/                # AdminUserSeeder (prod-safe), DevelopmentSeeder (local demo data)
 │   └── factories/              # Model factories for testing
 ├── docker/
 │   └── nginx/
@@ -219,6 +219,13 @@ docker compose exec app php artisan migrate
 
 ```bash
 docker compose exec app php artisan migrate:fresh --seed
+```
+
+This only creates the super admin from `ADMIN_EMAIL`/`ADMIN_PASSWORD` (production-safe).
+For local demo data (sample properties, prices, and a demo admin), also run:
+
+```bash
+docker compose exec app php artisan db:seed --class=DevelopmentSeeder
 ```
 
 ### Connect with a GUI client (TablePlus, DBeaver, etc.)

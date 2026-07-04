@@ -27,14 +27,16 @@ class LocalDemoSeeder extends Seeder
             return;
         }
 
-        User::create([
-            'name' => 'Demo Admin',
-            'email' => 'admin@example.local',
-            'phone_number' => '1234567890',
-            'password' => 'Password1A',
-            'is_admin' => true,
-            'is_super_admin' => false,
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@example.local'],
+            [
+                'name' => 'Demo Admin',
+                'phone_number' => '1234567890',
+                'password' => 'Password1A',
+                'is_admin' => true,
+                'is_super_admin' => false,
+            ],
+        );
 
         $this->command->info('Demo admin user created: admin@example.local / Password1A');
     }
