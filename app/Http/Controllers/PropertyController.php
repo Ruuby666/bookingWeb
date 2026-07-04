@@ -123,7 +123,7 @@ class PropertyController extends Controller
 
         $this->authorize('delete', $property);
 
-        $property->delete();
+        $this->propertyService->deleteProperty($property);
 
         return redirect()
             ->route('admin.properties')

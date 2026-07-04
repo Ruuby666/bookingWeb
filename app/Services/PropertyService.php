@@ -87,7 +87,11 @@ class PropertyService
 
         unset($data['images']);
 
-        return Property::create($data);
+        $property = Property::create($data);
+
+        Cache::forget('properties_list');
+
+        return $property;
     }
 
     /**
@@ -109,7 +113,19 @@ class PropertyService
 
         $property->update($data);
 
+        Cache::forget('properties_list');
+
         return $property->fresh();
+    }
+
+    /**
+     * Delete a property and invalidate the public properties cache.
+     */
+    public function deleteProperty(Property $property): void
+    {
+        $property->delete();
+
+        Cache::forget('properties_list');
     }
 
     /**
