@@ -332,6 +332,12 @@ docker compose exec app php artisan view:cache
 docker compose run --rm vite sh -c "npm ci && npm run build"
 ```
 
+`docker compose up -d` also starts the `worker` (`queue:work`) and `scheduler`
+(`schedule:work`) services automatically — they run the same app image with a
+different command, so queued booking/confirmation emails and the daily
+reservation reminder actually get processed. With `QUEUE_CONNECTION=sync`
+(the local default), the `worker` service is idle but harmless.
+
 ---
 
 ## CI/CD
