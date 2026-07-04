@@ -66,4 +66,22 @@ class AdminPropertyControllerTest extends TestCase
             ->get(route('admin.properties'))
             ->assertRedirect('/login');
     }
+
+    #[Test]
+    public function super_admin_viewing_all_scope_can_manage_only_their_own_properties(): void
+    {
+        $superAdmin = User::factory()->create(['is_admin' => true, 'is_super_admin' => true]);
+        $otherOwner = $this->adminUser();
+
+        $ownProperty = Property::factory()->create(['owner_id' => $superAdmin->id]);
+        $otherProperty = Property::factory()->create(['owner_id' => $otherOwner->id]);
+
+        $response = $this->actingAs($superAdmin)
+            ->get(route('admin.properties', ['scope' => 'all']))
+            ->assertOk();
+
+        $response->assertSee(route('properties.edit', $ownProperty));
+        $response->assertDontSee(route('properties.edit', $otherProperty));
+        $response->assertDontSee(route('properties.destroy', $otherProperty->id));
+    }
 }

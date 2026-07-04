@@ -101,6 +101,7 @@
 
                         <td>
                             <div class="action-buttons">
+                                @if($property->owner_id === Auth::id())
                                 <a href="{{ route('properties.edit', $property) }}" class="btn-edit">✏️</a>
                                 <form action="{{ route('properties.destroy', $property->id) }}" method="POST"
                                     onsubmit="return confirm('Are you sure you want to delete this property?');"
@@ -109,6 +110,9 @@
                                     @method('DELETE')
                                     <button type="submit" class="btn-delete">🗑️</button>
                                 </form>
+                                @else
+                                <span class="badge" title="Solo el propietario puede editar esta propiedad">👁️ View only</span>
+                                @endif
                             </div>
                         </td>
                     </tr>
