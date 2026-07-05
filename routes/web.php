@@ -29,8 +29,8 @@ Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.ema
 
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
 
-Route::get('/api/properties', [PublicApiController::class, 'properties']);
-Route::get('/api/reservations', [PublicApiController::class, 'reservations']);
+Route::get('/api/properties', [PublicApiController::class, 'properties'])->middleware('throttle:3,1');
+Route::get('/api/reservations', [PublicApiController::class, 'reservations'])->middleware('throttle:3,1');
 
 // --- Admin routes ---
 Route::middleware([IsAdmin::class])->group(function (): void {
