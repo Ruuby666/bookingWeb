@@ -164,6 +164,18 @@ class PropertyControllerTest extends TestCase
             ->assertForbidden();
     }
 
+    #[Test]
+    public function super_admin_cannot_access_edit_form_for_a_property_they_do_not_own(): void
+    {
+        $superAdmin = User::factory()->create(['is_admin' => true, 'is_super_admin' => true]);
+        $owner = $this->admin();
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+
+        $this->actingAs($superAdmin)
+            ->get(route('properties.edit', $property->id))
+            ->assertForbidden();
+    }
+
     // -----------------------------------------------------------------------
     // Update
     // -----------------------------------------------------------------------

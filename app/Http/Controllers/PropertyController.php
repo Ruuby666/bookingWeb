@@ -83,7 +83,7 @@ class PropertyController extends Controller
 
         $property = Property::findOrFail($id);
 
-        $this->authorize('view', $property);
+        $this->authorize('update', $property);
 
         return view('property.add_or_edit_property', compact('property'));
     }
