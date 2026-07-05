@@ -153,14 +153,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    prevButton.addEventListener("gmp-click", function () {
+    prevButton.addEventListener("click", function () {
         carousel.scrollBy({
             left: -cardWidth,
             behavior: "smooth"
         });
     });
 
-    nextButton.addEventListener("gmp-click", function () {
+    nextButton.addEventListener("click", function () {
         carousel.scrollBy({
             left: cardWidth,
             behavior: "smooth"
