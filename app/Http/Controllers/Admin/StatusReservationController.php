@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Services\ReservationService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class StatusReservationController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Inject required services.
      */
@@ -54,9 +57,7 @@ class StatusReservationController extends Controller
      */
     public function suggestionEmail(Reservation $reservation): View
     {
-        if ($reservation->property->owner_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorize('view', $reservation);
 
         return view('admin.suggestion', compact('reservation'));
     }

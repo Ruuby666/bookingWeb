@@ -96,4 +96,62 @@ class AdminReservationControllerTest extends TestCase
             ->post(route('admin.reservations.pending.update', $reservation->id))
             ->assertNotFound();
     }
+
+    #[Test]
+    public function owner_can_view_the_suggestion_page_for_their_reservation(): void
+    {
+        $admin = $this->adminUser();
+        $property = Property::factory()->create(['owner_id' => $admin->id]);
+        $guest = Guest::factory()->create();
+
+        $reservation = Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('suggestion.create', $reservation->id))
+            ->assertOk()
+            ->assertViewIs('admin.suggestion');
+    }
+
+    #[Test]
+    public function non_owner_admin_cannot_view_the_suggestion_page(): void
+    {
+        $admin = $this->adminUser();
+        $other = $this->adminUser();
+        $property = Property::factory()->create(['owner_id' => $other->id]);
+        $guest = Guest::factory()->create();
+
+        $reservation = Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('suggestion.create', $reservation->id))
+            ->assertForbidden();
+    }
+
+    #[Test]
+    public function super_admin_can_view_the_suggestion_page_for_any_reservation(): void
+    {
+        $superAdmin = User::factory()->create(['is_admin' => true, 'is_super_admin' => true]);
+        $owner = $this->adminUser();
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+        $guest = Guest::factory()->create();
+
+        $reservation = Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($superAdmin)
+            ->get(route('suggestion.create', $reservation->id))
+            ->assertOk()
+            ->assertViewIs('admin.suggestion');
+    }
 }
