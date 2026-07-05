@@ -93,6 +93,42 @@ class PropertyServiceTest extends TestCase
         $this->assertEquals($owner->id, $property->owner_id);
     }
 
+    #[Test]
+    public function it_generates_a_unique_images_div_for_properties_with_the_same_title(): void
+    {
+        $owner = User::factory()->create(['is_admin' => true]);
+        $this->actingAs($owner);
+
+        $payload = [
+            'title' => 'Casa del Sol',
+            'description' => 'Sunny house',
+            'location' => 'Costa Teguise',
+            'price_per_night' => 200.00,
+            'capacity' => 4,
+            'size' => 90,
+            'bedrooms' => 'King',
+            'bathrooms' => 1,
+            'min_nights' => 2,
+            'lat' => 28.9,
+            'lng' => -13.5,
+            'tv' => false,
+            'entertainment' => false,
+            'parking' => true,
+            'pool' => false,
+            'garden' => false,
+            'safeBox' => false,
+            'terrace' => true,
+            'wifi' => true,
+        ];
+
+        $first = $this->service->createProperty($payload, $owner->id);
+        $second = $this->service->createProperty($payload, $owner->id);
+
+        $this->assertNotEquals($first->images_div, $second->images_div);
+        $this->assertStringStartsWith($first->id . '_', $first->images_div);
+        $this->assertStringStartsWith($second->id . '_', $second->images_div);
+    }
+
     // -----------------------------------------------------------------------
     // updateProperty
     // -----------------------------------------------------------------------

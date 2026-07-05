@@ -73,21 +73,25 @@ class PropertyService
      */
     public function createProperty(array $data, int $ownerId): Property
     {
-        // La carpeta se genera a partir del título de la propiedad
-        $folder = $this->generateFolderName($data['title']);
-
-        // Sube las imágenes si se han proporcionado
-        if (! empty($data['images'])) {
-            $this->uploadImages($data['images'], $folder);
-        }
+        $images = $data['images'] ?? [];
+        unset($data['images']);
 
         $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
         $data['owner_id'] = $ownerId;
-        $data['images_div'] = $folder;
 
-        unset($data['images']);
-
+        // images_div is only finalized after the row exists, since it must
+        // include the property id to stay unique — two properties with the
+        // same (or slug-colliding) title would otherwise share one folder,
+        // and deleting either one would delete both properties' images.
+        $data['images_div'] = '';
         $property = Property::create($data);
+
+        $folder = $property->id . '_' . $this->generateFolderName($data['title']);
+        $property->update(['images_div' => $folder]);
+
+        if (! empty($images)) {
+            $this->uploadImages($images, $folder);
+        }
 
         Cache::forget('properties_list');
 
