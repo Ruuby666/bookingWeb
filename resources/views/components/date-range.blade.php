@@ -90,27 +90,51 @@
             container.empty();
 
             if (properties.length === 0) {
-                container.append('<p>No properties available for the selected dates.</p>');
+                const message = document.createElement('p');
+                message.textContent = 'No properties available for the selected dates.';
+                container.append(message);
                 return;
             }
 
             properties.forEach(prop => {
                 const img = images[prop.id] || 'default.jpg';
-                const card = `
-                <a href="/property/${prop.id}">
-                    <div class="cardcontainer">
-                        <div class="photo">
-                            <img src="/storage/images/${prop.images_div}/${img}" alt="Image not found" style="height: 200px; width: 300px;">
-                        </div>
-                        <div class="content">
-                            <p class="txt4">${prop.title}</p>
-                            <p class="txt5">${prop.location}</p>
-                            <p class="txt2">${prop.description}</p>
-                        </div>
-                    </div>
-                </a>
-            `;
-                container.append(card);
+
+                const link = document.createElement('a');
+                link.href = `/property/${prop.id}`;
+
+                const card = document.createElement('div');
+                card.className = 'cardcontainer';
+
+                const photo = document.createElement('div');
+                photo.className = 'photo';
+
+                const image = document.createElement('img');
+                image.src = `/storage/images/${prop.images_div}/${img}`;
+                image.alt = 'Image not found';
+                image.style.height = '200px';
+                image.style.width = '300px';
+                photo.appendChild(image);
+
+                const content = document.createElement('div');
+                content.className = 'content';
+
+                const title = document.createElement('p');
+                title.className = 'txt4';
+                title.textContent = prop.title;
+
+                const location = document.createElement('p');
+                location.className = 'txt5';
+                location.textContent = prop.location;
+
+                const description = document.createElement('p');
+                description.className = 'txt2';
+                description.textContent = prop.description;
+
+                content.append(title, location, description);
+                card.append(photo, content);
+                link.appendChild(card);
+
+                container.append(link);
             });
         }
 
