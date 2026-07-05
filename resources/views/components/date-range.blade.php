@@ -3,9 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-<!-- Estilos del DateRangePicker -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-<link rel="stylesheet" href="{{ asset('css/date-range.css') }}">
+@include('components.daterangepicker-assets')
 
 <div class="daterange-container">
     <div class="daterange-header">
@@ -15,11 +13,6 @@
     <input type="text" id="daterange" placeholder="Select a date range" readonly />
     <i class="fa-solid fa-repeat" id="reset-btn-second"></i>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
 
 <script>
     $(document).ready(function() {

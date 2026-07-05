@@ -2,8 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Date Range Picker</title>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-<link rel="stylesheet" href="{{ asset('css/date-range.css') }}">
+@include('components.daterangepicker-assets')
 <style>
     @keyframes price-spin {
         to {
@@ -26,10 +25,6 @@
 @csrf
 <input type="text" id="daterange" name="daterange" placeholder="Select a date range" readonly /><b> *</b>
 <p id="total-price">Minimum {{ $property->min_nights }} nights</p>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 {{-- Configuration PHP → JS --}}
 <script>
