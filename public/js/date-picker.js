@@ -172,13 +172,15 @@ $(document).ready(async function () {
         el.style.color = color;
     }
 
-    // --- Generar array de fechas entre check-in y check-out (inclusivo) ---
+    // --- Generar array de fechas entre check-in y check-out ---
+    // Excluye el día de check-out: coincide con la regla de intervalo semiabierto
+    // [check_in, check_out) del backend, para permitir turnover el mismo día.
     function generateAllDates(checkIn, checkOut) {
         const start = moment(checkIn);
         const end = moment(checkOut);
         const dates = [];
 
-        while (start.isBefore(end) || start.isSame(end, 'day')) {
+        while (start.isBefore(end, 'day')) {
             dates.push(start.format('YYYY-MM-DD'));
             start.add(1, 'days');
         }

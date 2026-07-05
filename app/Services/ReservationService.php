@@ -47,19 +47,12 @@ class ReservationService
      */
     public function confirmReservation(Reservation $reservation): array
     {
-        $conflict = Reservation::where('property_id', $reservation->property_id)
-            ->where('status', 'confirmed')
-            ->where('id', '!=', $reservation->id)
-            ->where(function ($query) use ($reservation): void {
-                $query
-                    ->whereBetween('check_in', [$reservation->check_in, $reservation->check_out])
-                    ->orWhereBetween('check_out', [$reservation->check_in, $reservation->check_out])
-                    ->orWhere(function ($q) use ($reservation): void {
-                        $q->where('check_in', '<=', $reservation->check_in)
-                            ->where('check_out', '>=', $reservation->check_out);
-                    });
-            })
-            ->exists();
+        $conflict = $this->findOverlappingReservation(
+            $reservation->property_id,
+            $reservation->check_in,
+            $reservation->check_out,
+            $reservation->id,
+        );
 
         if ($conflict) {
             return [
@@ -107,14 +100,24 @@ class ReservationService
 
     /**
      * Find an overlapping confirmed reservation for a property.
+     *
+     * Uses a half-open interval [check_in, check_out): a check-out that lands
+     * exactly on another reservation's check-in is same-day turnover, not a
+     * conflict. This is the single source of truth for overlap checks — both
+     * booking validation and confirmation must use it.
      */
     public function findOverlappingReservation(
         int $propertyId,
         Carbon $checkIn,
         Carbon $checkOut,
+        ?int $excludeReservationId = null,
     ): ?Reservation {
         return Reservation::where('property_id', $propertyId)
             ->where('status', 'confirmed')
+            ->when(
+                $excludeReservationId,
+                fn ($query) => $query->where('id', '!=', $excludeReservationId),
+            )
             ->where(function ($query) use ($checkIn, $checkOut): void {
                 $query->where('check_in', '<', $checkOut)
                     ->where('check_out', '>', $checkIn);
