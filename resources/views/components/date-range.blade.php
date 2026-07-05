@@ -1,19 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<meta charset="UTF-8">
+<title>Date Range Picker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-<head>
-    <meta charset="UTF-8">
-    <title>Date Range Picker</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-    <!-- Estilos del DateRangePicker -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <link rel="stylesheet" href="{{ asset('css/date-range.css') }}">
-</head>
-
-<body>
-</body>
+<!-- Estilos del DateRangePicker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="{{ asset('css/date-range.css') }}">
 
 <div class="daterange-container">
     <div class="daterange-header">
@@ -70,7 +62,7 @@
                 const occupiedIds = getOccupiedPropertyIds(reservations, start, end);
                 const availableProps = properties.filter(p => !occupiedIds.includes(p.id));
 
-                renderProperties(availableProps, propertyWithImages);
+                renderProperties(availableProps, window.INDEX_CONFIG.propertyWithImages);
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
@@ -136,7 +128,7 @@
             try {
                 const propertiesRes = await fetch('/api/properties');
                 const properties = await propertiesRes.json();
-                renderProperties(properties, propertyWithImages);
+                renderProperties(properties, window.INDEX_CONFIG.propertyWithImages);
             } catch (error) {
                 console.error("Error fetching all properties:", error);
             } finally {
@@ -182,5 +174,3 @@
 
     });
 </script>
-
-</html>
