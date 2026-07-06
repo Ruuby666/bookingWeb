@@ -124,12 +124,20 @@ class PropertyService
 
     /**
      * Delete a property and invalidate the public properties cache.
+     *
+     * @return array{success: bool, error?: string}
      */
-    public function deleteProperty(Property $property): void
+    public function deleteProperty(Property $property): array
     {
+        if ($property->reservations()->exists()) {
+            return ['success' => false, 'error' => 'Cannot delete a property with existing reservations.'];
+        }
+
         $property->delete();
 
         Cache::forget('properties_list');
+
+        return ['success' => true];
     }
 
     /**

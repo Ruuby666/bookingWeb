@@ -110,6 +110,12 @@ class SuperAdminController extends Controller
     {
         abort_if($admin->is_super_admin, 403);
 
+        if ($admin->properties()->exists()) {
+            return redirect()
+                ->route('super_admin.index')
+                ->with('error', 'Cannot delete an admin with existing properties.');
+        }
+
         $admin->delete();
 
         return redirect()

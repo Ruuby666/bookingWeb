@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Property;
+use App\Models\Reservation;
 use App\Models\User;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -253,6 +254,21 @@ class PropertyControllerTest extends TestCase
             ->assertRedirect(route('admin.properties'));
 
         $this->assertDatabaseMissing('properties', ['id' => $property->id]);
+    }
+
+    #[Test]
+    public function owner_cannot_delete_a_property_with_reservations(): void
+    {
+        $owner = $this->admin();
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+        Reservation::factory()->create(['property_id' => $property->id]);
+
+        $this->actingAs($owner)
+            ->delete(route('properties.destroy', $property->id))
+            ->assertRedirect(route('admin.properties'))
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseHas('properties', ['id' => $property->id]);
     }
 
     #[Test]

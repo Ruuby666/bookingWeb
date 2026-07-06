@@ -123,10 +123,10 @@ class PropertyController extends Controller
 
         $this->authorize('delete', $property);
 
-        $this->propertyService->deleteProperty($property);
+        $result = $this->propertyService->deleteProperty($property);
 
-        return redirect()
-            ->route('admin.properties')
-            ->with('success', 'Property deleted successfully.');
+        return $result['success']
+            ? redirect()->route('admin.properties')->with('success', 'Property deleted successfully.')
+            : redirect()->route('admin.properties')->with('error', $result['error']);
     }
 }
