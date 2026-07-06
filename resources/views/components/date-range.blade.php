@@ -17,7 +17,7 @@
 <script>
     $(document).ready(function() {
 
-        // Inicializ Date Range Picker
+        // Initialize Date Range Picker
         $('#daterange').daterangepicker({
             locale: {
                 format: 'DD/MM/YYYY'

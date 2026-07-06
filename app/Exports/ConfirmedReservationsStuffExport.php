@@ -41,7 +41,7 @@ class ConfirmedReservationsStuffExport
 
             $row = 1;
 
-            // Título principal
+            // Main title
             $sheet->setCellValue("A{$row}", "RESERVA {$propertyTitle}");
             $sheet->mergeCells("A{$row}:C{$row}");
             $sheet->getStyle("A{$row}")->getFont()->setBold(true);
@@ -72,12 +72,12 @@ class ConfirmedReservationsStuffExport
                 $arrivalHour = $checkInHour;
                 $departureHour = $checkOutHour;
 
-                // Mostrar el mes solo si ha cambiado
+                // Show the month only if it has changed
                 if ($month !== $lastMonth) {
                     $sheet->setCellValue("A{$row}", strtoupper($month));
                     $lastMonth = $month;
 
-                    // Solo si hay una reserva anterior
+                    // Only if there is a previous reservation
                     if ($prevReservation) {
                         $prevCheckOut = Carbon::parse($prevReservation->check_out);
                         if ($prevCheckOut->month === $checkInMonth) {
@@ -90,37 +90,37 @@ class ConfirmedReservationsStuffExport
                     $row++;
                 }
 
-                // Línea de fechas
+                // Date line
                 $sheet->setCellValue("B{$row}", "{$checkIn} - {$checkOut} {$userName}");
                 $row++;
 
                 $sheet->setCellValue("B{$row}", "{$userName}");
                 $row++;
 
-                // Número de huéspedes
+                // Number of guests
                 $sheet->setCellValue("B{$row}", "{$guests} personas");
                 $row++;
 
-                // Notas
+                // Notes
                 $sheet->setCellValue("B{$row}", "Observaciones: {$notes}");
                 $row++;
 
-                // Dias de llegada y salida
+                // Check-in and check-out days
                 $sheet->setCellValue("B{$row}", "Día Llegada: {$checkIn}, Día Salida: {$checkOut}");
                 $row++;
 
-                // Horas de llegada y salida
+                // Check-in and check-out times
                 $sheet->setCellValue("B{$row}", "Hora Llegada: {$arrivalHour}, Hora Salida: {$departureHour}");
                 $row++;
 
-                // Espacio entre reservas
+                // Space between reservations
                 $row++;
 
                 $prevReservation = $reservation;
             }
         }
 
-        // Guardar archivo temporalmente
+        // Save file temporarily
         $filename = 'Reservas_actualizado_stuff' . date('d.m.Y') . '.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $filename);
         (new Xlsx($spreadsheet))->save($temp_file);

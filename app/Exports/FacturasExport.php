@@ -64,7 +64,7 @@ class FacturasExport
             $headers = ['ENTRADA', 'SALIDA', 'DIAS',  'NOMBRE CLIENTE', 'IGIC', 'IMPORTE BASE IMPONIBLE', 'IMPORTE TOTAL'];
             $sheet->fromArray($headers, null, 'C30');
 
-            // Estilo para cabecera (negrita y centrado)
+            // Header style (bold and centered)
             $headerStyle = [
                 'font' => ['bold' => true],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],

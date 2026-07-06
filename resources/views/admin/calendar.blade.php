@@ -61,7 +61,7 @@
             </br>
             <button id="editButton">Editar hora</button>
 
-            <!-- Inputs ocultos inicialmente -->
+            <!-- Inputs hidden initially -->
             <form id="editForm" style="display: none; margin-top: 10px;" method="POST"
                 action="{{ route('admin.calendar.reservations.update-time') }}">
                 @csrf
@@ -119,7 +119,7 @@
 
                     document.getElementById('editForm').style.display = 'none';
 
-                    // Mostrar inputs al pulsar "Editar hora"
+                    // Show inputs when clicking "Editar hora"
                     document.getElementById('editButton').onclick = function() {
                         document.getElementById('editForm').style.display = 'block';
                         document.getElementById('modalEventId').value = info.event.id;
@@ -145,7 +145,7 @@
 
             calendar.render();
 
-            // Escucha cambios en el select y actualiza los eventos del calendario
+            // Listen for changes on the select and update the calendar events
             document.getElementById('propiedad').addEventListener('change', function() {
                 const propiedad = this.value;
                 calendar.removeAllEvents();

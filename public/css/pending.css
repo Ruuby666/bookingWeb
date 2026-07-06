@@ -30,7 +30,7 @@ body {
     text-align: center;
 }
 
-/* Estilos para las celdas de datos */
+/* Styles for the data cells */
 .pending-id,
 .pending-property,
 .pending-guest,
@@ -228,7 +228,7 @@ th:first-child {
     display: flex;
 }
 
-/* Contenido del modal */
+/* Modal content */
 .modal-content {
     width: 100%;
     max-width: 700px;
@@ -299,7 +299,7 @@ th:first-child {
 }
 
 /* ===========================
-   Modal de creación de facturas
+   Invoice creation modal
    =========================== */
 
 #modal-factura .modal-content {
@@ -375,7 +375,7 @@ th:first-child {
     margin-top: 10px;
 }
 
-/* Animación de aparición */
+/* Appearance animation */
 @keyframes fadeIn {
     from {
         opacity: 0;

@@ -31,7 +31,7 @@
 
 <script>
 (function () {
-    // Datos de las imágenes inyectados desde PHP
+    // Image data injected from PHP
     const _imagesDiv  = @json($property->images_div);
     const _mainImage  = @json($mainImage);
     const _rest       = @json($imagesWithoutFirst);
@@ -58,14 +58,14 @@
         document.getElementById('galleryPopupImage').src = _src(_allImages[_currentIndex]);
     };
 
-    // Cerrar al hacer clic fuera de la imagen (en el fondo oscuro)
+    // Close when clicking outside the image (on the dark backdrop)
     window.galleryCloseOnBackdrop = function (event) {
         if (event.target.id === 'galleryPopup') {
             galleryClosePopup();
         }
     };
 
-    // Cerrar con tecla Escape y navegar con flechas del teclado
+    // Close with the Escape key and navigate with arrow keys
     document.addEventListener('keydown', function (e) {
         const popup = document.getElementById('galleryPopup');
         if (popup.style.display === 'none') return;

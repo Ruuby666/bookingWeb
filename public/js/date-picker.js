@@ -1,8 +1,8 @@
 /**
  * date-range.js
- * Require: jQuery, moment.js, daterangepicker (cargados antes de este script)
+ * Require: jQuery, moment.js, daterangepicker (loaded before this script)
  *
- * Configuración inyectada desde Blade:
+ * Configuration injected from Blade:
  *   window.DATE_RANGE_CONFIG = { propertyId, minNights }
  */
 
@@ -12,12 +12,12 @@ $(document).ready(async function () {
     const propertyId = window.DATE_RANGE_CONFIG?.propertyId;
     const minNights = window.DATE_RANGE_CONFIG?.minNights;
 
-    // Obtén todas las fechas ocupadas antes de inicializar el picker
+    // Get all reserved dates before initializing the picker
     const reservedDates = await fetchReservedDates(propertyId);
     checkBetweenReservations(reservedDates, minNights);
     initializeDateRangePicker(reservedDates);
 
-    // --- Fetch fechas reservadas ---
+    // --- Fetch reserved dates ---
     async function fetchReservedDates(propertyId) {
         try {
             const response = await fetch(`/property/${propertyId}/reservations`);
@@ -47,7 +47,7 @@ $(document).ready(async function () {
         }
     }
 
-    // --- Inicializar el picker ---
+    // --- Initialize the picker ---
     function initializeDateRangePicker(reservedDates) {
         $('#daterange').daterangepicker({
             locale: { format: 'DD/MM/YYYY' },
@@ -68,7 +68,7 @@ $(document).ready(async function () {
         });
     }
 
-    // --- Validar rango seleccionado y actualizar precio ---
+    // --- Validate selected range and update price ---
     async function fetchDataAndRenderProperties(startDate, endDate) {
         const checkIn = moment(startDate);
         const checkOut = moment(endDate);
@@ -95,7 +95,7 @@ $(document).ready(async function () {
         );
     }
 
-    // --- Array de fechas entre dos momentos (sin incluir checkout) ---
+    // --- Array of dates between two moments (excluding checkout) ---
     function getDateRangeArray(start, end) {
         const dates = [];
         const current = moment(start);
@@ -108,7 +108,7 @@ $(document).ready(async function () {
         return dates;
     }
 
-    // --- Comprobar solapamiento con reservas confirmadas ---
+    // --- Check for overlap with confirmed reservations ---
     async function checkForOverlaps(propertyId, fullDates, selectedDates) {
         try {
             const response = await fetch('/api/reservations');
@@ -131,11 +131,11 @@ $(document).ready(async function () {
                 '#e07a5f'
             );
 
-            return true; // Bloquea la reserva por seguridad
+            return true; // Block the reservation for safety
         }
     }
 
-    // --- Actualizar precio total ---
+    // --- Update total price ---
     async function updatePrice(startDate, endDate, propertyId) {
         showPriceSpinner();
         try {
@@ -158,23 +158,23 @@ $(document).ready(async function () {
         }
     }
 
-    // --- Spinner mientras carga el precio ---
+    // --- Spinner while the price loads ---
     function showPriceSpinner() {
         const el = document.getElementById('total-price');
         el.innerHTML = '<span class="price-spinner"></span>';
         el.style.color = '';
     }
 
-    // --- Mostrar mensaje en un elemento ---
+    // --- Display a message in an element ---
     function displayMessage(elementId, message, color = '#000') {
         const el = document.getElementById(elementId);
         el.textContent = message;
         el.style.color = color;
     }
 
-    // --- Generar array de fechas entre check-in y check-out ---
-    // Excluye el día de check-out: coincide con la regla de intervalo semiabierto
-    // [check_in, check_out) del backend, para permitir turnover el mismo día.
+    // --- Generate array of dates between check-in and check-out ---
+    // Excludes the check-out day: matches the backend's half-open interval
+    // rule [check_in, check_out), to allow same-day turnover.
     function generateAllDates(checkIn, checkOut) {
         const start = moment(checkIn);
         const end = moment(checkOut);
@@ -188,7 +188,7 @@ $(document).ready(async function () {
         return dates;
     }
 
-    // --- Bloquear huecos menores a minNights entre reservas ---
+    // --- Block gaps smaller than minNights between reservations ---
     function checkBetweenReservations(reservedDates, minNights) {
         const today = moment().startOf('day');
 

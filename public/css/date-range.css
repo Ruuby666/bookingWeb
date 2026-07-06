@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Lato:wght@100;300;400;700;900&display=swap');
 
-/* ----- Estilos generales ----- */
+/* ----- General styles ----- */
 .daterange-container {
     display: flex;
     align-items: center;
@@ -42,7 +42,7 @@
 }
 
 
-/* ----- Estilos del input daterange ----- */
+/* ----- Daterange input styles ----- */
 #daterange {
     padding: 0px 10px;
     width: 17%;
@@ -89,7 +89,7 @@ th {
     padding: 0 !important;
 }
 
-/* ----- Mejora en el diseño responsivo ----- */
+/* ----- Responsive design improvement ----- */
 @media (max-width: 1024px) {
     .daterange-container {
         gap: 15px;

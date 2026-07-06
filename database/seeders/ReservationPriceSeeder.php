@@ -20,7 +20,7 @@ class ReservationPriceSeeder extends Seeder
         }
 
         foreach ($properties as $property) {
-            // Creamos 3 rangos de fechas por propiedad
+            // Create 3 date ranges per property
             for ($i = 0; $i < 3; $i++) {
                 $startDate = Carbon::now()->addMonths($i * 4);
                 $endDate = (clone $startDate)->addMonths(3);
@@ -29,7 +29,7 @@ class ReservationPriceSeeder extends Seeder
                     'property_id' => $property->id,
                     'start_date' => $startDate->format('Y-m-d'),
                     'end_date' => $endDate->format('Y-m-d'),
-                    'price_per_night' => rand(60, 250) + rand(0, 99) / 100, // Precio aleatorio entre 60.00 y 250.99
+                    'price_per_night' => rand(60, 250) + rand(0, 99) / 100, // Random price between 60.00 and 250.99
                 ]);
             }
         }

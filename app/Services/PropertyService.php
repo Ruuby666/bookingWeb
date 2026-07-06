@@ -106,7 +106,7 @@ class PropertyService
      */
     public function updateProperty(Property $property, array $data): Property
     {
-        // Solo sube nuevas imágenes si se han proporcionado
+        // Only upload new images if they have been provided
         if (! empty($data['images'])) {
             $this->uploadImages($data['images'], $property->images_div);
         }
@@ -133,8 +133,8 @@ class PropertyService
     }
 
     /**
-     * Sube un array de archivos a la carpeta de la propiedad en Storage.
-     * Invalida el caché de imágenes después de subir nuevas imágenes.
+     * Uploads an array of files to the property's folder in Storage.
+     * Invalidates the image cache after uploading new images.
      *
      * @param  \Illuminate\Http\UploadedFile[]  $images
      */
@@ -149,8 +149,8 @@ class PropertyService
     }
 
     /**
-     * Genera un nombre de carpeta válido a partir del título de la propiedad.
-     * Ejemplo: "Casa del Sol" => "casa_del_sol"
+     * Generates a valid folder name from the property title.
+     * Example: "Casa del Sol" => "casa_del_sol"
      */
     private function generateFolderName(string $title): string
     {

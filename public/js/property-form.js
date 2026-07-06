@@ -2,7 +2,7 @@
     "use strict";
 
     // =====================================================
-    // CONFIGURACIÓN
+    // CONFIGURATION
     // =====================================================
 
     const _maxCapacity = window.FORM_CONFIG?.maxCapacity ?? 0;
@@ -10,7 +10,7 @@
     let confirmedSubmission = false;
 
     // =====================================================
-    // ELEMENTOS DEL DOM
+    // DOM ELEMENTS
     // =====================================================
 
     const phoneInput = document.querySelector("#number");
@@ -68,7 +68,7 @@
     }
 
     // =====================================================
-    // VALIDACIONES
+    // VALIDATIONS
     // =====================================================
 
     function validatePhoneField() {
