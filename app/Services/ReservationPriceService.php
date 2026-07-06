@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Property;
 use App\Models\ReservationPrice;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 class ReservationPriceService
 {
@@ -76,13 +78,11 @@ class ReservationPriceService
      *
      * @return array{success: bool, error?: string, model?: ReservationPrice}
      */
-    public function createPriceRange(int $propertyId, Carbon $startDate, Carbon $endDate, float $pricePerNight, int $ownerId): array
+    public function createPriceRange(int $propertyId, Carbon $startDate, Carbon $endDate, float $pricePerNight, User $user): array
     {
-        $property = Property::where('id', $propertyId)
-            ->where('owner_id', $ownerId)
-            ->first();
+        $property = Property::find($propertyId);
 
-        if (! $property) {
+        if (! $property || Gate::forUser($user)->denies('create', [ReservationPrice::class, $property])) {
             return ['success' => false, 'error' => 'Unauthorized access.'];
         }
 
@@ -120,13 +120,11 @@ class ReservationPriceService
      *
      * @return array{success: bool, error?: string}
      */
-    public function deletePriceRange(int $id, int $ownerId): array
+    public function deletePriceRange(int $id, User $user): array
     {
-        $price = ReservationPrice::where('id', $id)
-            ->whereHas('property', fn ($q) => $q->where('owner_id', $ownerId))
-            ->first();
+        $price = ReservationPrice::with('property')->find($id);
 
-        if (! $price) {
+        if (! $price || Gate::forUser($user)->denies('delete', $price)) {
             return ['success' => false, 'error' => 'Price range not found.'];
         }
 
