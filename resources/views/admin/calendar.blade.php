@@ -79,6 +79,14 @@
     </div>
 
     <script>
+        function showCalendarError(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast error';
+            toast.innerHTML = `<span class="icon">❌</span><span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 15000);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const propiedad = "{{ request('propiedad') ?? 'todos' }}";
             const calendarEl = document.getElementById('calendar');
@@ -93,9 +101,17 @@
                 events: function(fetchInfo, successCallback, failureCallback) {
                     const propiedad = document.getElementById('propiedad').value;
                     fetch(`/admin/calendar/reservations?propiedad=${encodeURIComponent(propiedad)}`)
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Request failed with status ${response.status}`);
+                            }
+                            return response.json();
+                        })
                         .then(data => successCallback(data))
-                        .catch(error => failureCallback(error));
+                        .catch(error => {
+                            showCalendarError('No se pudieron cargar las reservas del calendario. Inténtalo de nuevo más tarde.');
+                            failureCallback(error);
+                        });
                 },
                 eventClick: function(info) {
                     document.getElementById('modalTitle').textContent = info.event.title;
@@ -145,13 +161,12 @@
 
             calendar.render();
 
-            // Listen for changes on the select and update the calendar events
+            // Listen for changes on the select and update the calendar events.
+            // The events source above already reads the current dropdown value on
+            // every fetch, so refetching is enough — replacing it with a raw URL
+            // (as this used to do) bypassed our error handling entirely.
             document.getElementById('propiedad').addEventListener('change', function() {
-                const propiedad = this.value;
                 calendar.removeAllEvents();
-                calendar.refetchEvents();
-                calendar.setOption('events',
-                    `/admin/calendar/reservations?propiedad=${encodeURIComponent(propiedad)}`);
                 calendar.refetchEvents();
             });
         });
