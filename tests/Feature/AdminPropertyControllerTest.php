@@ -53,6 +53,17 @@ class AdminPropertyControllerTest extends TestCase
     }
 
     #[Test]
+    public function out_of_range_page_redirects_to_last_page(): void
+    {
+        $admin = $this->adminUser();
+        Property::factory()->count(5)->create(['owner_id' => $admin->id]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.properties', ['page' => 99]))
+            ->assertRedirect(route('admin.properties', ['page' => 1]));
+    }
+
+    #[Test]
     public function properties_list_is_paginated(): void
     {
         $admin = $this->adminUser();

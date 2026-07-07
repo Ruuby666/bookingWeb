@@ -35,6 +35,23 @@ class ReservationPriceControllerTest extends TestCase
     }
 
     #[Test]
+    public function out_of_range_page_redirects_to_last_page(): void
+    {
+        $admin = $this->admin();
+        $property = Property::factory()->create(['owner_id' => $admin->id]);
+        ReservationPrice::create([
+            'property_id' => $property->id,
+            'start_date' => Carbon::parse('2026-01-01')->startOfDay(),
+            'end_date' => Carbon::parse('2026-01-05')->endOfDay(),
+            'price_per_night' => 100.00,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.reservation_prices', ['page' => 99]))
+            ->assertRedirect(route('admin.reservation_prices', ['page' => 1]));
+    }
+
+    #[Test]
     public function reservation_prices_list_is_paginated(): void
     {
         $admin = $this->admin();

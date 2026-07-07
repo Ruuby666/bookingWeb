@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSuperAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -116,7 +117,17 @@ class SuperAdminController extends Controller
                 ->with('error', 'Cannot delete an admin with existing properties.');
         }
 
-        $admin->delete();
+        try {
+            $admin->delete();
+        } catch (QueryException $e) {
+            if ($e->getCode() !== '23000') {
+                throw $e;
+            }
+
+            return redirect()
+                ->route('super_admin.index')
+                ->with('error', 'Cannot delete an admin with existing properties.');
+        }
 
         return redirect()
             ->route('super_admin.index')

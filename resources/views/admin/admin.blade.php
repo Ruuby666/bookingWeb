@@ -6,10 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel</title>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/toast.css') }}" />
 </head>
 
 <body>
     @include('components.header')
+
+    @if (session('success'))
+        <x-toast :message="session('success')" type="success" />
+    @endif
+
+    @if (session('error'))
+        <x-toast :message="session('error')" type="error" />
+    @endif
 
     <div class="container">
         <h1 class="page-title">🏠 Property Management</h1>

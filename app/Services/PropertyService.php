@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -133,7 +134,15 @@ class PropertyService
             return ['success' => false, 'error' => 'Cannot delete a property with existing reservations.'];
         }
 
-        $property->delete();
+        try {
+            $property->delete();
+        } catch (QueryException $e) {
+            if ($e->getCode() !== '23000') {
+                throw $e;
+            }
+
+            return ['success' => false, 'error' => 'Cannot delete a property with existing reservations.'];
+        }
 
         Cache::forget('properties_list');
 

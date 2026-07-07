@@ -37,8 +37,13 @@ class ReservationPriceController extends Controller
         $reservationPrices = ReservationPrice::with('property')
             ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
             ->orderBy('property_id')
-            ->paginate(20)
-            ->withQueryString();
+            ->paginate(20);
+            
+        if ($reservationPrices->currentPage() > $reservationPrices->lastPage() && $reservationPrices->lastPage() > 0) {
+            return redirect()->route('admin.reservation_prices', ['page' => $reservationPrices->lastPage()]);
+        }
+
+        $reservationPrices->withQueryString();
 
         return view('admin.reservation_price', compact('reservationPrices', 'properties'));
     }
