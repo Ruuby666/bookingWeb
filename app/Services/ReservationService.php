@@ -30,7 +30,7 @@ class ReservationService
             'guest_id' => $guest->id,
             'check_in' => $checkIn,
             'check_out' => $checkOut,
-            'status' => 'pending',
+            'status' => ReservationStatus::Pending,
             'notes' => $data['message'] ?? null,
             'guests' => $data['adults'] + $data['children'],
             'invoice' => false,
@@ -122,7 +122,7 @@ class ReservationService
         bool $lockForUpdate = false,
     ): ?Reservation {
         $query = Reservation::where('property_id', $propertyId)
-            ->where('status', 'confirmed')
+            ->where('status', ReservationStatus::Confirmed)
             ->when(
                 $excludeReservationId,
                 fn ($query) => $query->where('id', '!=', $excludeReservationId),
@@ -145,7 +145,7 @@ class ReservationService
     public function getConfirmedReservationsForOwner(int $ownerId, ?string $propertyTitle = null)
     {
         $query = Reservation::with(['guest', 'property'])
-            ->where('status', 'confirmed')
+            ->where('status', ReservationStatus::Confirmed)
             ->whereHas('property', fn ($q) => $q->where('owner_id', $ownerId));
 
         if ($propertyTitle && $propertyTitle !== 'todos') {
@@ -162,12 +162,12 @@ class ReservationService
     {
         $ownerFilter = fn ($q) => $q->where('owner_id', $ownerId);
 
-        $confirmed = Reservation::where('status', 'confirmed')
+        $confirmed = Reservation::where('status', ReservationStatus::Confirmed)
             ->whereHas('property', $ownerFilter)
             ->with('property', 'guest')
             ->get();
 
-        $pending = Reservation::where('status', 'pending')
+        $pending = Reservation::where('status', ReservationStatus::Pending)
             ->whereHas('property', $ownerFilter)
             ->with('property', 'guest')
             ->get();

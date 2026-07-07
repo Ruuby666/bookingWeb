@@ -2,6 +2,7 @@
 
 namespace App\Exports\Concerns;
 
+use App\Enums\ReservationStatus;
 use App\Models\Reservation;
 use App\Models\User;
 use Carbon\Carbon;
@@ -21,7 +22,7 @@ trait BuildsConfirmedReservationsSpreadsheet
     private static function buildConfirmedReservationsSpreadsheet(User $user, bool $fullDetails): Spreadsheet
     {
         $query = Reservation::with(['guest', 'property'])
-            ->where('status', 'confirmed');
+            ->where('status', ReservationStatus::Confirmed);
 
         // Respect configuration: if super-admins should not export all, scope by owner
         if (! $user->is_super_admin || ! config('exports.super_admin_can_export_all')) {

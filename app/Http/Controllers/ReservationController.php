@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReservationStatus;
 use App\Models\Reservation;
 use Illuminate\Http\JsonResponse;
 
@@ -19,7 +20,7 @@ class ReservationController extends Controller
     public function data($propertyId)
     {
         $reservations = Reservation::where('property_id', $propertyId)
-            ->where('status', 'confirmed')
+            ->where('status', ReservationStatus::Confirmed)
             ->get(['property_id', 'check_in', 'check_out']);
 
         return response()->json($reservations);

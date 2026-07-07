@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\ReservationStatus;
 use App\Mail\ReservationInfoMail;
 use App\Models\Reservation;
 use Carbon\Carbon;
@@ -21,7 +22,7 @@ class SendReservationInfo extends Command
         $tomorrow = Carbon::tomorrow()->toDateString();
 
         $reservations = Reservation::with(['guest', 'property'])
-            ->where('status', 'confirmed')
+            ->where('status', ReservationStatus::Confirmed)
             ->whereDate('check_in', $tomorrow)
             ->get();
 

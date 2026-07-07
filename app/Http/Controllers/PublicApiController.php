@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReservationStatus;
 use App\Models\Property;
 use App\Models\Reservation;
 use Illuminate\Http\JsonResponse;
@@ -59,7 +60,7 @@ class PublicApiController extends Controller
             'reservations_confirmed',
             now()->addMinutes(10),
             function () {
-                return Reservation::where('status', 'confirmed')
+                return Reservation::where('status', ReservationStatus::Confirmed)
                     ->get(['property_id', 'check_in', 'check_out', 'status']);
             },
         );
