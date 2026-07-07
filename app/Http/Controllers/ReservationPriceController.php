@@ -37,7 +37,8 @@ class ReservationPriceController extends Controller
         $reservationPrices = ReservationPrice::with('property')
             ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
             ->orderBy('property_id')
-            ->get();
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.reservation_price', compact('reservationPrices', 'properties'));
     }

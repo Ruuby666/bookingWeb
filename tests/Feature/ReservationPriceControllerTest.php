@@ -35,6 +35,29 @@ class ReservationPriceControllerTest extends TestCase
     }
 
     #[Test]
+    public function reservation_prices_list_is_paginated(): void
+    {
+        $admin = $this->admin();
+        $property = Property::factory()->create(['owner_id' => $admin->id]);
+
+        for ($i = 0; $i < 25; $i++) {
+            ReservationPrice::create([
+                'property_id' => $property->id,
+                'start_date' => Carbon::parse('2026-01-01')->addMonths($i)->startOfDay(),
+                'end_date' => Carbon::parse('2026-01-05')->addMonths($i)->endOfDay(),
+                'price_per_night' => 100.00,
+            ]);
+        }
+
+        $response = $this->actingAs($admin)
+            ->get(route('admin.reservation_prices'))
+            ->assertOk();
+
+        $this->assertCount(20, $response->viewData('reservationPrices'));
+        $this->assertTrue($response->viewData('reservationPrices')->hasMorePages());
+    }
+
+    #[Test]
     public function guest_is_redirected_from_reservation_prices_index(): void
     {
         $this->get(route('admin.reservation_prices'))

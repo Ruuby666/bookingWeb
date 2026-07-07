@@ -71,6 +71,8 @@
         </table>
     </div>
 
+    {{ $reservationPrices->links() }}
+
 
     <div class="floating-button-container">
         <button

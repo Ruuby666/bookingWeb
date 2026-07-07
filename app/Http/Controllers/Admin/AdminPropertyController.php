@@ -18,8 +18,10 @@ class AdminPropertyController extends Controller
         $user = Auth::user();
 
         $properties = ($user->isSuperAdmin() && $scope === 'all')
-            ? Property::with('owner')->get()
-            : Property::where('owner_id', Auth::id())->get();
+            ? Property::with('owner')->paginate(20)
+            : Property::where('owner_id', Auth::id())->paginate(20);
+
+        $properties->withQueryString();
 
         return view('admin.admin', compact('properties', 'scope'));
     }

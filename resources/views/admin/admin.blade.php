@@ -125,6 +125,8 @@
             </table>
         </div>
 
+        {{ $properties->links() }}
+
         <div class="buttons">
             <a href="{{ route('properties.create') }}" class="btn-add">➕ Add New Property</a>
         </div>

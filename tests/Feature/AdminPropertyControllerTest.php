@@ -53,6 +53,20 @@ class AdminPropertyControllerTest extends TestCase
     }
 
     #[Test]
+    public function properties_list_is_paginated(): void
+    {
+        $admin = $this->adminUser();
+        Property::factory()->count(25)->create(['owner_id' => $admin->id]);
+
+        $response = $this->actingAs($admin)
+            ->get(route('admin.properties'))
+            ->assertOk();
+
+        $this->assertCount(20, $response->viewData('properties'));
+        $this->assertTrue($response->viewData('properties')->hasMorePages());
+    }
+
+    #[Test]
     public function guest_is_redirected_from_admin_properties(): void
     {
         $this->get(route('admin.properties'))
