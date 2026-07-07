@@ -12,7 +12,6 @@ use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReservationPriceController;
 use App\Http\Controllers\SuperAdminController;
-use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
@@ -29,11 +28,11 @@ Route::post('/send-email', [MailController::class, 'sendEmail'])->name('send.ema
 
 Route::get('/property/{id}/reservations', [ReservationController::class, 'data'])->name('property.reservations.data');
 
-Route::get('/api/properties', [PublicApiController::class, 'properties'])->middleware('throttle:3,1');
-Route::get('/api/reservations', [PublicApiController::class, 'reservations'])->middleware('throttle:3,1');
+Route::get('/api/properties', [PublicApiController::class, 'properties'])->middleware('throttle:30,1');
+Route::get('/api/reservations', [PublicApiController::class, 'reservations'])->middleware('throttle:30,1');
 
 // --- Admin routes ---
-Route::middleware([IsAdmin::class])->group(function (): void {
+Route::middleware(['admin'])->group(function (): void {
     Route::post('/admin/logout', [AdminAuthController::class, 'logoutFunction'])->name('admin.logout');
     Route::get('/admin/properties', [AdminPropertyController::class, 'properties'])->name('admin.properties');
     Route::get('/admin/reservations/pending', [StatusReservationController::class, 'pending'])->name('admin.reservations.pending');
