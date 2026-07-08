@@ -43,15 +43,17 @@ class FacturasExport
             }
 
             $address = array_map('trim', explode(',', $reservation->property->location));
-            if ($reservation->property->title == 'El Galeon') {
-                $sheet->setCellValue('B2', 'TONIRETOOS SL');
-                $sheet->setCellValue('B3', 'B35632223');
-                $sheet->setCellValue('B4', 'APARTAMENTO EL GALEON');
-                $sheet->setCellValue('B5', 'VALLE DE LA DEGOLLADA 63');
-                $sheet->setCellValue('B6', 'LA DEGOLLADA, 35570 YAIZA');
+            $billingProfiles = config('exports.billing_profiles', []);
+            $billing = $billingProfiles[$reservation->property->title] ?? $billingProfiles['default'] ?? [];
+
+            $sheet->setCellValue('B2', $billing['name'] ?? '');
+            $sheet->setCellValue('B3', $billing['tax_id'] ?? '');
+
+            if (! empty($billing['display_name'])) {
+                $sheet->setCellValue('B4', $billing['display_name']);
+                $sheet->setCellValue('B5', $billing['address_line1'] ?? '');
+                $sheet->setCellValue('B6', $billing['address_line2'] ?? '');
             } else {
-                $sheet->setCellValue('B2', 'OSCAR SEPULVEDA GUTIERREZ');
-                $sheet->setCellValue('B3', '45532610Q');
                 $sheet->setCellValue('B4', strtoupper($reservation->property->title));
                 $sheet->setCellValue('B5', strtoupper($address[0] ?? ''));
                 $sheet->setCellValue('B6', strtoupper($address[1] ?? ''));
