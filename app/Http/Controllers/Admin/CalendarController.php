@@ -62,9 +62,7 @@ class CalendarController extends Controller
      */
     public function updateTime(UpdateReservationTimeRequest $request)
     {
-        $reservation = Reservation::where('id', $request->validated('event_id'))
-            ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
-            ->firstOrFail();
+        $reservation = Reservation::findOrFail($request->validated('event_id'));
 
         $result = $this->reservationService->updateReservationTime(
             $reservation,
