@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Property;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +33,7 @@ class SuperAdminControllerTest extends TestCase
     public function guest_is_redirected_from_super_admin_routes(): void
     {
         $this->get(route('super_admin.index'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]
@@ -42,7 +43,7 @@ class SuperAdminControllerTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('super_admin.index'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     #[Test]
@@ -217,6 +218,21 @@ class SuperAdminControllerTest extends TestCase
             ->assertSessionHas('success');
 
         $this->assertDatabaseMissing('users', ['id' => $admin->id]);
+    }
+
+    #[Test]
+    public function super_admin_cannot_delete_admin_with_properties(): void
+    {
+        $superAdmin = $this->superAdminUser();
+        $admin = $this->normalAdminUser();
+        Property::factory()->create(['owner_id' => $admin->id]);
+
+        $this->actingAs($superAdmin)
+            ->delete(route('super_admin.destroy', $admin))
+            ->assertRedirect(route('super_admin.index'))
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseHas('users', ['id' => $admin->id]);
     }
 
     #[Test]

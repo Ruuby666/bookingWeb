@@ -6,7 +6,7 @@ body {
     color: #333;
 }
 
-/* Footer fijo y limpio */
+/* Fixed, clean footer */
 #footer {
     position: fixed !important;
     bottom: 0;
@@ -28,7 +28,7 @@ main {
     padding: 20px;
 }
 
-/* Tabla */
+/* Table */
 .table-wrapper {
     overflow-x: auto;
     width: 100%;
@@ -92,7 +92,7 @@ td:nth-child(2) {
     overflow: auto;
 }
 
-/* Botones */
+/* Buttons */
 .buttons {
     display: flex;
     justify-content: center;
@@ -258,7 +258,7 @@ td:nth-child(2) {
 }
 
 
-/* Badges para booleanos */
+/* Badges for booleans */
 .property-icons {
     margin-top: 10px;
     display: flex;

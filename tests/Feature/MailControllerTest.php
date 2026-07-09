@@ -86,6 +86,39 @@ class MailControllerTest extends TestCase
     }
 
     #[Test]
+    public function booking_total_price_is_calculated_server_side_and_ignores_client_input(): void
+    {
+        $owner = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create([
+            'owner_id' => $owner->id,
+            'min_nights' => 1,
+            'capacity' => 4,
+            'price_per_night' => 100.00,
+        ]);
+
+        // Client submits a manipulated total_price far below the real cost.
+        $this->post(route('send.email'), [
+            'property_id' => $property->id,
+            'name' => 'Eve',
+            'email' => 'eve@example.com',
+            'verification_email' => 'eve@example.com',
+            'number' => '600333444',
+            'adults' => 2,
+            'children' => 0,
+            'guests' => 2,
+            'daterange' => '01/07/2026 - 04/07/2026', // 3 nights
+            'total_price' => 1.00,
+        ]);
+
+        // 3 nights at 100.00/night = 300.00, regardless of the submitted total_price.
+        $this->assertDatabaseHas('reservations', [
+            'property_id' => $property->id,
+            'total_price' => 300.00,
+        ]);
+        $this->assertDatabaseMissing('reservations', ['total_price' => 1.00]);
+    }
+
+    #[Test]
     public function booking_fails_when_dates_overlap_confirmed_reservation(): void
     {
         $owner = User::factory()->create(['is_admin' => true]);

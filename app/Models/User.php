@@ -25,8 +25,6 @@ class User extends Authenticatable
         'email',
         'phone_number',
         'password',
-        'is_admin',
-        'is_super_admin',
     ];
 
     protected $hidden = [
@@ -63,5 +61,15 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return (bool) $this->is_super_admin;
+    }
+
+    public function promoteToAdmin(): void
+    {
+        $this->forceFill(['is_admin' => true])->save();
+    }
+
+    public function revokeAdmin(): void
+    {
+        $this->forceFill(['is_admin' => false, 'is_super_admin' => false])->save();
     }
 }

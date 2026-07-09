@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Enums\ReservationStatus;
 use App\Mail\ReservationConfirmedMail;
 use App\Models\Guest;
 use App\Models\Property;
@@ -58,7 +59,9 @@ class ReservationServiceTest extends TestCase
             'total_price' => 600.00,
         ], $guest);
 
-        $this->assertEquals('pending', $reservation->status);
+        $this->assertDatabaseHas('reservations', [
+            'status' => ReservationStatus::Pending->value,
+        ]);
         $this->assertEquals(3, $reservation->guests);
         $this->assertEquals(600.00, $reservation->total_price);
         $this->assertDatabaseHas('reservations', ['id' => $reservation->id, 'status' => 'pending']);
@@ -102,7 +105,7 @@ class ReservationServiceTest extends TestCase
 
         $this->assertTrue($result['success']);
         $reservation->refresh();
-        $this->assertEquals('confirmed', $reservation->status);
+        $this->assertEquals(ReservationStatus::Confirmed, $reservation->status);
         Mail::assertSent(ReservationConfirmedMail::class);
     }
 
@@ -135,6 +138,37 @@ class ReservationServiceTest extends TestCase
         $this->assertFalse($result['success']);
         $this->assertStringContainsString('already booked', $result['error']);
         Mail::assertNotSent(ReservationConfirmedMail::class);
+    }
+
+    #[Test]
+    public function it_confirms_a_reservation_that_starts_the_same_day_another_ends(): void
+    {
+        $property = $this->makeProperty();
+        $guest = $this->makeGuest();
+
+        // Existing confirmed reservation checks out 2026-08-10
+        Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'confirmed',
+            'check_in' => Carbon::parse('2026-08-01'),
+            'check_out' => Carbon::parse('2026-08-10'),
+        ]);
+
+        // New reservation checks in the same day (same-day turnover) — must not conflict
+        $sameDayTurnover = Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'pending',
+            'check_in' => Carbon::parse('2026-08-10'),
+            'check_out' => Carbon::parse('2026-08-15'),
+        ]);
+
+        $result = $this->service->confirmReservation($sameDayTurnover);
+
+        $this->assertTrue($result['success']);
+        $sameDayTurnover->refresh();
+        $this->assertEquals(ReservationStatus::Confirmed, $sameDayTurnover->status);
     }
 
     // -----------------------------------------------------------------------
@@ -223,6 +257,30 @@ class ReservationServiceTest extends TestCase
         $overlap = $this->service->findOverlappingReservation(
             $property->id,
             Carbon::parse('2026-10-08'),
+            Carbon::parse('2026-10-15'),
+        );
+
+        $this->assertNull($overlap);
+    }
+
+    #[Test]
+    public function it_allows_same_day_turnover_check_in_equals_other_check_out(): void
+    {
+        $property = $this->makeProperty();
+        $guest = $this->makeGuest();
+
+        Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'confirmed',
+            'check_in' => Carbon::parse('2026-10-01'),
+            'check_out' => Carbon::parse('2026-10-10'),
+        ]);
+
+        // New range checks in exactly when the existing one checks out.
+        $overlap = $this->service->findOverlappingReservation(
+            $property->id,
+            Carbon::parse('2026-10-10'),
             Carbon::parse('2026-10-15'),
         );
 

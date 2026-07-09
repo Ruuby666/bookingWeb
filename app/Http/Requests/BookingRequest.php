@@ -27,10 +27,6 @@ class BookingRequest extends FormRequest
             'verification_email' => ['required', 'same:email', 'email', 'max:255'],
             'message' => ['nullable', 'string', 'max:1000'],
             'daterange' => ['required', 'string', 'regex:/\d{2}\/\d{2}\/\d{4} - \d{2}\/\d{2}\/\d{4}/'],
-            // total_price is NOT validated here.
-            // BookingRequestService recalculates the real price server-side
-            // from ReservationPriceService::getPriceBreakdown().
-            // The client-side hidden input is only a convenience for UX display.
         ];
     }
 
@@ -61,7 +57,6 @@ class BookingRequest extends FormRequest
             'message.max' => 'El mensaje no puede tener más de 1000 caracteres.',
             'daterange.required' => 'El rango de fechas es obligatorio.',
             'daterange.regex' => 'El rango de fechas debe tener el formato DD/MM/AAAA - DD/MM/AAAA.',
-            'total_price.min' => 'Selecciona al menos el mínimo de noches.',
         ];
     }
 

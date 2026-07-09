@@ -94,7 +94,7 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-10'),
             150.00,
-            $owner->id,
+            $owner,
         );
 
         $this->assertTrue($result['success']);
@@ -122,7 +122,7 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-10'),
             200.00,
-            $owner->id,
+            $owner,
         );
 
         $this->assertFalse($result['success']);
@@ -141,7 +141,7 @@ class ReservationPriceServiceTest extends TestCase
             Carbon::parse('2026-07-01'),
             Carbon::parse('2026-07-05'),
             99.00,
-            $otherUser->id,
+            $otherUser,
         );
 
         $this->assertFalse($result['success']);
@@ -165,7 +165,7 @@ class ReservationPriceServiceTest extends TestCase
             'price_per_night' => 130.00,
         ]);
 
-        $result = $this->service->deletePriceRange($price->id, $owner->id);
+        $result = $this->service->deletePriceRange($price->id, $owner);
 
         $this->assertTrue($result['success']);
         $this->assertDatabaseMissing('reservation_prices', ['id' => $price->id]);
@@ -186,7 +186,7 @@ class ReservationPriceServiceTest extends TestCase
             'owner_id' => $otherUser->id,
         ]);
 
-        $result = $this->service->deletePriceRange($price->id, $otherUser->id);
+        $result = $this->service->deletePriceRange($price->id, $otherUser);
 
         $this->assertFalse($result['success']);
         $this->assertEquals('Price range not found.', $result['error']);

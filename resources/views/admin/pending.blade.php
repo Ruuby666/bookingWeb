@@ -54,7 +54,9 @@
                     <td class="pending-id">
                         {{ $reservation->id }}
                         <button onclick="openModal('{{ $reservation->id }}')"><b>ⓘ</b></button>
-                        @if ($section['title'] == 'Confirmed Reservations' && $reservation->invoice == false) <input type="checkbox" value="{{ $reservation->id }}" class="reservation-checkbox"> @endif
+                        @if ($section['title'] == 'Confirmed Reservations' && $reservation->invoice == false)
+                        <input type="checkbox" value="{{ $reservation->id }}" class="reservation-checkbox">
+                        @endif
                     </td>
                     <td class="pending-property">{{ $reservation->property->title }}</td>
                     <td class="pending-guest">{{ $reservation->guest->name }}</td>
@@ -65,11 +67,13 @@
                         {{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y - H:i') }}
                     </td>
                     <td class="pending-status">
-                        <span class="status-badge status-{{ $reservation->status }}">{{ ucfirst($reservation->status) }}</span>
+                        <span class="status-badge status-{{ $reservation->status->value }}">
+                            {{ ucfirst($reservation->status->value) }}
+                        </span>
                     </td>
                     <td class="pending-guests">{{ $reservation->guests }}</td>
                     <td class="pending-total-price">€{{ number_format($reservation->total_price, 2) }}</td>
-                    @if ($reservation->status == 'pending')
+                    @if ($reservation->status->value === 'pending')
                     <td class="pending-action">
                         <form action="{{ route('admin.reservations.pending.update', $reservation->id) }}" method="POST" style="display:inline;">
                             @csrf
@@ -78,77 +82,69 @@
                     </td>
                     @endif
                 </tr>
-
-                <div id="modal-{{ $reservation->id }}" class="modal hidden">
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-                            <h2>{{ $reservation->property->title }}</h2>
-
-                            <span class="close"
-                                onclick="closeModal('{{ $reservation->id }}')">
-                                &times;
-                            </span>
-                        </div>
-
-                        <div class="modal-body">
-
-                            <ul class="reservation-info">
-                                <li><strong>Client</strong><span>{{ $reservation->guest->name }}</span></li>
-
-                                <li><strong>Email</strong><span>{{ $reservation->guest->email }}</span></li>
-
-                                <li><strong>Phone</strong><span>{{ $reservation->guest->phone_number }}</span></li>
-
-                                <li><strong>Check-in</strong><span>{{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y H:i') }}</span></li>
-
-                                <li><strong>Check-out</strong><span>{{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y H:i') }}</span></li>
-
-                                <li>
-                                    <strong>Status</strong>
-
-                                    <span class="status-badge status-{{ $reservation->status }}">
-                                        {{ ucfirst($reservation->status) }}
-                                    </span>
-                                </li>
-
-                                <li><strong>Guests</strong><span>{{ $reservation->guests }}</span></li>
-
-                                <li><strong>Total</strong><span>€{{ number_format($reservation->total_price,2) }}</span></li>
-
-                                <li><strong>Notes</strong><span>{{ $reservation->notes ?: '-' }}</span></li>
-                            </ul>
-
-                            @if ($reservation->status == 'pending')
-                            <div class="div-buttons">
-
-                                <button
-                                    class="mark-sugerencia-button"
-                                    data-url="{{ route('suggestion.create', $reservation) }}"
-                                    onclick="redirectFromButton(this)">
-                                    Suggestion
-                                </button>
-
-                                <form action="{{ route('admin.reservations.pending.update',$reservation->id) }}"
-                                    method="POST">
-                                    @csrf
-
-                                    <button class="mark-completed-button">
-                                        Confirm
-                                    </button>
-                                </form>
-
-                            </div>
-                            @endif
-
-                        </div>
-
-                    </div>
-                </div>
-
                 @endforeach
             </tbody>
         </table>
+
+        @foreach ($section['data'] as $reservation)
+        <div id="modal-{{ $reservation->id }}" class="modal hidden">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h2>{{ $reservation->property->title }}</h2>
+
+                    <span class="close"
+                        onclick="closeModal('{{ $reservation->id }}')">
+                        &times;
+                    </span>
+                </div>
+
+                <div class="modal-body">
+
+                    <ul class="reservation-info">
+                        <li><strong>Client</strong><span>{{ $reservation->guest->name }}</span></li>
+                        <li><strong>Email</strong><span>{{ $reservation->guest->email }}</span></li>
+                        <li><strong>Phone</strong><span>{{ $reservation->guest->phone_number }}</span></li>
+                        <li><strong>Check-in</strong><span>{{ \Carbon\Carbon::parse($reservation->check_in)->format('d/m/Y H:i') }}</span></li>
+                        <li><strong>Check-out</strong><span>{{ \Carbon\Carbon::parse($reservation->check_out)->format('d/m/Y H:i') }}</span></li>
+                        <li>
+                            <strong>Status</strong>
+                            <span class="status-badge status-{{ $reservation->status->value }}">
+                                {{ ucfirst($reservation->status->value) }}
+                            </span>
+                        </li>
+                        <li><strong>Guests</strong><span>{{ $reservation->guests }}</span></li>
+                        <li><strong>Total</strong><span>€{{ number_format($reservation->total_price,2) }}</span></li>
+                        <li><strong>Notes</strong><span>{{ $reservation->notes ?: '-' }}</span></li>
+                    </ul>
+
+                    @if ($reservation->status->value === 'pending')
+                    <div class="div-buttons">
+
+                        <button
+                            class="mark-sugerencia-button"
+                            data-url="{{ route('suggestion.create', $reservation) }}"
+                            onclick="redirectFromButton(this)">
+                            Suggestion
+                        </button>
+
+                        <form action="{{ route('admin.reservations.pending.update',$reservation->id) }}"
+                            method="POST">
+                            @csrf
+
+                            <button class="mark-completed-button">
+                                Confirm
+                            </button>
+                        </form>
+
+                    </div>
+                    @endif
+
+                </div>
+
+            </div>
+        </div>
+        @endforeach
         @endif
     </div>
     @endforeach
@@ -162,7 +158,7 @@
             <ul id="selected-reservations-list"></ul>
             <input type="number" id="invoice-amount" placeholder="Número de la primera factura" required>
             <div class="div-buttons">
-                <button class="mark-export-button" data-url="{{ route('admin.calendar.export-factura-excel') }}" onclick="redirectfacturaFromButton(this)">
+                <button class="mark-export-button" data-url="{{ route('admin.calendar.export-invoice-excel') }}" onclick="redirectfacturaFromButton(this)">
                     Exportar a Exel
                 </button>
             </div>

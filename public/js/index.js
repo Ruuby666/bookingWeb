@@ -3,8 +3,6 @@
 let markers = window.INDEX_CONFIG.markers;
 let propertyWithImages = window.INDEX_CONFIG.propertyWithImages;
 
-// resto del código...
-
 // Initialize Google Maps
 window.initMap = async function () {
     let map = new google.maps.Map(document.getElementById('map'), {
@@ -13,14 +11,6 @@ window.initMap = async function () {
             lat: 29.0669,
             lng: -13.5900
         },
-        mapId: "af934e8f21fb7b29",
-    });
-
-    map.addListener('mapcapabilities_changed', () => {
-        const mapCapabilities = map.getMapCapabilities();
-        if (!mapCapabilities.isAdvancedMarkersAvailable) {
-            console.log('Advanced markers are not available');
-        }
     });
 
     const markerElements = [];
@@ -32,15 +22,10 @@ window.initMap = async function () {
             lng: parseFloat(markerInfo.lng)
         };
 
-        const pin = new google.maps.marker.PinElement({
-            glyphColor: "white",
-        });
-
-        const marker = new google.maps.marker.AdvancedMarkerElement({
+        const marker = new google.maps.Marker({
             position: position,
             map: map,
             title: markerInfo.title,
-            content: pin.element,
         });
 
         const infoWindow = new google.maps.InfoWindow({
@@ -58,11 +43,13 @@ window.initMap = async function () {
         markerElements.push(marker);
     });
 
-    // Aplicar MarkerClusterer
-    new markerClusterer.MarkerClusterer({
-        map: map,
-        markers: markerElements,
-    });
+    // Apply MarkerClusterer
+    if (markerClusterer && markerClusterer.MarkerClusterer) {
+        new markerClusterer.MarkerClusterer({
+            map: map,
+            markers: markerElements,
+        });
+    }
 }
 
 // Function to build content for InfoWindow
@@ -70,7 +57,7 @@ function buildContent(property) {
     const content = document.createElement("div");
     content.classList.add("property");
 
-    // imagen + link
+    // image + link
     const imgWrapper = document.createElement("div");
     imgWrapper.classList.add("property-image");
 
@@ -85,7 +72,7 @@ function buildContent(property) {
     linkImg.appendChild(img);
     imgWrapper.appendChild(linkImg);
 
-    // detalles
+    // details
     const details = document.createElement("div");
     details.classList.add("property-details");
 

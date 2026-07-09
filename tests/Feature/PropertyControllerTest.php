@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Property;
+use App\Models\Reservation;
 use App\Models\User;
 use App\Services\PropertyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -91,7 +92,7 @@ class PropertyControllerTest extends TestCase
     {
         // IsAdmin middleware redirects to '/' not '/login'
         $this->get(route('properties.create'))
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
     }
 
     // -----------------------------------------------------------------------
@@ -160,6 +161,18 @@ class PropertyControllerTest extends TestCase
         $property = Property::factory()->create(['owner_id' => $owner->id]);
 
         $this->actingAs($otherAdmin)
+            ->get(route('properties.edit', $property->id))
+            ->assertForbidden();
+    }
+
+    #[Test]
+    public function super_admin_cannot_access_edit_form_for_a_property_they_do_not_own(): void
+    {
+        $superAdmin = User::factory()->create(['is_admin' => true, 'is_super_admin' => true]);
+        $owner = $this->admin();
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+
+        $this->actingAs($superAdmin)
             ->get(route('properties.edit', $property->id))
             ->assertForbidden();
     }
@@ -241,6 +254,21 @@ class PropertyControllerTest extends TestCase
             ->assertRedirect(route('admin.properties'));
 
         $this->assertDatabaseMissing('properties', ['id' => $property->id]);
+    }
+
+    #[Test]
+    public function owner_cannot_delete_a_property_with_reservations(): void
+    {
+        $owner = $this->admin();
+        $property = Property::factory()->create(['owner_id' => $owner->id]);
+        Reservation::factory()->create(['property_id' => $property->id]);
+
+        $this->actingAs($owner)
+            ->delete(route('properties.destroy', $property->id))
+            ->assertRedirect(route('admin.properties'))
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseHas('properties', ['id' => $property->id]);
     }
 
     #[Test]

@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<meta charset="UTF-8">
+<title>Date Range Picker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-<head>
-    <meta charset="UTF-8">
-    <title>Date Range Picker</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-    <!-- Estilos del DateRangePicker -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <link rel="stylesheet" href="{{ asset('css/date-range.css') }}">
-</head>
-
-<body>
-</body>
+@include('components.daterangepicker-assets')
 
 <div class="daterange-container">
     <div class="daterange-header">
@@ -24,15 +14,10 @@
     <i class="fa-solid fa-repeat" id="reset-btn-second"></i>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
-
 <script>
     $(document).ready(function() {
 
-        // Inicializ Date Range Picker
+        // Initialize Date Range Picker
         $('#daterange').daterangepicker({
             locale: {
                 format: 'DD/MM/YYYY'
@@ -70,7 +55,7 @@
                 const occupiedIds = getOccupiedPropertyIds(reservations, start, end);
                 const availableProps = properties.filter(p => !occupiedIds.includes(p.id));
 
-                renderProperties(availableProps, propertyWithImages);
+                renderProperties(availableProps, window.INDEX_CONFIG.propertyWithImages);
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
@@ -105,27 +90,51 @@
             container.empty();
 
             if (properties.length === 0) {
-                container.append('<p>No properties available for the selected dates.</p>');
+                const message = document.createElement('p');
+                message.textContent = 'No properties available for the selected dates.';
+                container.append(message);
                 return;
             }
 
             properties.forEach(prop => {
                 const img = images[prop.id] || 'default.jpg';
-                const card = `
-                <a href="/property/${prop.id}">
-                    <div class="cardcontainer">
-                        <div class="photo">
-                            <img src="/storage/images/${prop.images_div}/${img}" alt="Image not found" style="height: 200px; width: 300px;">
-                        </div>
-                        <div class="content">
-                            <p class="txt4">${prop.title}</p>
-                            <p class="txt5">${prop.location}</p>
-                            <p class="txt2">${prop.description}</p>
-                        </div>
-                    </div>
-                </a>
-            `;
-                container.append(card);
+
+                const link = document.createElement('a');
+                link.href = `/property/${prop.id}`;
+
+                const card = document.createElement('div');
+                card.className = 'cardcontainer';
+
+                const photo = document.createElement('div');
+                photo.className = 'photo';
+
+                const image = document.createElement('img');
+                image.src = `/storage/images/${prop.images_div}/${img}`;
+                image.alt = 'Image not found';
+                image.style.height = '200px';
+                image.style.width = '300px';
+                photo.appendChild(image);
+
+                const content = document.createElement('div');
+                content.className = 'content';
+
+                const title = document.createElement('p');
+                title.className = 'txt4';
+                title.textContent = prop.title;
+
+                const location = document.createElement('p');
+                location.className = 'txt5';
+                location.textContent = prop.location;
+
+                const description = document.createElement('p');
+                description.className = 'txt2';
+                description.textContent = prop.description;
+
+                content.append(title, location, description);
+                card.append(photo, content);
+                link.appendChild(card);
+
+                container.append(link);
             });
         }
 
@@ -136,7 +145,7 @@
             try {
                 const propertiesRes = await fetch('/api/properties');
                 const properties = await propertiesRes.json();
-                renderProperties(properties, propertyWithImages);
+                renderProperties(properties, window.INDEX_CONFIG.propertyWithImages);
             } catch (error) {
                 console.error("Error fetching all properties:", error);
             } finally {
@@ -182,5 +191,3 @@
 
     });
 </script>
-
-</html>

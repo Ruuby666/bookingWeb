@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
-use App\Mail\ReservationConfirmedMail;
+use App\Enums\ReservationStatus;
+use App\Events\ReservationConfirmed;
 use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ReservationService
 {
@@ -23,17 +25,22 @@ class ReservationService
             [$checkIn, $checkOut] = [$checkOut, $checkIn];
         }
 
-        return Reservation::create([
+        $reservation = Reservation::create([
             'property_id' => $property->id,
             'guest_id' => $guest->id,
             'check_in' => $checkIn,
             'check_out' => $checkOut,
-            'status' => 'pending',
+            'status' => ReservationStatus::Pending,
             'notes' => $data['message'] ?? null,
             'guests' => $data['adults'] + $data['children'],
             'invoice' => false,
             'total_price' => $data['total_price'],
         ]);
+
+        // Invalidate reservations cache on new booking
+        Cache::forget('reservations_confirmed');
+
+        return $reservation;
     }
 
     /**
@@ -41,34 +48,36 @@ class ReservationService
      */
     public function confirmReservation(Reservation $reservation): array
     {
-        $conflict = Reservation::where('property_id', $reservation->property_id)
-            ->where('status', 'confirmed')
-            ->where('id', '!=', $reservation->id)
-            ->where(function ($query) use ($reservation): void {
-                $query
-                    ->whereBetween('check_in', [$reservation->check_in, $reservation->check_out])
-                    ->orWhereBetween('check_out', [$reservation->check_in, $reservation->check_out])
-                    ->orWhere(function ($q) use ($reservation): void {
-                        $q->where('check_in', '<=', $reservation->check_in)
-                            ->where('check_out', '>=', $reservation->check_out);
-                    });
-            })
-            ->exists();
+        return DB::transaction(function () use ($reservation) {
+            // lockForUpdate blocks concurrent confirmations for the same property
+            // until this transaction commits, closing the TOCTOU window that
+            // otherwise let two overlapping pending reservations both pass the
+            // conflict check and get confirmed at the same time.
+            $conflict = $this->findOverlappingReservation(
+                $reservation->property_id,
+                $reservation->check_in,
+                $reservation->check_out,
+                $reservation->id,
+                lockForUpdate: true,
+            );
 
-        if ($conflict) {
-            return [
-                'success' => false,
-                'error' => 'Cannot confirm: date range is already booked.',
-            ];
-        }
+            if ($conflict) {
+                return [
+                    'success' => false,
+                    'error' => 'Cannot confirm: date range is already booked.',
+                ];
+            }
 
-        $reservation->status = 'confirmed';
-        $reservation->save();
+            $reservation->status = ReservationStatus::Confirmed;
+            $reservation->save();
 
-        Mail::to($reservation->guest->email)
-            ->send(new ReservationConfirmedMail($reservation));
+            // Invalidate cache when a reservation is confirmed
+            Cache::forget('reservations_confirmed');
 
-        return ['success' => true];
+            event(new ReservationConfirmed($reservation));
+
+            return ['success' => true];
+        });
     }
 
     /**
@@ -99,19 +108,35 @@ class ReservationService
 
     /**
      * Find an overlapping confirmed reservation for a property.
+     *
+     * Uses a half-open interval [check_in, check_out): a check-out that lands
+     * exactly on another reservation's check-in is same-day turnover, not a
+     * conflict. This is the single source of truth for overlap checks — both
+     * booking validation and confirmation must use it.
      */
     public function findOverlappingReservation(
         int $propertyId,
         Carbon $checkIn,
         Carbon $checkOut,
+        ?int $excludeReservationId = null,
+        bool $lockForUpdate = false,
     ): ?Reservation {
-        return Reservation::where('property_id', $propertyId)
-            ->where('status', 'confirmed')
+        $query = Reservation::where('property_id', $propertyId)
+            ->where('status', ReservationStatus::Confirmed)
+            ->when(
+                $excludeReservationId,
+                fn ($query) => $query->where('id', '!=', $excludeReservationId),
+            )
             ->where(function ($query) use ($checkIn, $checkOut): void {
                 $query->where('check_in', '<', $checkOut)
                     ->where('check_out', '>', $checkIn);
-            })
-            ->first();
+            });
+
+        if ($lockForUpdate) {
+            $query->lockForUpdate();
+        }
+
+        return $query->first();
     }
 
     /**
@@ -120,7 +145,7 @@ class ReservationService
     public function getConfirmedReservationsForOwner(int $ownerId, ?string $propertyTitle = null)
     {
         $query = Reservation::with(['guest', 'property'])
-            ->where('status', 'confirmed')
+            ->where('status', ReservationStatus::Confirmed)
             ->whereHas('property', fn ($q) => $q->where('owner_id', $ownerId));
 
         if ($propertyTitle && $propertyTitle !== 'todos') {
@@ -137,12 +162,12 @@ class ReservationService
     {
         $ownerFilter = fn ($q) => $q->where('owner_id', $ownerId);
 
-        $confirmed = Reservation::where('status', 'confirmed')
+        $confirmed = Reservation::where('status', ReservationStatus::Confirmed)
             ->whereHas('property', $ownerFilter)
             ->with('property', 'guest')
             ->get();
 
-        $pending = Reservation::where('status', 'pending')
+        $pending = Reservation::where('status', ReservationStatus::Pending)
             ->whereHas('property', $ownerFilter)
             ->with('property', 'guest')
             ->get();

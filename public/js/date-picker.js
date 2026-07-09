@@ -1,8 +1,8 @@
 /**
  * date-range.js
- * Require: jQuery, moment.js, daterangepicker (cargados antes de este script)
+ * Require: jQuery, moment.js, daterangepicker (loaded before this script)
  *
- * Configuración inyectada desde Blade:
+ * Configuration injected from Blade:
  *   window.DATE_RANGE_CONFIG = { propertyId, minNights }
  */
 
@@ -10,19 +10,19 @@ $(document).ready(async function () {
     'use strict';
 
     const propertyId = window.DATE_RANGE_CONFIG?.propertyId;
-    const minNights  = window.DATE_RANGE_CONFIG?.minNights;
+    const minNights = window.DATE_RANGE_CONFIG?.minNights;
 
-    // Obtén todas las fechas ocupadas antes de inicializar el picker
+    // Get all reserved dates before initializing the picker
     const reservedDates = await fetchReservedDates(propertyId);
     checkBetweenReservations(reservedDates, minNights);
     initializeDateRangePicker(reservedDates);
 
-    // --- Fetch fechas reservadas ---
+    // --- Fetch reserved dates ---
     async function fetchReservedDates(propertyId) {
         try {
-            const response     = await fetch(`/property/${propertyId}/reservations`);
+            const response = await fetch(`/property/${propertyId}/reservations`);
             const reservations = await response.json();
-            const dates        = new Set();
+            const dates = new Set();
 
             reservations.forEach(reservation => {
                 if (reservation.property_id == propertyId) {
@@ -34,23 +34,32 @@ $(document).ready(async function () {
             return dates;
         } catch (error) {
             console.error('Error fetching reserved dates:', error);
+
+            displayMessage(
+                'total-price',
+                'Unable to load availability. Please refresh the page or try again later.',
+                '#e07a5f'
+            );
+
+            $('#daterange').prop('disabled', true);
+
             return new Set();
         }
     }
 
-    // --- Inicializar el picker ---
+    // --- Initialize the picker ---
     function initializeDateRangePicker(reservedDates) {
         $('#daterange').daterangepicker({
-            locale:               { format: 'DD/MM/YYYY' },
-            autoApply:            true,
-            linkedCalendars:      true,
-            autoUpdateInput:      true,
+            locale: { format: 'DD/MM/YYYY' },
+            autoApply: true,
+            linkedCalendars: true,
+            autoUpdateInput: true,
             showCustomRangeLabel: true,
-            showDropdowns:        false,
-            minDate:              moment().add(1, 'days'),
-            endDate:              moment().add(1, 'days'),
-            opens:                'center',
-            drops:                'auto',
+            showDropdowns: false,
+            minDate: moment().add(1, 'days'),
+            endDate: moment().add(1, 'days'),
+            opens: 'center',
+            drops: 'auto',
             isInvalidDate: function (date) {
                 return reservedDates.has(date.format('YYYY-MM-DD'));
             }
@@ -59,9 +68,9 @@ $(document).ready(async function () {
         });
     }
 
-    // --- Validar rango seleccionado y actualizar precio ---
+    // --- Validate selected range and update price ---
     async function fetchDataAndRenderProperties(startDate, endDate) {
-        const checkIn  = moment(startDate);
+        const checkIn = moment(startDate);
         const checkOut = moment(endDate);
         const totalNights = checkOut.diff(checkIn, 'days');
 
@@ -71,8 +80,8 @@ $(document).ready(async function () {
         }
 
         const selectedDates = getDateRangeArray(checkIn, checkOut);
-        const fullDates     = [];
-        const hasOverlap    = await checkForOverlaps(propertyId, fullDates, selectedDates);
+        const fullDates = [];
+        const hasOverlap = await checkForOverlaps(propertyId, fullDates, selectedDates);
 
         if (hasOverlap) {
             displayMessage('total-price', 'Selected dates overlap with an existing reservation.', '#e07a5f');
@@ -86,9 +95,9 @@ $(document).ready(async function () {
         );
     }
 
-    // --- Array de fechas entre dos momentos (sin incluir checkout) ---
+    // --- Array of dates between two moments (excluding checkout) ---
     function getDateRangeArray(start, end) {
-        const dates   = [];
+        const dates = [];
         const current = moment(start);
 
         while (current.isBefore(end)) {
@@ -99,10 +108,10 @@ $(document).ready(async function () {
         return dates;
     }
 
-    // --- Comprobar solapamiento con reservas confirmadas ---
+    // --- Check for overlap with confirmed reservations ---
     async function checkForOverlaps(propertyId, fullDates, selectedDates) {
         try {
-            const response     = await fetch('/api/reservations');
+            const response = await fetch('/api/reservations');
             const reservations = await response.json();
 
             reservations.forEach(reservation => {
@@ -115,48 +124,63 @@ $(document).ready(async function () {
             return selectedDates.some(date => fullDates.includes(date));
         } catch (error) {
             console.error('Error fetching reservations:', error);
-            return false;
+
+            displayMessage(
+                'total-price',
+                'Unable to verify reservation availability. Please try again later.',
+                '#e07a5f'
+            );
+
+            return true; // Block the reservation for safety
         }
     }
 
-    // --- Actualizar precio total ---
+    // --- Update total price ---
     async function updatePrice(startDate, endDate, propertyId) {
         showPriceSpinner();
         try {
             const response = await fetch(
                 `/api/property-price-range?start_date=${startDate}&end_date=${endDate}&property_id=${propertyId}`
             );
-            const data  = await response.json();
+            const data = await response.json();
             const total = data.reduce((sum, night) => sum + parseFloat(night.price), 0);
 
             displayMessage('total-price', `Total amount: ${total.toFixed(2)} € (${data.length} nights)`, '#2a4261');
             document.getElementById('total_price_input').value = total.toFixed(2);
         } catch (error) {
-            displayMessage('total-price', 'Error obtaining prices.', '#e07a5f');
+            console.error('Error fetching prices:', error);
+
+            displayMessage(
+                'total-price',
+                'Unable to calculate the reservation price. Please try again later.',
+                '#e07a5f'
+            );
         }
     }
 
-    // --- Spinner mientras carga el precio ---
+    // --- Spinner while the price loads ---
     function showPriceSpinner() {
         const el = document.getElementById('total-price');
         el.innerHTML = '<span class="price-spinner"></span>';
         el.style.color = '';
     }
 
-    // --- Mostrar mensaje en un elemento ---
+    // --- Display a message in an element ---
     function displayMessage(elementId, message, color = '#000') {
-        const el   = document.getElementById(elementId);
+        const el = document.getElementById(elementId);
         el.textContent = message;
         el.style.color = color;
     }
 
-    // --- Generar array de fechas entre check-in y check-out (inclusivo) ---
+    // --- Generate array of dates between check-in and check-out ---
+    // Excludes the check-out day: matches the backend's half-open interval
+    // rule [check_in, check_out), to allow same-day turnover.
     function generateAllDates(checkIn, checkOut) {
         const start = moment(checkIn);
-        const end   = moment(checkOut);
+        const end = moment(checkOut);
         const dates = [];
 
-        while (start.isBefore(end) || start.isSame(end, 'day')) {
+        while (start.isBefore(end, 'day')) {
             dates.push(start.format('YYYY-MM-DD'));
             start.add(1, 'days');
         }
@@ -164,7 +188,7 @@ $(document).ready(async function () {
         return dates;
     }
 
-    // --- Bloquear huecos menores a minNights entre reservas ---
+    // --- Block gaps smaller than minNights between reservations ---
     function checkBetweenReservations(reservedDates, minNights) {
         const today = moment().startOf('day');
 
@@ -175,9 +199,9 @@ $(document).ready(async function () {
         if (sorted.length < 2) return;
 
         for (let i = 0; i < sorted.length - 1; i++) {
-            const currentDate = moment(sorted[i],     'YYYY-MM-DD');
-            const nextDate    = moment(sorted[i + 1], 'YYYY-MM-DD');
-            const gap         = nextDate.diff(currentDate, 'days') - 1;
+            const currentDate = moment(sorted[i], 'YYYY-MM-DD');
+            const nextDate = moment(sorted[i + 1], 'YYYY-MM-DD');
+            const gap = nextDate.diff(currentDate, 'days') - 1;
 
             if (gap > 0 && gap < minNights) {
                 for (let d = 1; d <= gap; d++) {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReservationStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $property_id
  * @property \Carbon\Carbon $check_in
  * @property \Carbon\Carbon $check_out
- * @property string $status
+ * @property ReservationStatus $status
  * @property string|null $notes
  * @property bool $invoice
  * @property int $guests
@@ -40,6 +41,7 @@ class Reservation extends Model
 
     protected $casts = [
         'check_in' => 'datetime',
+        'status' => ReservationStatus::class,
         'check_out' => 'datetime',
         'total_price' => 'decimal:2',
         'invoice' => 'boolean',

@@ -27,14 +27,21 @@ class LocalDemoSeeder extends Seeder
             return;
         }
 
-        User::create([
-            'name' => 'Demo Admin',
-            'email' => 'admin@example.local',
-            'phone_number' => '1234567890',
-            'password' => 'Password1A',
+        $user = User::updateOrCreate(
+            ['email' => 'admin@example.local'],
+            [
+                'name' => 'Demo Admin',
+                'phone_number' => '1234567890',
+                'password' => 'Password1A',
+            ],
+        );
+
+        // is_admin/is_super_admin are guarded (not mass-assignable) to prevent
+        // privilege escalation via forms, so they must be set explicitly here.
+        $user->forceFill([
             'is_admin' => true,
             'is_super_admin' => false,
-        ]);
+        ])->save();
 
         $this->command->info('Demo admin user created: admin@example.local / Password1A');
     }

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSuperAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -39,14 +40,14 @@ class SuperAdminController extends Controller
      */
     public function store(StoreSuperAdminRequest $request): RedirectResponse
     {
-        User::create([
+        $user = User::create([
             'name' => $request->validated('name'),
             'email' => $request->validated('email'),
             'phone_number' => $request->validated('phone_number'),
             'password' => $request->validated('password'),
-            'is_admin' => true,
-            'is_super_admin' => false,
         ]);
+
+        $user->promoteToAdmin();
 
         return redirect()
             ->route('super_admin.index')
@@ -93,9 +94,9 @@ class SuperAdminController extends Controller
     {
         abort_if($admin->is_super_admin, 403);
 
-        $admin->update(['is_admin' => ! $admin->is_admin]);
+        $admin->is_admin ? $admin->revokeAdmin() : $admin->promoteToAdmin();
 
-        $status = $admin->is_admin ? 'enabled' : 'disabled';
+        $status = $admin->fresh()->is_admin ? 'enabled' : 'disabled';
 
         return redirect()
             ->route('super_admin.index')
@@ -110,7 +111,23 @@ class SuperAdminController extends Controller
     {
         abort_if($admin->is_super_admin, 403);
 
-        $admin->delete();
+        if ($admin->properties()->exists()) {
+            return redirect()
+                ->route('super_admin.index')
+                ->with('error', 'Cannot delete an admin with existing properties.');
+        }
+
+        try {
+            $admin->delete();
+        } catch (QueryException $e) {
+            if ($e->getCode() !== '23000') {
+                throw $e;
+            }
+
+            return redirect()
+                ->route('super_admin.index')
+                ->with('error', 'Cannot delete an admin with existing properties.');
+        }
 
         return redirect()
             ->route('super_admin.index')

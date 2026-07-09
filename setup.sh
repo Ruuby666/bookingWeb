@@ -39,6 +39,7 @@ docker compose exec -T app php artisan migrate --force
 
 echo "Running seeders..."
 docker compose exec -T app php artisan db:seed --force
+docker compose exec -T app php artisan db:seed --class=DevelopmentSeeder --force
 
 echo "Creating storage link and setting permissions..."
 docker compose exec -T app rm -rf public/storage

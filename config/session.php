@@ -4,8 +4,6 @@ use Illuminate\Support\Str;
 
 return [
 
-    'googlekey' => env('API_GOOGLE_MAPS_KEY'),
-
     /*
     |--------------------------------------------------------------------------
     | Default Session Driver

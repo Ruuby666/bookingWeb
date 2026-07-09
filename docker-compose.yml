@@ -17,6 +17,44 @@ services:
     networks:
       - bookingweb
 
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bookingweb-worker
+    restart: unless-stopped
+    working_dir: /var/www/html
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www/html
+      - images_data:/var/www/html/storage/app/public/images
+    depends_on:
+      db:
+        condition: service_healthy
+    command: php artisan queue:work --tries=3 --sleep=3
+    networks:
+      - bookingweb
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bookingweb-scheduler
+    restart: unless-stopped
+    working_dir: /var/www/html
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www/html
+      - images_data:/var/www/html/storage/app/public/images
+    depends_on:
+      db:
+        condition: service_healthy
+    command: php artisan schedule:work
+    networks:
+      - bookingweb
+
   web:
     image: nginx:1.27-alpine
     container_name: bookingweb-web

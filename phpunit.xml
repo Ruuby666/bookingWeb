@@ -17,10 +17,29 @@
         </include>
     </source>
     <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_CONNECTION" value="sync"/>
-        <env name="MAIL_MAILER" value="array"/>
+        <!--
+            Both <env> and <server> are needed: Docker injects APP_ENV (and
+            friends) into $_SERVER at process start via docker-compose's
+            env_file, and Dotenv's repository reads $_SERVER before $_ENV.
+            <env force="true"> alone only patches putenv()/$_ENV, so without
+            the matching <server> entries these values silently stay whatever
+            Docker set them to.
+        -->
+        <env name="APP_ENV" value="testing" force="true"/>
+        <env name="DB_CONNECTION" value="sqlite" force="true"/>
+        <env name="DB_DATABASE" value=":memory:" force="true"/>
+        <env name="CACHE_DRIVER" value="array" force="true"/>
+        <env name="CACHE_STORE" value="array" force="true"/>
+        <env name="SESSION_DRIVER" value="array" force="true"/>
+        <env name="QUEUE_CONNECTION" value="sync" force="true"/>
+        <env name="MAIL_MAILER" value="array" force="true"/>
+        <server name="APP_ENV" value="testing" force="true"/>
+        <server name="DB_CONNECTION" value="sqlite" force="true"/>
+        <server name="DB_DATABASE" value=":memory:" force="true"/>
+        <server name="CACHE_DRIVER" value="array" force="true"/>
+        <server name="CACHE_STORE" value="array" force="true"/>
+        <server name="SESSION_DRIVER" value="array" force="true"/>
+        <server name="QUEUE_CONNECTION" value="sync" force="true"/>
+        <server name="MAIL_MAILER" value="array" force="true"/>
     </php>
 </phpunit>

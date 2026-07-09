@@ -83,7 +83,7 @@ class PropertyController extends Controller
 
         $property = Property::findOrFail($id);
 
-        $this->authorize('view', $property);
+        $this->authorize('update', $property);
 
         return view('property.add_or_edit_property', compact('property'));
     }
@@ -121,12 +121,12 @@ class PropertyController extends Controller
     {
         $property = Property::findOrFail($id);
 
-        $this->authorize('update', $property);
+        $this->authorize('delete', $property);
 
-        $property->delete();
+        $result = $this->propertyService->deleteProperty($property);
 
-        return redirect()
-            ->route('admin.properties')
-            ->with('success', 'Property deleted successfully.');
+        return $result['success']
+            ? redirect()->route('admin.properties')->with('success', 'Property deleted successfully.')
+            : redirect()->route('admin.properties')->with('error', $result['error']);
     }
 }

@@ -112,7 +112,7 @@
 
     <hr class="divider">
 
-    {{-- CLIENTE --}}
+    {{-- CUSTOMER --}}
     <h3 class="section-title">👤 Cliente</h3>
 
     <p><strong>Nombre:</strong> {{ $reservation->guest->name }}</p>
@@ -128,7 +128,7 @@
 
     <hr class="divider">
 
-    {{-- RESERVA --}}
+    {{-- RESERVATION --}}
     <h3 class="section-title">📅 Reserva</h3>
 
     <p><strong>ID:</strong> #{{ $reservation->id }}</p>
@@ -146,12 +146,12 @@
 
     <p>
         <strong>Estado:</strong>
-        <span class="status">{{ ucfirst($reservation->status) }}</span>
+        <span class="status">{{ ucfirst($reservation->status->value) }}</span>
     </p>
 
     <hr class="divider">
 
-    {{-- PROPIEDAD --}}
+    {{-- PROPERTY --}}
     <h3 class="section-title">🏠 Propiedad</h3>
 
     <table class="property-table">
@@ -173,7 +173,7 @@
 
     <hr class="divider">
 
-    {{-- ECONOMÍA --}}
+    {{-- PAYMENT --}}
     <h3 class="section-title">💰 Pago</h3>
 
     <p class="price">

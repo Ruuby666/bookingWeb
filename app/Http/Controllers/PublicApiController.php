@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReservationStatus;
 use App\Models\Property;
 use App\Models\Reservation;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Public read-only API endpoints consumed by the Blade/JS frontend.
@@ -14,26 +16,34 @@ class PublicApiController extends Controller
 {
     /**
      * All properties with the fields needed by the homepage map and card list.
+     * Cached for 1 hour to reduce database queries on every datepicker interaction.
      */
     public function properties(): JsonResponse
     {
-        return response()->json(
-            Property::query()->get([
-                'id',
-                'title',
-                'location',
-                'description',
-                'images_div',
-                'price_per_night',
-                'capacity',
-                'lat',
-                'lng',
-            ]),
+        $properties = Cache::remember(
+            'properties_list',
+            now()->addHour(),
+            function () {
+                return Property::query()->get([
+                    'id',
+                    'title',
+                    'location',
+                    'description',
+                    'images_div',
+                    'price_per_night',
+                    'capacity',
+                    'lat',
+                    'lng',
+                ]);
+            },
         );
+
+        return response()->json($properties);
     }
 
     /**
      * Confirmed reservations.
+     * Cached for 10 minutes to reduce database queries on every datepicker interaction.
      *
      * Returns `status` explicitly so frontend JS can filter without guessing
      * whether the endpoint already filtered for confirmed-only.
@@ -46,10 +56,16 @@ class PublicApiController extends Controller
      */
     public function reservations(): JsonResponse
     {
-        return response()->json(
-            Reservation::where('status', 'confirmed')
-                ->get(['property_id', 'check_in', 'check_out', 'status']),
+        $reservations = Cache::remember(
+            'reservations_confirmed',
+            now()->addMinutes(10),
+            function () {
+                return Reservation::where('status', ReservationStatus::Confirmed)
+                    ->get(['property_id', 'check_in', 'check_out', 'status']);
+            },
         );
+
+        return response()->json($reservations);
     }
 
     /**

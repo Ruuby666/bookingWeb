@@ -2,13 +2,16 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Reservation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SendSuggestionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return Reservation::where('id', $this->route('id'))
+            ->whereHas('property', fn ($q) => $q->where('owner_id', $this->user()?->id))
+            ->exists();
     }
 
     public function rules(): array

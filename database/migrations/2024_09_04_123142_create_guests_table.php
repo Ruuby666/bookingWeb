@@ -13,12 +13,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone_number', 20)->nullable();
-
             // Optionals
             $table->string('country', 100)->nullable();
             $table->string('language', 10)->nullable(); // es, en, de...
             $table->text('notes')->nullable();
-
             $table->timestamps();
         });
     }

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('addPriceModal');
 
     //---------------------------------------------------------
-    // Configuración inicial
+    // Initial configuration
     //---------------------------------------------------------
 
     const today = new Date().toISOString().split('T')[0];
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     end.min = today;
 
     //---------------------------------------------------------
-    // Fecha fin automática
+    // Automatic end date
     //---------------------------------------------------------
 
     start.addEventListener('change', () => {
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //---------------------------------------------------------
-    // Validación formulario
+    // Form validation
     //---------------------------------------------------------
 
     form.addEventListener('submit', function (e) {
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //---------------------------------------------------------
-    // Limpiar estilos de error
+    // Clear error styles
     //---------------------------------------------------------
 
     function clearValidation() {
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //---------------------------------------------------------
-    // Limpiar error al escribir
+    // Clear error while typing
     //---------------------------------------------------------
 
     [
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //---------------------------------------------------------
-    // Abrir modal
+    // Open modal
     //---------------------------------------------------------
 
     window.openPriceModal = function () {
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     //---------------------------------------------------------
-    // Cerrar modal
+    // Close modal
     //---------------------------------------------------------
 
     window.closePriceModal = function () {
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     //---------------------------------------------------------
-    // Click fuera del modal
+    // Click outside the modal
     //---------------------------------------------------------
 
     window.addEventListener('click', function (e) {

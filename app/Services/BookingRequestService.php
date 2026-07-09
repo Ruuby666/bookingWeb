@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Data\BookingData;
 use App\Events\BookingCreated;
 use App\Models\Property;
 use Carbon\Carbon;
@@ -27,13 +28,13 @@ class BookingRequestService
      *     checkOut?: Carbon
      * }
      */
-    public function process(Property $property, array $data): array
+    public function process(Property $property, BookingData $data): array
     {
         try {
             // Parse booking dates
             $dates = $this->bookingDateService->parse(
                 $property,
-                $data['daterange'],
+                $data->daterange,
             );
 
             $checkIn = $dates['checkIn'];
@@ -55,17 +56,13 @@ class BookingRequestService
 
             // Find or create guest
             $guest = $this->guestService->findOrCreate(
-                $data['name'],
-                $data['email'],
-                $data['number'],
+                $data->name,
+                $data->email,
+                $data->phone,
             );
 
             // Booking payload
-            $bookingData = array_merge($data, [
-                'checkIn' => $checkIn,
-                'checkOut' => $checkOut,
-                'total_price' => $totalPrice,
-            ]);
+            $bookingData = $data->toReservationArray($checkIn, $checkOut, $totalPrice);
 
             // Create reservation
             $reservation = $this->reservationService->createReservation(

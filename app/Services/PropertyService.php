@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -11,20 +13,30 @@ class PropertyService
 {
     /**
      * Get all properties with a representative image for each one.
+     * Uses Cache::remember() to avoid N filesystem calls on every request.
      *
      * @return array{properties: Collection, propertyWithImages: array<int, string>}
      */
     public function getAllWithFirstImage(): array
     {
         $properties = Property::all();
-        $propertyWithImages = [];
 
-        foreach ($properties as $property) {
-            $files = Storage::disk('public')->files('images/' . $property->images_div);
-            $propertyWithImages[$property->id] = ! empty($files)
-                ? basename($files[0])
-                : 'default.jpg';
-        }
+        // Cache images for 1 hour to avoid N filesystem calls
+        $propertyWithImages = Cache::remember(
+            'property_images',
+            now()->addHour(),
+            function () use ($properties) {
+                $result = [];
+                foreach ($properties as $property) {
+                    $files = Storage::disk('public')->files('images/' . $property->images_div);
+                    $result[$property->id] = ! empty($files)
+                        ? basename($files[0])
+                        : 'default.jpg';
+                }
+
+                return $result;
+            },
+        );
 
         return compact('properties', 'propertyWithImages');
     }
@@ -62,21 +74,29 @@ class PropertyService
      */
     public function createProperty(array $data, int $ownerId): Property
     {
-        // La carpeta se genera a partir del título de la propiedad
-        $folder = $this->generateFolderName($data['title']);
-
-        // Sube las imágenes si se han proporcionado
-        if (! empty($data['images'])) {
-            $this->uploadImages($data['images'], $folder);
-        }
+        $images = $data['images'] ?? [];
+        unset($data['images']);
 
         $data['bedrooms'] = $this->parseBedroomsToJson($data['bedrooms']);
         $data['owner_id'] = $ownerId;
-        $data['images_div'] = $folder;
 
-        unset($data['images']);
+        // images_div is only finalized after the row exists, since it must
+        // include the property id to stay unique — two properties with the
+        // same (or slug-colliding) title would otherwise share one folder,
+        // and deleting either one would delete both properties' images.
+        $data['images_div'] = '';
+        $property = Property::create($data);
 
-        return Property::create($data);
+        $folder = $property->id . '_' . $this->generateFolderName($data['title']);
+        $property->update(['images_div' => $folder]);
+
+        if (! empty($images)) {
+            $this->uploadImages($images, $folder);
+        }
+
+        Cache::forget('properties_list');
+
+        return $property;
     }
 
     /**
@@ -87,7 +107,7 @@ class PropertyService
      */
     public function updateProperty(Property $property, array $data): Property
     {
-        // Solo sube nuevas imágenes si se han proporcionado
+        // Only upload new images if they have been provided
         if (! empty($data['images'])) {
             $this->uploadImages($data['images'], $property->images_div);
         }
@@ -98,11 +118,40 @@ class PropertyService
 
         $property->update($data);
 
+        Cache::forget('properties_list');
+
         return $property->fresh();
     }
 
     /**
-     * Sube un array de archivos a la carpeta de la propiedad en Storage.
+     * Delete a property and invalidate the public properties cache.
+     *
+     * @return array{success: bool, error?: string}
+     */
+    public function deleteProperty(Property $property): array
+    {
+        if ($property->reservations()->exists()) {
+            return ['success' => false, 'error' => 'Cannot delete a property with existing reservations.'];
+        }
+
+        try {
+            $property->delete();
+        } catch (QueryException $e) {
+            if ($e->getCode() !== '23000') {
+                throw $e;
+            }
+
+            return ['success' => false, 'error' => 'Cannot delete a property with existing reservations.'];
+        }
+
+        Cache::forget('properties_list');
+
+        return ['success' => true];
+    }
+
+    /**
+     * Uploads an array of files to the property's folder in Storage.
+     * Invalidates the image cache after uploading new images.
      *
      * @param  \Illuminate\Http\UploadedFile[]  $images
      */
@@ -111,11 +160,14 @@ class PropertyService
         foreach ($images as $image) {
             $image->store('images/' . $folder, 'public');
         }
+
+        // Invalidate cache so the new images are fetched on next request
+        Cache::forget('property_images');
     }
 
     /**
-     * Genera un nombre de carpeta válido a partir del título de la propiedad.
-     * Ejemplo: "Casa del Sol" => "casa_del_sol"
+     * Generates a valid folder name from the property title.
+     * Example: "Casa del Sol" => "casa_del_sol"
      */
     private function generateFolderName(string $title): string
     {

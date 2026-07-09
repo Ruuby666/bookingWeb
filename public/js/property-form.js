@@ -2,7 +2,7 @@
     "use strict";
 
     // =====================================================
-    // CONFIGURACIÓN
+    // CONFIGURATION
     // =====================================================
 
     const _maxCapacity = window.FORM_CONFIG?.maxCapacity ?? 0;
@@ -10,7 +10,7 @@
     let confirmedSubmission = false;
 
     // =====================================================
-    // ELEMENTOS DEL DOM
+    // DOM ELEMENTS
     // =====================================================
 
     const phoneInput = document.querySelector("#number");
@@ -68,7 +68,7 @@
     }
 
     // =====================================================
-    // VALIDACIONES
+    // VALIDATIONS
     // =====================================================
 
     function validatePhoneField() {
@@ -137,11 +137,9 @@
         }
     }
 
-    function validateForm() {
+    function validateRequiredFields() {
 
         let isValid = true;
-
-        clearJSErrors();
 
         [
             "adults",
@@ -167,25 +165,41 @@
             }
         });
 
+        return isValid;
+    }
+
+    function validatePhone() {
+
         if (!phoneInput.value.trim()) {
+
             phoneInput.classList.add("js-error");
+
             showJSError(
                 phoneInput,
                 "Phone number is required"
             );
-            isValid = false;
 
-        } else if (!iti.isValidNumber()) {
+            return false;
+        }
+
+        if (!iti.isValidNumber()) {
+
             phoneInput.classList.add("js-error");
+
             showJSError(
                 phoneInput,
                 "Invalid phone number for selected country"
             );
-            isValid = false;
 
-        } else {
-            phoneInput.value = iti.getNumber();
+            return false;
         }
+
+        phoneInput.value = iti.getNumber();
+
+        return true;
+    }
+
+    function validateEmailMatch() {
 
         const email =
             document.getElementById("email").value;
@@ -213,33 +227,45 @@
                 "The emails do not match"
             );
 
-            isValid = false;
+            return false;
         }
 
-        const adults =
-            parseInt(document.getElementById("adults").value) || 0;
+        return true;
+    }
 
-        const children =
-            parseInt(document.getElementById("children").value) || 0;
+    function validateCapacityForm() {
 
-        if (exceedsCapacity()) {
-
-            const adultsInput =
-                document.getElementById("adults");
-
-            const childrenInput =
-                document.getElementById("children");
-
-            adultsInput.classList.add("js-error");
-            childrenInput.classList.add("js-error");
-
-            showJSError(
-                adultsInput,
-                `The max guests possible are ${_maxCapacity}`,
-            );
-
-            isValid = false;
+        if (!exceedsCapacity()) {
+            return true;
         }
+
+        const adultsInput =
+            document.getElementById("adults");
+
+        const childrenInput =
+            document.getElementById("children");
+
+        adultsInput.classList.add("js-error");
+        childrenInput.classList.add("js-error");
+
+        showJSError(
+            adultsInput,
+            `The max guests possible are ${_maxCapacity}`,
+        );
+
+        return false;
+    }
+
+    function validateForm() {
+
+        clearJSErrors();
+
+        let isValid = true;
+
+        isValid = validateRequiredFields() && isValid;
+        isValid = validatePhone() && isValid;
+        isValid = validateEmailMatch() && isValid;
+        isValid = validateCapacityForm() && isValid;
 
         return isValid;
     }

@@ -12,7 +12,7 @@ class PropertiesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        // JSON con las propiedades
+        // JSON with the properties
         $propertiesJson = '[
             {
                 "id": 1,
@@ -114,7 +114,7 @@ class PropertiesTableSeeder extends Seeder
 
         $properties = json_decode($propertiesJson, true);
 
-        // Insertar las propiedades en la base de datos
+        // Insert the properties into the database
         if (is_array($properties)) {
             foreach ($properties as $property) {
                 Property::create([

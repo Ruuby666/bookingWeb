@@ -14,7 +14,7 @@ a {
     height: 200px;
     background-image: url('/images/laGeria.jpg');
     background-position: center center;
-    /* Centra la imagen de fondo */
+    /* Centers the background image */
     background-size: cover;
     background-repeat: no-repeat;
     margin-bottom: 30px;
@@ -55,12 +55,12 @@ a {
     text-shadow: 0 0 10px rgb(6, 6, 6);
 }
 
-/* ----- Importación de la fuente Roboto ----- */
+/* ----- Roboto font import ----- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 @media (max-width: 768px) {
 
-    /* Móvil */
+    /* Mobile */
     #header {
         height: 100px;
         background-position: center center;

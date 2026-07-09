@@ -32,7 +32,7 @@ class BookingDateService
 
             $checkOut = Carbon::createFromFormat(
                 'd/m/Y H:i',
-                trim($dates[1]) . ' 11:00',
+                trim($dates[1]) . ' ' . config('booking.default_check_out_hour'),
             );
         } catch (\Exception) {
             throw new InvalidArgumentException('Invalid date format.');
@@ -51,7 +51,7 @@ class BookingDateService
     {
         return str_contains($property->title, 'Casa')
             || str_contains($property->title, 'Villa')
-            ? '15:00'
-            : '14:00';
+            ? config('booking.villa_check_in_hour')
+            : config('booking.apartment_check_in_hour');
     }
 }
