@@ -3,7 +3,6 @@
 namespace Tests\Unit\Services;
 
 use App\Models\Property;
-use App\Models\User;
 use App\Services\BookingDateService;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;

@@ -28,7 +28,7 @@ class ReservationPriceController extends Controller
     /**
      * Display reservation price ranges for the authenticated owner.
      *
-     * @return View
+     * @return View|RedirectResponse
      */
     public function index()
     {
@@ -38,7 +38,7 @@ class ReservationPriceController extends Controller
             ->whereHas('property', fn ($q) => $q->where('owner_id', Auth::id()))
             ->orderBy('property_id')
             ->paginate(20);
-            
+
         if ($reservationPrices->currentPage() > $reservationPrices->lastPage() && $reservationPrices->lastPage() > 0) {
             return redirect()->route('admin.reservation_prices', ['page' => $reservationPrices->lastPage()]);
         }
