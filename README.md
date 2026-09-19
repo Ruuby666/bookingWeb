@@ -319,18 +319,22 @@ cd bookingWeb
 
 cp .env.example .env
 # Edit .env: set APP_ENV=production, APP_DEBUG=false, APP_URL, DB credentials, MAIL, etc.
+# Set APP_KEY there too (generate one with: docker compose run --rm app php artisan key:generate --show)
 
-docker compose up -d --build
-docker compose exec app composer install --no-dev --optimize-autoloader
-docker compose exec app php artisan key:generate --force
+# The image already contains the app, vendor/ and the storage link;
+# docker-compose.prod.yml stops the PHP containers bind-mounting the host repo.
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 docker compose exec app php artisan migrate --force
 docker compose exec app php artisan db:seed --force
-docker compose exec app php artisan storage:link
 docker compose exec app php artisan config:cache
 docker compose exec app php artisan route:cache
 docker compose exec app php artisan view:cache
 docker compose run --rm vite sh -c "npm ci && npm run build"
 ```
+
+To ship a new version: `git pull`, then re-run the `up -d --build` line above
+and `php artisan migrate --force`. Dependencies come from `composer.lock` at
+build time, so nothing needs to be installed by hand inside the container.
 
 `docker compose up -d` also starts the `worker` (`queue:work`) and `scheduler`
 (`schedule:work`) services automatically — they run the same app image with a

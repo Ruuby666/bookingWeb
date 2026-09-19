@@ -1,0 +1,21 @@
+# Production overlay. The base file bind-mounts the repo into the PHP
+# containers for live reload in development. In production they should run
+# the code baked into the image instead (see Dockerfile), so vendor/ can't
+# drift from composer.lock.
+#
+# `web` keeps its bind mount on purpose: nginx only serves static files.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+services:
+  app:
+    volumes: !override
+      - images_data:/var/www/html/storage/app/public/images
+
+  worker:
+    volumes: !override
+      - images_data:/var/www/html/storage/app/public/images
+
+  scheduler:
+    volumes: !override
+      - images_data:/var/www/html/storage/app/public/images
