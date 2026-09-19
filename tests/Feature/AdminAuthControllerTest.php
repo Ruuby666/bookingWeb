@@ -108,4 +108,16 @@ class AdminAuthControllerTest extends TestCase
 
         $this->assertGuest();
     }
+
+    #[Test]
+    public function logout_destroys_the_whole_session_not_just_the_login(): void
+    {
+        $admin = $this->adminUser();
+
+        $this->actingAs($admin)
+            ->withSession(['leftover' => 'data'])
+            ->post(route('admin.logout'));
+
+        $this->assertFalse(session()->has('leftover'));
+    }
 }

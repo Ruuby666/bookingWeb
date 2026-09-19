@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminLoginRequest;
 use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class AdminAuthController extends Controller
 {
@@ -40,9 +41,12 @@ class AdminAuthController extends Controller
      *
      * @return RedirectResponse
      */
-    public function logoutFunction()
+    public function logoutFunction(Request $request)
     {
         $this->authService->logoutAdmin();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()->route('index')->with('success', 'Logged out successfully.');
     }
