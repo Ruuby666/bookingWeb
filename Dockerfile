@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     zip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql pdo_sqlite mbstring bcmath exif pcntl gd zip \
+    && docker-php-ext-install pdo_mysql pdo_sqlite mbstring bcmath exif pcntl gd zip opcache \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
