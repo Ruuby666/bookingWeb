@@ -80,7 +80,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
-      - "33060:3306"
+      - "127.0.0.1:33060:3306"
     volumes:
       - dbdata:/var/lib/mysql
     healthcheck:
