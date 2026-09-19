@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => App\Http\Middleware\EnsureUserHasRole::class . ':admin',
             'super_admin' => App\Http\Middleware\EnsureUserHasRole::class . ':super_admin',
         ]);
+
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
