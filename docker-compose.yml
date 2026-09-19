@@ -60,7 +60,7 @@ services:
     container_name: bookingweb-web
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "127.0.0.1:8000:80"
     volumes:
       - ./:/var/www/html
       - images_data:/var/www/html/storage/app/public/images
