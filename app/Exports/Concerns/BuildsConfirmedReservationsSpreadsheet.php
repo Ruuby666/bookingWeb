@@ -11,6 +11,8 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 trait BuildsConfirmedReservationsSpreadsheet
 {
+    use EscapesSpreadsheetFormulas;
+
     /**
      * Build the confirmed-reservations spreadsheet, one sheet per property.
      *
@@ -60,7 +62,7 @@ trait BuildsConfirmedReservationsSpreadsheet
             $prevReservation = null;
 
             foreach ($propertyReservations as $reservation) {
-                $userName = $reservation->guest->name ?? '';
+                $userName = self::escapeFormula($reservation->guest->name ?? '');
 
                 $checkInDate = Carbon::parse($reservation->check_in);
                 $checkOutDate = Carbon::parse($reservation->check_out);
@@ -76,7 +78,7 @@ trait BuildsConfirmedReservationsSpreadsheet
                 $month = ucfirst($checkInDate->locale('es')->isoFormat('MMMM'));
 
                 $guests = $reservation->guests ?? 'N/A';
-                $notes = $reservation->notes ?? '';
+                $notes = self::escapeFormula($reservation->notes ?? '');
 
                 // Show the month only if it has changed
                 if ($month !== $lastMonth) {
@@ -87,7 +89,7 @@ trait BuildsConfirmedReservationsSpreadsheet
                     if ($prevReservation) {
                         $prevCheckOut = Carbon::parse($prevReservation->check_out);
                         if ($prevCheckOut->month === $checkInMonth) {
-                            $prevName = $prevReservation->guest->name ?? '';
+                            $prevName = self::escapeFormula($prevReservation->guest->name ?? '');
                             $prevCheckOutFormatted = $prevCheckOut->format('d.m.Y');
                             $row++;
                             $sheet->setCellValue("B{$row}", "Hasta {$prevCheckOutFormatted} {$prevName}");
@@ -104,7 +106,7 @@ trait BuildsConfirmedReservationsSpreadsheet
                 $row++;
 
                 if ($fullDetails) {
-                    $email = $reservation->guest->email ?? '';
+                    $email = self::escapeFormula($reservation->guest->email ?? '');
                     $sheet->setCellValue("B{$row}", "{$email}");
                     $row++;
                 }

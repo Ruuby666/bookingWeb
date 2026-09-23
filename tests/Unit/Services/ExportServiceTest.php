@@ -2,12 +2,15 @@
 
 namespace Tests\Unit\Services;
 
+use App\Exports\ConfirmedReservationsExport;
 use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Services\ExportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Tests\TestCase;
@@ -185,6 +188,29 @@ class ExportServiceTest extends TestCase
         $this->assertInstanceOf(BinaryFileResponse::class, $result);
         // Since config disables export-all, the super admin should NOT mark this reservation
         $this->assertFalse($reservationA->invoice);
+    }
+
+    #[Test]
+    public function guest_name_with_formula_syntax_does_not_become_a_live_formula_in_the_export(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $admin->id]);
+        $guest = Guest::factory()->create(['name' => '=cmd|"/C calc"!A1']);
+
+        Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'confirmed',
+        ]);
+
+        $response = ConfirmedReservationsExport::download($admin);
+        $spreadsheet = IOFactory::load($response->getFile()->getPathname());
+
+        foreach ($spreadsheet->getActiveSheet()->getRowIterator() as $row) {
+            foreach ($row->getCellIterator() as $cell) {
+                $this->assertNotSame(DataType::TYPE_FORMULA, $cell->getDataType());
+            }
+        }
     }
 
     #[Test]

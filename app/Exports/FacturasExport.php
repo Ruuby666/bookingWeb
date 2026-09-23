@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Exports\Concerns\EscapesSpreadsheetFormulas;
 use App\Models\Reservation;
 use App\Models\User;
 use Carbon\Carbon;
@@ -13,6 +14,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class FacturasExport
 {
+    use EscapesSpreadsheetFormulas;
+
     public static function download(User $user, array $ids, $invoiceAmount)
     {
         $query = Reservation::with(['guest', 'property'])
@@ -83,7 +86,7 @@ class FacturasExport
 
             $sheet->getStyle('C30:I30')->applyFromArray($headerStyle);
 
-            $userName = $reservation->guest->name ?? '';
+            $userName = self::escapeFormula($reservation->guest->name ?? '');
             $checkIn = Carbon::parse($reservation->check_in)->format('d.m.Y');
             $checkOut = Carbon::parse($reservation->check_out)->format('d.m.Y');
             $days = Carbon::parse($checkIn)->diffInDays($checkOut);
