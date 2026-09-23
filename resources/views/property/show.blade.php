@@ -24,7 +24,7 @@
 
 <body>
     @include('components.header')
-    <a href="{{ route('index') }}"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
+    <a href="{{ route('index') }}" aria-label="Back to properties"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
     @if (session('success'))
         <x-toast :message="session('success')" type="success" />
     @endif
