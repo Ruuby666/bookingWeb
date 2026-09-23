@@ -1,14 +1,5 @@
 # syntax=docker/dockerfile:1
 
-# ---- Frontend assets ------------------------------------------------------
-FROM node:20-alpine AS frontend
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
-COPY resources/ resources/
-COPY vite.config.js ./
-RUN npm run build
-
 # ---- Application image ----------------------------------------------------
 FROM php:8.3-fpm AS runtime
 
@@ -46,7 +37,6 @@ WORKDIR /var/www/html
 # The application and its dependencies live in the image, so a deploy is
 # "build a new image" and vendor/ always matches composer.lock.
 COPY . .
-COPY --from=frontend /app/public/build ./public/build
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist \
     && php artisan storage:link \

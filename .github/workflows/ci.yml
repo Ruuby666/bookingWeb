@@ -44,21 +44,6 @@ jobs:
       - name: Check security vulnerabilities
         run: composer audit
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version-file: ".nvmrc"
-
-      - name: Install Node dependencies
-        run: npm ci
-
-      - name: Check Node security vulnerabilities
-        run: npm audit
-        continue-on-error: true
-
-      - name: Build frontend assets
-        run: npm run build
-
       - name: Check code style
         run: composer lint:check
 

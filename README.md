@@ -18,8 +18,6 @@
 - [Quick Start](#quick-start)
 - [Environment Variables](#environment-variables)
 - [Database](#database)
-- [Images](#images)
-- [Frontend (Vite)](#frontend-vite)
 - [Useful Commands](#useful-commands)
 - [Deployment](#deployment)
 - [Troubleshooting](#troubleshooting)
@@ -33,7 +31,7 @@
 | [Docker Desktop](https://www.docker.com/products/docker-desktop/) | Latest |
 | Git | Latest |
 
-> No need to install PHP, Composer, Node, or MySQL locally — Docker handles everything.
+> No need to install PHP, Composer, or MySQL locally — Docker handles everything.
 
 ---
 
@@ -329,7 +327,6 @@ docker compose exec app php artisan db:seed --force
 docker compose exec app php artisan config:cache
 docker compose exec app php artisan route:cache
 docker compose exec app php artisan view:cache
-docker compose run --rm vite sh -c "npm ci && npm run build"
 ```
 
 To ship a new version: `git pull`, then re-run the `up -d --build` line above
