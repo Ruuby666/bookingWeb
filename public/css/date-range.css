@@ -96,7 +96,7 @@ th {
     }
 
     #daterange {
-        width: 30%;
+        width: 220px !important;
         font-size: 16px;
     }
 
@@ -109,11 +109,6 @@ th {
 @media (max-width: 768px) {
     .daterange-container {
         gap: 10px;
-    }
-
-    #daterange {
-        width: 40%;
-        font-size: 16px;
     }
 
     .daterange-container h5 {
@@ -133,11 +128,6 @@ th {
     .daterange-container {
         flex-direction: column;
         gap: 10px;
-    }
-
-    #daterange {
-        width: 50%;
-        font-size: 16px;
     }
 
     .daterange-container h5 {

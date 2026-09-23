@@ -15,6 +15,10 @@ body {
     margin: 5px 0;
 }
 
+.privacy-notice {
+    font-weight: normal;
+}
+
 #header {
     margin-bottom: 0 !important;
 }
@@ -31,7 +35,7 @@ body {
     padding: 10px;
 }
 
-.content-grid > * {
+.content-grid>* {
     flex: 1;
     width: 50%;
 }
@@ -211,8 +215,13 @@ a[data-color="orange"] {
 }
 
 #daterange {
+    box-sizing: border-box;
     padding: 10px 15px !important;
-    width: 38% !important;
+    /* Fixed width, not a %: the picker always formats as
+       "DD/MM/YYYY - DD/MM/YYYY" (24 chars), so its text width never
+       changes — sized to that text plus breathing room, not to the
+       parent container. */
+    width: 260px !important;
     margin: 0 !important;
     background-color: #ffffff9c !important;
     border: 1px solid #0000009c !important;
@@ -237,6 +246,8 @@ medium {
 
 .form-group input,
 .form-group textarea {
+    box-sizing: border-box;
+    width: 98%;
     padding: 0.5rem;
     border: 1px solid #3d5a80;
     border-radius: 5px;
@@ -421,19 +432,13 @@ b {
     .content-grid {
         flex-direction: column;
     }
-
-    .date-container #daterange {
-        width: 50% !important;
+    .content-grid>* {
+        flex: 0;
+        width: 100%;
     }
-
 }
 
 @media (max-width: 480px) {
-
-    .date-container #daterange {
-        width: 80% !important;
-    }
-
     .form-group {
         width: 100%;
     }
