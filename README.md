@@ -2,8 +2,8 @@
 
 > Laravel-based property booking web application — Docker powered, production ready.
 
-![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)
-![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-1.27-009639?logo=nginx&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
@@ -158,7 +158,7 @@ MYSQL_PASSWORD=YourPassword123
 MYSQL_ROOT_PASSWORD=root
 
 # Cache & Sessions
-CACHE_DRIVER=file
+CACHE_STORE=file
 SESSION_DRIVER=file
 SESSION_LIFETIME=20
 QUEUE_CONNECTION=database

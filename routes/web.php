@@ -12,6 +12,7 @@ use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReservationPriceController;
 use App\Http\Controllers\SuperAdminController;
+use App\Models\Property;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
@@ -71,3 +72,14 @@ Route::get('/api/property-price-range', [ReservationPriceController::class, 'get
 Route::get('/privacy', function () {
     return view('privacy');
 })->name('privacy');
+
+Route::get('/sitemap.xml', function () {
+    return response()
+        ->view('sitemap', ['properties' => Property::all(['id', 'updated_at'])])
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
+
+Route::get('/robots.txt', function () {
+    return response("User-agent: *\nDisallow:\nSitemap: " . url('/sitemap.xml') . "\n")
+        ->header('Content-Type', 'text/plain');
+})->name('robots');
