@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Hash;
 class AuthService
 {
     /**
+     * A precomputed bcrypt hash with no matching password, used to keep
+     * Hash::check()'s cost constant whether or not the email exists —
+     * otherwise a nonexistent email short-circuits before hashing and
+     * responds measurably faster, letting an attacker enumerate admin
+     * emails by timing the login endpoint.
+     */
+    private const DUMMY_HASH = '$2y$12$CjWdbAaTEb2zP/gz0co/3..iGzLlk.fjbAdJrYvl4kwHTZgJB/oCG';
+
+    /**
      * Attempt to log in a user and verify admin privileges.
      *
      * @param  string  $email  User email
@@ -22,7 +31,9 @@ class AuthService
     {
         $user = User::where('email', $email)->first();
 
-        if (! $user || ! Hash::check($password, $user->password)) {
+        $validPassword = Hash::check($password, $user->password ?? self::DUMMY_HASH);
+
+        if (! $user || ! $validPassword) {
             return [
                 'success' => false,
                 'error' => 'Email or password is incorrect.',
