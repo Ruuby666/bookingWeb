@@ -60,6 +60,9 @@
             <div class="error-message">{{ $message }}</div>
             @enderror
         </div>
+        <p class="privacy-notice">
+            By submitting this form, you agree to our <a href="{{ route('privacy') }}" target="_blank">Privacy Policy</a>.
+        </p>
         <input type="hidden" name="property_id" value="{{ $property->id }}">
         <input type="hidden" name="total_price" id="total_price_input" value="">
         <button type="submit">Send Your Request</button>
