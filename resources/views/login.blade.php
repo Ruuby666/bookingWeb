@@ -15,8 +15,10 @@
                 <form method="POST" action="{{ route('admin.login.submit') }}">
                     @csrf
                     <label>Login</label>
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Password" minlength="8" required>
+                    <label for="email" class="sr-only">Email</label>
+                    <input id="email" type="email" name="email" placeholder="Email" required>
+                    <label for="password" class="sr-only">Password</label>
+                    <input id="password" type="password" name="password" placeholder="Password" minlength="8" required>
                     <button type="submit">Login</button>
                 </form>
             </div>

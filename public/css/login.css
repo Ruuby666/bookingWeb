@@ -82,6 +82,20 @@ button:hover {
     font-size: 30px;
 }
 
+/* Visually hidden but still announced by screen readers — used for the
+   per-field labels the design doesn't show (inputs rely on placeholder). */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 #footer {
     position: absolute !important;
     width: -webkit-fill-available !important;
