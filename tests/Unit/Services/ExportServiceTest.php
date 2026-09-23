@@ -214,6 +214,33 @@ class ExportServiceTest extends TestCase
     }
 
     #[Test]
+    public function pending_reservation_is_not_marked_as_invoiced(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $admin->id]);
+
+        $confirmed = Reservation::factory()->create([
+            'property_id' => $property->id,
+            'status' => 'confirmed',
+        ]);
+
+        $pending = Reservation::factory()->create([
+            'property_id' => $property->id,
+            'status' => 'pending',
+        ]);
+
+        $result = $this->ExportService->downloadInvoicesExcel(
+            $admin,
+            [$confirmed->id, $pending->id],
+            1.0,
+        );
+
+        $this->assertInstanceOf(BinaryFileResponse::class, $result);
+        $this->assertTrue($confirmed->fresh()->invoice);
+        $this->assertFalse($pending->fresh()->invoice);
+    }
+
+    #[Test]
     public function multiple_reservations_are_marked_as_invoiced(): void
     {
         $admin = User::factory()->create([

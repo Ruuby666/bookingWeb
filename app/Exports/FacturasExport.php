@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Enums\ReservationStatus;
 use App\Exports\Concerns\EscapesSpreadsheetFormulas;
 use App\Models\Reservation;
 use App\Models\User;
@@ -19,7 +20,8 @@ class FacturasExport
     public static function download(User $user, array $ids, $invoiceAmount)
     {
         $query = Reservation::with(['guest', 'property'])
-            ->whereIn('id', $ids);
+            ->whereIn('id', $ids)
+            ->where('status', ReservationStatus::Confirmed);
 
         // Respect configuration for super-admin export policy. When disabled,
         // super-admins are treated like regular admins and only see their properties.

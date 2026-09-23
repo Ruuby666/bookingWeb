@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ReservationStatus;
 use App\Exports\ConfirmedReservationsExport;
 use App\Exports\ConfirmedReservationsStuffExport;
 use App\Exports\FacturasExport;
@@ -54,7 +55,12 @@ class ExportService
     {
         $response = FacturasExport::download($user, $ids, $invoiceAmount);
 
-        $query = Reservation::whereIn('id', $ids);
+        // Only confirmed reservations are ever included in the generated invoice
+        // (see FacturasExport::download), so only those should be marked as
+        // invoiced — otherwise a pending/cancelled reservation could end up
+        // flagged `invoice = true` with no invoice document behind it.
+        $query = Reservation::whereIn('id', $ids)
+            ->where('status', ReservationStatus::Confirmed);
 
         // If configuration disallows super-admin export-all, scope invoice updates
         // to reservations that belong to properties owned by the user.
