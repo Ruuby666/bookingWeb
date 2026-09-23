@@ -1,7 +1,5 @@
-<meta charset="UTF-8">
-<title>Date Range Picker</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha384-/o6I2CkkWC//PSjvWC/eYN7l3xM3tJm8ZzVkCOfp//W05QcE3mlGskpoHB6XqI+B" crossorigin="anonymous" />
 
 @include('components.daterangepicker-assets')
 
@@ -110,7 +108,7 @@
 
                 const image = document.createElement('img');
                 image.src = `/storage/images/${prop.images_div}/${img}`;
-                image.alt = 'Image not found';
+                image.alt = prop.title;
                 image.style.height = '200px';
                 image.style.width = '300px';
                 photo.appendChild(image);
