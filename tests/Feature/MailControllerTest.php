@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Events\ReservationSuggestionRequested;
 use App\Models\Guest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -177,6 +179,33 @@ class MailControllerTest extends TestCase
                 'note' => 'We suggest moving to August instead.',
             ])
             ->assertRedirect(route('admin.reservations.pending'));
+    }
+
+    #[Test]
+    public function sending_a_suggestion_dispatches_a_queueable_event_instead_of_sending_inline(): void
+    {
+        Event::fake([ReservationSuggestionRequested::class]);
+
+        $admin = User::factory()->create(['is_admin' => true]);
+        $property = Property::factory()->create(['owner_id' => $admin->id]);
+        $guest = Guest::factory()->create();
+
+        $reservation = Reservation::factory()->create([
+            'property_id' => $property->id,
+            'guest_id' => $guest->id,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('reservations.sendSuggestion', $reservation->id), [
+                'note' => 'We suggest moving to August instead.',
+            ]);
+
+        Event::assertDispatched(
+            ReservationSuggestionRequested::class,
+            fn ($event) => $event->reservation->id === $reservation->id
+                && $event->note === 'We suggest moving to August instead.',
+        );
     }
 
     #[Test]

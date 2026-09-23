@@ -27,8 +27,14 @@ class SendReservationInfo extends Command
             ->get();
 
         foreach ($reservations as $reservation) {
-            if ($reservation->guest && ! empty($reservation->guest->email)) {
-                Mail::to($reservation->guest->email)->send(new ReservationInfoMail($reservation));
+            if (! $reservation->guest || empty($reservation->guest->email)) {
+                continue;
+            }
+
+            try {
+                Mail::to($reservation->guest->email)->queue(new ReservationInfoMail($reservation));
+            } catch (\Throwable $e) {
+                report($e);
             }
         }
 

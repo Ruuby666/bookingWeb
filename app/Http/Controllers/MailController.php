@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Data\BookingData;
+use App\Events\ReservationSuggestionRequested;
 use App\Http\Requests\BookingRequest;
 use App\Http\Requests\SendSuggestionRequest;
 use App\Models\Property;
 use App\Models\Reservation;
 use App\Services\BookingRequestService;
-use App\Services\MailService;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -21,7 +21,6 @@ class MailController extends Controller
      */
     public function __construct(
         private readonly BookingRequestService $bookingRequestService,
-        private readonly MailService $mailService,
     ) {}
 
     /**
@@ -63,10 +62,10 @@ class MailController extends Controller
         $reservation = Reservation::with(['guest', 'property'])
             ->findOrFail($id);
 
-        $this->mailService->sendSuggestionToGuest(
+        event(new ReservationSuggestionRequested(
             $reservation,
             $request->validated('note'),
-        );
+        ));
 
         return redirect()
             ->route('admin.reservations.pending')
