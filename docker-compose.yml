@@ -34,7 +34,10 @@ services:
       dockerfile: Dockerfile
     container_name: bookingweb-worker
     restart: unless-stopped
+    user: www-data
     working_dir: /var/www/html
+    environment:
+      - HOME=/tmp
     env_file:
       - .env
     volumes:
@@ -58,7 +61,10 @@ services:
       dockerfile: Dockerfile
     container_name: bookingweb-scheduler
     restart: unless-stopped
+    user: www-data
     working_dir: /var/www/html
+    environment:
+      - HOME=/tmp
     env_file:
       - .env
     volumes:
