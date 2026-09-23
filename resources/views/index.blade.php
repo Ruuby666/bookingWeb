@@ -4,7 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookingOcra</title>
+    <title>BookingOcra — Vacation Rentals in Lanzarote</title>
+    <meta name="description" content="Browse and book vacation rentals in Lanzarote, Canary Islands — apartments and villas with pool, wifi and free parking.">
+    <link rel="canonical" href="{{ url('/') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="BookingOcra — Vacation Rentals in Lanzarote">
+    <meta property="og:description" content="Browse and book vacation rentals in Lanzarote, Canary Islands.">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:image" content="{{ asset('images/logoEML.png') }}">
 </head>
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 <link rel="stylesheet" href="{{ asset('css/card.css') }}">

@@ -4,7 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Details</title>
+    <title>{{ $property->title }} — BookingOcra</title>
+    <meta name="description" content="{{ str($property->description)->limit(155) }}">
+    <link rel="canonical" href="{{ route('property.show', $property->id) }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $property->title }} — BookingOcra">
+    <meta property="og:description" content="{{ str($property->description)->limit(155) }}">
+    <meta property="og:url" content="{{ route('property.show', $property->id) }}">
+    @if ($mainImage)
+        <meta property="og:image" content="{{ Storage::url('images/' . $property->images_div . '/' . $mainImage) }}">
+    @endif
     <link href="{{ asset('css/details-property.css') }}" rel="stylesheet">
     <link href="{{ asset('css/reservation-modal.css') }}" rel="stylesheet">
     <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
