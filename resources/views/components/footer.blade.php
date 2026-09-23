@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
 <div id="footer">
     <div id="footer-content">
-        <img id="logo" src="/images/logoEML.png" alt="Not found">
+        <img id="logo" src="/images/logoEML.png" alt="Enjoy Home Lanzarote">
         <p>enjoyhomelanzarote@gmail.com</p>
     </div>
 

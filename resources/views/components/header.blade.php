@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="{{ asset('css/header.css') }}">
 
 <div id="header">
-    <img id="nameLogo" src="/images/nameEMLWhite.png" alt="Not found">
+    <img id="nameLogo" src="/images/nameEMLWhite.png" alt="Enjoy Home Lanzarote">
     <div id="header-menu">
         @if (Auth::check() && Auth::user()->is_super_admin)
             {{-- Super admin sees their own panel + full admin panel --}}

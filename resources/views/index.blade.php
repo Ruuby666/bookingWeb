@@ -39,7 +39,7 @@
                 <div class="cardcontainer">
                     <div class="photo">
                         <img src="{{ Storage::url('images/' . $property['images_div'] . '/' . $propertyWithImages[$property['id']]) }}"
-                            alt="Not found" style="height: 200px; width: 300px;">
+                            alt="{{ $property['title'] }}" style="height: 200px; width: 300px;">
                     </div>
                     <div class="content">
                         <p class="txt4">{{ $property['title'] }}</p>
