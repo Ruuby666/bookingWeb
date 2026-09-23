@@ -217,11 +217,6 @@ a[data-color="orange"] {
 #daterange {
     box-sizing: border-box;
     padding: 10px 15px !important;
-    /* Fixed width, not a %: the picker always formats as
-       "DD/MM/YYYY - DD/MM/YYYY" (24 chars), so its text width never
-       changes — sized to that text plus breathing room, not to the
-       parent container. */
-    width: 260px !important;
     margin: 0 !important;
     background-color: #ffffff9c !important;
     border: 1px solid #0000009c !important;

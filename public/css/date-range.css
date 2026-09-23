@@ -44,13 +44,13 @@
 
 /* ----- Daterange input styles ----- */
 #daterange {
-    padding: 0px 10px;
-    width: 17%;
-    border: 2px solid #007bff;
+    padding: 10px 15px;
+    width: 220px;
+    border: 1px solid;
     border-radius: 8px;
     background-color: #ffffff6e;
     color: #333333;
-    font-size: 18px;
+    font-size: 16px;
     font-family: 'Roboto' !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -93,11 +93,6 @@ th {
 @media (max-width: 1024px) {
     .daterange-container {
         gap: 15px;
-    }
-
-    #daterange {
-        width: 220px !important;
-        font-size: 16px;
     }
 
     .daterange-container h5 {
