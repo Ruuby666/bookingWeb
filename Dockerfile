@@ -36,6 +36,9 @@ RUN curl -fsSL -o composer-setup.php https://getcomposer.org/installer \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && rm composer-setup.php composer-setup.sig
 
+# Start from the hardened production defaults (display_errors off, etc.)
+# instead of PHP's permissive compiled-in defaults, then layer our overrides.
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 WORKDIR /var/www/html
