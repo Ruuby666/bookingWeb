@@ -52,6 +52,10 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
+      - name: Check Node security vulnerabilities
+        run: npm audit
+        continue-on-error: true
+
       - name: Build frontend assets
         run: npm run build
 
