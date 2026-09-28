@@ -126,7 +126,7 @@
                     document.getElementById('modalEmail').textContent = info.event.extendedProps.guest
                         .email ? info.event.extendedProps.guest.email : 'No especificado';
                     document.getElementById('modalPhone').textContent = info.event.extendedProps.guest
-                        .phone_number ? info.event.extendedProps.guest.name : 'No especificado';
+                        .phone_number ? info.event.extendedProps.guest.phone_number : 'No especificado';
                     document.getElementById('modalProperty').textContent = info.event.extendedProps
                         .property ? info.event.extendedProps.property : 'No especificado';
 
