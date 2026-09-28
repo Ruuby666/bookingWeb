@@ -48,12 +48,29 @@ function redirectfacturaFromButton(button) {
         return;
     }
 
-    const params = new URLSearchParams();
-    ids.forEach(id => params.append('ids[]', id));
-    params.append('invoice_amount', invoiceAmount);
+    const token = document.querySelector('meta[name="csrf-token"]').content;
 
-    const finalUrl = `${url}?${params.toString()}`;
-    window.open(finalUrl, '_blank');
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    form.target = '_blank';
+
+    const addField = (name, value) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+    };
+
+    addField('_token', token);
+    ids.forEach(id => addField('ids[]', id));
+    addField('invoice_amount', invoiceAmount);
+
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+
     closeFacturaModal();
     setTimeout(() => location.reload(), 1000);
 

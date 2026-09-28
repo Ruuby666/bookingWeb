@@ -177,6 +177,12 @@ th:first-child {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin: 20px;
+    /* #footer is position:sticky (z-index:9000) and visually sits on top
+       of page content rather than below it. On a page short enough that
+       this button lands near the bottom of the viewport, the footer
+       covers it and blocks clicks — verified with a real browser. Enough
+       bottom margin keeps the button clear of the footer's height. */
+    margin-bottom: 100px;
 }
 
 .crear-factura-button:hover {
