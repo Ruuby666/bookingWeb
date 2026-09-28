@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Lato:wght@100;300;400;700;900&display=swap');
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    background-color: #f4f1de;
+    color: #000;
+    font-family: 'Lato', sans-serif;
+}
+
+/* Minimal, DB/session-free header — same look as components.header
+   without the auth-dependent menu, so it still renders during a 500. */
+#error-header {
+    height: 120px;
+    background-image: url('/images/laGeria.jpg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#error-header img {
+    height: 50%;
+}
+
+.error-page {
+    min-height: calc(100vh - 120px - 74px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.error-code {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 900;
+    font-size: 6rem;
+    color: #3d5a80;
+    margin: 0;
+    line-height: 1;
+}
+
+.error-title {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    color: #3d5a80;
+    margin: 10px 0;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: #464646;
+    max-width: 480px;
+    margin: 0 0 30px 0;
+}
+
+.error-home-link {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #e07a5f;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.error-home-link:hover {
+    background-color: #cf6247;
+}
+
+#error-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background-color: rgb(35, 35, 35);
+    color: #f4f1de;
+    font-size: 14px;
+}
