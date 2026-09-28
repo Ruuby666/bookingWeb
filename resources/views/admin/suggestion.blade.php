@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pending Reservations</title>
+    <title>Send Suggestion</title>
     <link href="{{ asset('css/sugestions.css') }}" rel="stylesheet">
 </head>
 

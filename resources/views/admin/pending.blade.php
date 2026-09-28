@@ -54,7 +54,7 @@
                 <tr class="pending-row">
                     <td class="pending-id">
                         {{ $reservation->id }}
-                        <button onclick="openModal('{{ $reservation->id }}')"><b>ⓘ</b></button>
+                        <button onclick="openModal('{{ $reservation->id }}')" aria-label="View reservation details"><b>ⓘ</b></button>
                         @if ($section['title'] == 'Confirmed Reservations' && $reservation->invoice == false)
                         <input type="checkbox" value="{{ $reservation->id }}" class="reservation-checkbox">
                         @endif
@@ -160,7 +160,7 @@
             <input type="number" id="invoice-amount" placeholder="Número de la primera factura" required>
             <div class="div-buttons">
                 <button class="mark-export-button" data-url="{{ route('admin.calendar.export-invoice-excel') }}" onclick="redirectfacturaFromButton(this)">
-                    Exportar a Exel
+                    Exportar a Excel
                 </button>
             </div>
         </div>
