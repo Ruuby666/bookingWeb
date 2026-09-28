@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -53,7 +53,8 @@
                             @method('DELETE')
                             <button
                                 type="submit"
-                                class="btn-delete">
+                                class="btn-delete"
+                                aria-label="Delete price range">
                                 ✕
                             </button>
                         </form>
