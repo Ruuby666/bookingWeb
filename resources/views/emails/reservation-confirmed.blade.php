@@ -52,7 +52,7 @@
         <tr style="background-color: #f0f0f0;">
             <td style="text-align: center; padding: 20px;">
                 <img src="cid:nameEMLBlack.png" alt="Logo" style="width: 250px; margin-bottom: 10px;">
-                <p style="font-size: 12px; color: #888;">© 2025 Your Reservation Company. All rights reserved.</p>
+                <p style="font-size: 12px; color: #888;">© {{ date('Y') }} Enjoy Home Lanzarote. All rights reserved.</p>
             </td>
         </tr>
     </table>
