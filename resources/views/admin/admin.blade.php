@@ -75,7 +75,8 @@
                                 data-safebox="{{ $property->safeBox ? 'Sí' : 'No' }}"
                                 data-entertainment="{{ $property->entertainment }}"
                                 data-lat="{{ $property->lat }}"
-                                data-lng="{{ $property->lng }}">
+                                data-lng="{{ $property->lng }}"
+                                aria-label="View property details">
                                 <b>ⓘ</b>
                             </button>
                         </td>
@@ -99,7 +100,8 @@
                         <td>
                             @if($property->owner)
                             {{ $property->owner->name }}
-                            <button onclick="openOwnerModal('{{ $property->owner->id }}', '{{ addslashes($property->owner->name) }}', '{{ addslashes($property->owner->email) }}', '{{ addslashes($property->owner->phone_number ?? 'N/A') }}')">
+                            <button onclick="openOwnerModal('{{ $property->owner->id }}', '{{ addslashes($property->owner->name) }}', '{{ addslashes($property->owner->email) }}', '{{ addslashes($property->owner->phone_number ?? 'N/A') }}')"
+                                aria-label="View owner details">
                                 <b>ⓘ</b>
                             </button>
                             @else
@@ -111,13 +113,13 @@
                         <td>
                             <div class="action-buttons">
                                 @if($property->owner_id === Auth::id())
-                                <a href="{{ route('properties.edit', $property) }}" class="btn-edit">✏️</a>
+                                <a href="{{ route('properties.edit', $property) }}" class="btn-edit" aria-label="Edit property">✏️</a>
                                 <form action="{{ route('properties.destroy', $property->id) }}" method="POST"
                                     onsubmit="return confirm('Are you sure you want to delete this property?');"
                                     style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-delete">🗑️</button>
+                                    <button type="submit" class="btn-delete" aria-label="Delete property">🗑️</button>
                                 </form>
                                 @else
                                 <span class="badge" title="Solo el propietario puede editar esta propiedad">👁️ View only</span>

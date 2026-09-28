@@ -7,7 +7,8 @@
     <title>Calendar</title>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" />
     <link href="{{ asset('css/toast.css') }}" rel="stylesheet">
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"
+        integrity="sha384-RvFLqUoLENXxwOpLf9+DxOdYK1gR2w9NIQ7uN31j65tKiMpSD6qEJ8Rt6I2WQ/H/" crossorigin="anonymous"></script>
 
 
 </head>
