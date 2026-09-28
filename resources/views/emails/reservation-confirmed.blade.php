@@ -22,11 +22,11 @@
                 <table style="width: 100%; margin-top: 20px;">
                     <tr>
                         <td><strong>Check-in:</strong></td>
-                        <td>{{ $reservation->check_in }}</td>
+                        <td>{{ $reservation->check_in->format('d/m/Y') }}</td>
                     </tr>
                     <tr>
                         <td><strong>Check-out:</strong></td>
-                        <td>{{ $reservation->check_out }}</td>
+                        <td>{{ $reservation->check_out->format('d/m/Y') }}</td>
                     </tr>
                     <tr>
                         <td><strong>Number of guests:</strong></td>
