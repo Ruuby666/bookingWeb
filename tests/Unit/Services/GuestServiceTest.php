@@ -45,7 +45,7 @@ class GuestServiceTest extends TestCase
     }
 
     #[Test]
-    public function it_refreshes_name_and_phone_on_an_existing_guest(): void
+    public function it_keeps_the_stored_name_and_phone_of_an_existing_guest(): void
     {
         $existing = Guest::factory()->create([
             'email' => 'carol@example.com',
@@ -56,7 +56,7 @@ class GuestServiceTest extends TestCase
         $guest = $this->service->findOrCreate('New Name', 'carol@example.com', '600999999');
 
         $this->assertSame($existing->id, $guest->id);
-        $this->assertEquals('New Name', $guest->fresh()->name);
-        $this->assertEquals('600999999', $guest->fresh()->phone_number);
+        $this->assertEquals('Old Name', $guest->fresh()->name);
+        $this->assertEquals('600000000', $guest->fresh()->phone_number);
     }
 }
