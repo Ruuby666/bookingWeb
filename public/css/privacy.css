@@ -1,0 +1,58 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-inline: hidden;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f6f0;
+}
+
+.privacy-container {
+    max-width: 860px;
+    margin: 60px auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+}
+
+h1 {
+    color: #1E4D8C;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #1E4D8C;
+    margin-top: 40px;
+    font-size: 18px;
+}
+
+p,
+li {
+    color: #4A4A4A;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+.last-updated {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 40px;
+}
+
+/* Works around a browser rendering quirk: a sticky, width:100% footer can
+   render wider than the viewport on pages tall enough to need a vertical
+   scroll (not reproduced on shorter pages using the same footer.css, e.g.
+   the homepage) — verified with a real browser. left/right instead of an
+   explicit width sizes it the same way without triggering the bug. */
+#footer {
+    width: auto;
+    left: 0;
+    right: 0;
+}

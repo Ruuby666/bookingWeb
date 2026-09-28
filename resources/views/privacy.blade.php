@@ -6,21 +6,7 @@
     <title>Privacy Policy - Enjoy Home Lanzarote</title>
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f9f6f0; }
-        .privacy-container {
-            max-width: 860px;
-            margin: 60px auto;
-            padding: 40px;
-            background: #fff;
-            border-radius: 8px;
-        }
-        h1 { color: #1E4D8C; margin-bottom: 10px; }
-        h2 { color: #1E4D8C; margin-top: 40px; font-size: 18px; }
-        p, li { color: #4A4A4A; line-height: 1.8; font-size: 15px; }
-        ul { padding-left: 20px; }
-        .last-updated { color: #888; font-size: 13px; margin-bottom: 40px; }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/privacy.css') }}">
 </head>
 <body>
 
